@@ -1,0 +1,607 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-jost), sans-serif;
+}
+
+:root.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-jost), sans-serif;
+  transition: none;
+}
+
+body.theme-ready {
+  transition: none;
+}
+
+.dark body,
+body:where(.dark *) {
+  background-color: #0a0a0a;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes hero-pan {
+  0% {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.1) translate3d(-14px, -8px, 0);
+  }
+}
+
+@keyframes hero-title-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-text-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hero-text-glow {
+  0%, 100% {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    text-shadow: 0 10px 26px rgba(244, 114, 182, 0.22);
+  }
+}
+
+.hero-text-float {
+  animation: hero-text-float 6.4s ease-in-out 0.9s infinite;
+  will-change: transform;
+}
+
+.hero-headline {
+  animation:
+    hero-title-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both 100ms,
+    hero-text-glow 6.4s ease-in-out 0.9s infinite;
+  will-change: transform, opacity;
+}
+
+/* ── Full-screen mobile menu animations ─────────────────────────────── */
+
+@keyframes menu-overlay-in {
+  0% {
+    opacity: 0;
+    clip-path: circle(0% at calc(100% - 40px) 40px);
+  }
+  100% {
+    opacity: 1;
+    clip-path: circle(150% at calc(100% - 40px) 40px);
+  }
+}
+
+@keyframes menu-overlay-out {
+  0% {
+    opacity: 1;
+    clip-path: circle(150% at calc(100% - 40px) 40px);
+  }
+  100% {
+    opacity: 0;
+    clip-path: circle(0% at calc(100% - 40px) 40px);
+  }
+}
+
+@keyframes menu-link-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-separator-grow {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@keyframes menu-bottom-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-overlay-enter {
+  animation: menu-overlay-in 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.menu-overlay-exit {
+  animation: menu-overlay-out 450ms cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+.menu-link-enter {
+  opacity: 0;
+  animation: menu-link-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.menu-separator-enter {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: menu-separator-grow 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.menu-bottom-enter {
+  opacity: 0;
+  animation: menu-bottom-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Mobile navbar glow pulse ──────────────────────────────────────── */
+
+@keyframes navbar-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.mobile-navbar-glow {
+  position: relative;
+}
+
+.mobile-navbar-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 36px;
+  background: linear-gradient(135deg, rgba(244,114,182,0.3) 0%, rgba(219,39,119,0.15) 50%, rgba(244,114,182,0.3) 100%);
+  filter: blur(8px);
+  opacity: 0.5;
+  animation: none;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.dark .mobile-navbar-glow::before {
+  background: linear-gradient(135deg, rgba(244,114,182,0.2) 0%, rgba(190,24,93,0.12) 50%, rgba(244,114,182,0.2) 100%);
+  opacity: 0.6;
+}
+
+/* ── Mobile social cards motion ─────────────────────────────────────── */
+
+@keyframes social-sheen-sweep {
+  0% {
+    transform: translateX(-125%) rotate(8deg);
+  }
+  100% {
+    transform: translateX(125%) rotate(8deg);
+  }
+}
+
+@keyframes social-press-pulse {
+  0% {
+    box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12);
+  }
+  45% {
+    box-shadow: 0 18px 30px rgba(236, 72, 153, 0.38), 0 10px 18px rgba(15, 23, 42, 0.18);
+  }
+  100% {
+    box-shadow: 0 12px 24px rgba(157, 23, 77, 0.3), 0 4px 10px rgba(15, 23, 42, 0.14);
+  }
+}
+
+.social-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 220ms ease;
+  touch-action: manipulation;
+}
+
+.social-card::before {
+  content: "";
+  position: absolute;
+  inset: -24% -42%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(108deg, transparent 30%, rgba(255, 255, 255, 0.42) 50%, transparent 70%);
+  transform: translateX(-125%) rotate(8deg);
+}
+
+.social-card:hover,
+.social-card:focus-visible,
+.social-card.is-pressed {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(157, 23, 77, 0.34), 0 7px 14px rgba(15, 23, 42, 0.2);
+  filter: saturate(1.05);
+}
+
+.social-card:hover::before,
+.social-card:focus-visible::before,
+.social-card.is-pressed::before {
+  opacity: 1;
+  animation: social-sheen-sweep 760ms cubic-bezier(0.22, 1, 0.36, 1) var(--sheen-delay, 0ms) 1;
+}
+
+.social-card.is-pressed {
+  animation: social-press-pulse 280ms ease-out 1;
+}
+
+.social-icon-wrap {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+}
+
+.social-card:hover .social-icon-wrap,
+.social-card:focus-visible .social-icon-wrap,
+.social-card.is-pressed .social-icon-wrap {
+  transform: scale(1.08);
+  background-color: rgba(131, 24, 67, 0.38);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+/* ── Gallery helpers ─────────────────────────────────────────────────── */
+
+.gallery-tile {
+}
+
+@keyframes gallery-scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes gallery-scroll-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text-float,
+  .hero-headline {
+    animation: none !important;
+  }
+
+  .menu-overlay-enter,
+  .menu-overlay-exit,
+  .menu-link-enter,
+  .menu-separator-enter,
+  .menu-bottom-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  .mobile-navbar-glow::before {
+    animation: none !important;
+    opacity: 0.5 !important;
+  }
+
+  .social-card,
+  .social-card::before,
+  .social-card.is-pressed,
+  .social-icon-wrap {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .social-card:hover,
+  .social-card:focus-visible,
+  .social-card.is-pressed {
+    transform: none !important;
+    box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12) !important;
+    filter: none !important;
+  }
+
+  .social-card::before {
+    opacity: 0 !important;
+  }
+
+  .social-card:hover .social-icon-wrap,
+  .social-card:focus-visible .social-icon-wrap,
+  .social-card.is-pressed .social-icon-wrap {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .gallery-tile {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+}
+
+/* ── Hakkımızda marquee ────────────────────────────────────────────────── */
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[marquee_20s_linear_infinite\] {
+    animation: none !important;
+  }
+}
+
+/* ── Operasyonlar page animations ─────────────────────────────────────── */
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-gradient {
+  to { --angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[blink_1s_step-end_infinite\] {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .animate-\[marquee_30s_linear_infinite\] {
+    animation: none !important;
+  }
+}
+
+/* ── ServiceCircleDiagram orbital particles ────────────────────────────── */
+
+@keyframes svc-orbit-1 {
+  0%   { transform: translate(-50%,-50%) rotate(0deg)   translateX(220px) rotate(0deg);   opacity: 0.35; }
+  25%  { opacity: 0.5; }
+  50%  { transform: translate(-50%,-50%) rotate(180deg) translateX(200px) rotate(-180deg); opacity: 0.25; }
+  75%  { opacity: 0.45; }
+  100% { transform: translate(-50%,-50%) rotate(360deg) translateX(220px) rotate(-360deg); opacity: 0.35; }
+}
+
+@keyframes svc-orbit-2 {
+  0%   { transform: translate(-50%,-50%) rotate(90deg)  translateX(250px) rotate(-90deg);  opacity: 0.3; }
+  50%  { transform: translate(-50%,-50%) rotate(270deg) translateX(230px) rotate(-270deg); opacity: 0.45; }
+  100% { transform: translate(-50%,-50%) rotate(450deg) translateX(250px) rotate(-450deg); opacity: 0.3; }
+}
+
+@keyframes svc-orbit-3 {
+  0%   { transform: translate(-50%,-50%) rotate(200deg) translateX(190px) rotate(-200deg); opacity: 0.25; }
+  50%  { transform: translate(-50%,-50%) rotate(380deg) translateX(210px) rotate(-380deg); opacity: 0.4; }
+  100% { transform: translate(-50%,-50%) rotate(560deg) translateX(190px) rotate(-560deg); opacity: 0.25; }
+}
+
+@keyframes svc-orbit-4 {
+  0%   { transform: translate(-50%,-50%) rotate(310deg) translateX(240px) rotate(-310deg); opacity: 0.3; }
+  50%  { transform: translate(-50%,-50%) rotate(490deg) translateX(215px) rotate(-490deg); opacity: 0.35; }
+  100% { transform: translate(-50%,-50%) rotate(670deg) translateX(240px) rotate(-670deg); opacity: 0.3; }
+}
+
+/* ── Video Testimonials ────────────────────────────── */
+
+@keyframes play-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+.video-play-icon {
+  animation: play-pulse 2.4s ease-in-out infinite;
+}
+
+.video-card {
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 768px) {
+  .video-card:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-play-icon {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .video-card {
+    transition: none !important;
+  }
+}
+
+/* ── 404 Not Found ──────────────────────────────────────────────────── */
+
+@keyframes notfound-airship-drift {
+  0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+  50% { transform: translate(6px, -10px) rotate(2deg); }
+}
+
+.notfound-airship {
+  animation: notfound-airship-drift 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes notfound-radar-ping {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.notfound-radar-ring {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  animation: notfound-radar-ping 3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes notfound-star-twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.9; }
+}
+
+.notfound-star {
+  animation: notfound-star-twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes notfound-ridge-glow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.notfound-ridge-glow {
+  animation: notfound-ridge-glow 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notfound-airship,
+  .notfound-radar-ring,
+  .notfound-star,
+  .notfound-ridge-glow {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* Hero giriş animasyonları — bilinçli olarak CSS.
+   framer-motion tüm güncellemelerini kendi kare döngüsünde uyguluyor; o döngü
+   durursa (gizli sekme, bazı gömülü görünümler) elemanlar başlangıç hâlinde
+   yani opacity:0'da donup kalıyor. CSS animasyonu bu riski taşımıyor. */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(0.7em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFade {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-rise { animation: heroRise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero-fade { animation: heroFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise, .hero-fade {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero arka planı — nefes alan degrade lekeleri.
+   Bilinçli olarak CSS: JS kare döngüsüne yük binmiyor ve yalnızca transform
+   animasyonu var, yani kompozitörde çalışıyor, hiç yeniden boyama yok. */
+@keyframes blobA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(5%, -4%, 0) scale(1.14); }
+}
+@keyframes blobB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.06); }
+  50%      { transform: translate3d(-6%, 5%, 0) scale(0.94); }
+}
+@keyframes blobC {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.96); }
+  50%      { transform: translate3d(4%, 6%, 0) scale(1.12); }
+}
+.hero-blob { will-change: transform; }
+.hero-blob-a { animation: blobA 19s ease-in-out infinite; }
+.hero-blob-b { animation: blobB 26s ease-in-out infinite; }
+.hero-blob-c { animation: blobC 33s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-a, .hero-blob-b, .hero-blob-c { animation: none; }
+}
+
+/* Işık alanı katmanları — imleçle birlikte kayan derinlik.
+   Nefes animasyonu iç katmanda, imleç ötelemesi dış katmanda: ikisi ayrı
+   elemanda olunca transform'lar çakışmıyor ve ikisi de kompozitörde kalıyor. */
+@keyframes blobD {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.02) rotate(0deg); }
+  50%      { transform: translate3d(-4%, -5%, 0) scale(0.92) rotate(8deg); }
+}
+@keyframes veilPulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.85; }
+}
+.hero-blob-d { animation: blobD 41s ease-in-out infinite; }
+.hero-veil   { animation: veilPulse 24s ease-in-out infinite; will-change: opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-d, .hero-veil { animation: none; }
+}

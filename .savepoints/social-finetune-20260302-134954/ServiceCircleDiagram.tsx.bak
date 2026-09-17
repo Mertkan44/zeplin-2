@@ -1,0 +1,1035 @@
+"use client";
+
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+
+/* ── Constants ──────────────────────────────────────────────────────────── */
+
+const FONT = '"futura-pt", sans-serif';
+
+const CIRCLE_W = 680; // center column width for circles
+const ASPECT = 1912 / 2940;
+
+/* ── RichText: **bold** markup ─────────────────────────────────────────── */
+
+function RichText({ text, brightBold }: { text: string; brightBold?: boolean }) {
+  return (
+    <>
+      {text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+        i % 2 === 1 ? (
+          <strong
+            key={i}
+            style={{
+              fontWeight: 700,
+              color: brightBold ? "#fff" : "rgba(255,255,255,0.95)",
+              transition: "color 0.4s ease",
+            }}
+          >
+            {part}
+          </strong>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+}
+
+/* ── AnimatedLayer — two-phase PNG layer with hover offset ─────────────── */
+
+interface LayerProps {
+  src: string;
+  start: boolean;
+  entranceDelay: number;
+  breatheScale: [number, number, number];
+  breatheOpacity?: [number, number, number];
+  breatheDuration: number;
+  breatheDelay?: number;
+  transformOrigin: string;
+  zIndex: number;
+  hovered: boolean;
+  hoverTranslateX?: number;
+  hoverScale?: number;
+}
+
+function AnimatedLayer({
+  src,
+  start,
+  entranceDelay,
+  breatheScale,
+  breatheOpacity,
+  breatheDuration,
+  breatheDelay = 0,
+  transformOrigin,
+  zIndex,
+  hovered,
+  hoverTranslateX = 0,
+  hoverScale = 1,
+}: LayerProps) {
+  const [breathing, setBreathing] = useState(false);
+
+  useEffect(() => {
+    if (!start) return;
+    const ms = (entranceDelay + 2.5) * 1000;
+    const id = setTimeout(() => setBreathing(true), ms);
+    return () => clearTimeout(id);
+  }, [start, entranceDelay]);
+
+  const tx = hovered ? hoverTranslateX : 0;
+  const hs = hovered ? hoverScale : 1;
+
+  const breatheAnimate = !start
+    ? { scale: 0.2, opacity: 0 }
+    : breathing
+    ? {
+      scale: breatheScale,
+      opacity: breatheOpacity || 1,
+    }
+    : { scale: 1, opacity: 1 };
+
+  const breatheTransition = !start
+    ? { duration: 0 }
+    : breathing
+    ? {
+      scale: {
+        duration: breatheDuration,
+        repeat: Infinity,
+        ease: "easeInOut" as const,
+        delay: breatheDelay,
+      },
+      ...(breatheOpacity
+        ? {
+          opacity: {
+            duration: breatheDuration,
+            repeat: Infinity,
+            ease: "easeInOut" as const,
+            delay: breatheDelay,
+          },
+        }
+        : {}),
+    }
+    : {
+      type: "spring" as const,
+      stiffness: 55,
+      damping: 14,
+      delay: entranceDelay,
+    };
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex,
+        transform: `translateX(${tx}px) scale(${hs})`,
+        transformOrigin,
+        transition: "transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)",
+        pointerEvents: "none",
+      }}
+    >
+      <motion.div
+        style={{ position: "absolute", inset: 0, transformOrigin }}
+        initial={{ scale: 0.2, opacity: 0 }}
+        animate={breatheAnimate}
+        transition={breatheTransition}
+      >
+        <img
+          src={src}
+          alt=""
+          draggable={false}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            display: "block",
+          }}
+        />
+      </motion.div>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: "50%",
+          boxShadow: hovered
+            ? "0 0 50px rgba(255,45,120,0.12)"
+            : "none",
+          transition: "box-shadow 0.6s cubic-bezier(0.25,0.1,0.25,1)",
+          pointerEvents: "none",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ── Orbital Particle ──────────────────────────────────────────────────── */
+
+function OrbitalParticle({
+  start,
+  animName,
+  duration,
+  delay,
+}: {
+  start: boolean;
+  animName: string;
+  duration: number;
+  delay: number;
+}) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        width: 3,
+        height: 3,
+        borderRadius: "50%",
+        background: "rgba(255, 45, 120, 0.4)",
+        boxShadow: "0 0 6px rgba(255, 45, 120, 0.3)",
+        pointerEvents: "none",
+        zIndex: 12,
+        animation: start ? `${animName} ${duration}s linear ${delay}s infinite forwards` : "none",
+        opacity: 0,
+      }}
+    />
+  );
+}
+
+/* ── Typing Dots (Chatbot indicator) ───────────────────────────────────── */
+
+function TypingDots({ bright }: { bright: boolean }) {
+  const dotColor = bright
+    ? "rgba(255, 45, 120, 0.7)"
+    : "rgba(255, 45, 120, 0.4)";
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 5, margin: "10px 0" }}>
+      {[0, 0.15, 0.3].map((d, i) => (
+        <motion.div
+          key={i}
+          animate={{ scale: [0.6, 1, 0.6] }}
+          transition={{
+            duration: bright ? 0.7 : 1,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: d,
+          }}
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: dotColor,
+            transition: "background 0.4s ease",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Audio Waveform Bars (Sesli Asistan indicator) ─────────────────────── */
+
+const WAVE_BARS = [
+  { heights: [8, 24, 10, 18, 8], dur: 1.2 },
+  { heights: [18, 8, 26, 10, 18], dur: 1.0 },
+  { heights: [10, 28, 12, 22, 10], dur: 1.4 },
+  { heights: [22, 10, 18, 8, 22], dur: 1.1 },
+  { heights: [12, 20, 8, 26, 12], dur: 1.3 },
+];
+
+function WaveformBars({ bright }: { bright: boolean }) {
+  const barColor = bright
+    ? "rgba(255, 45, 120, 0.7)"
+    : "rgba(255, 45, 120, 0.35)";
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        height: 30,
+        margin: "10px 0",
+        justifyContent: "flex-end",
+      }}
+    >
+      {WAVE_BARS.map((bar, i) => (
+        <motion.div
+          key={i}
+          animate={{ height: bar.heights }}
+          transition={{
+            duration: bright ? bar.dur * 0.8 : bar.dur,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            width: 4,
+            borderRadius: 2,
+            background: barColor,
+            transition: "background 0.4s ease",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Merge Icon (Özel Yazılım — two lines becoming one) ────────────────── */
+
+function MergeIcon({ bright }: { bright: boolean }) {
+  return (
+    <motion.svg
+      width={44}
+      height={22}
+      viewBox="0 0 44 22"
+      style={{ display: "block", margin: "14px auto 0" }}
+      animate={{ opacity: bright ? [0.4, 0.6, 0.4] : [0.15, 0.4, 0.15] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <motion.line
+        x1={4} y1={2} x2={22} y2={20}
+        stroke="rgba(255,255,255,0.5)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+      />
+      <motion.line
+        x1={40} y1={2} x2={22} y2={20}
+        stroke="rgba(255,255,255,0.5)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+      />
+    </motion.svg>
+  );
+}
+
+/* ── Bottom tabs ───────────────────────────────────────────────────────── */
+
+const TABS = [
+  { label: "Akıllı\nChatbot", nodeId: "chatbot" },
+  { label: "Özel\nYazılım", nodeId: "yazilim" },
+  { label: "Sesli\nAsistan", nodeId: "sesli" },
+] as const;
+
+/* ── Component ──────────────────────────────────────────────────────────── */
+
+export default function ServiceCircleDiagram() {
+  const circleRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [circleCw, setCircleCw] = useState(CIRCLE_W);
+  const [gridW, setGridW] = useState(1200);
+  const [activeTab, setActiveTab] = useState(0);
+  const [pulsingLabel, setPulsingLabel] = useState<string | null>(null);
+  const [hoveredCircle, setHoveredCircle] = useState<string | null>(null);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const [startAnimations, setStartAnimations] = useState(false);
+  const [viewportW, setViewportW] = useState(1280);
+
+  useEffect(() => {
+    const updateViewport = () => setViewportW(window.innerWidth);
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
+  /* ── Parallax ───────────────────────────────────────────────── */
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 120, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 120, damping: 20 });
+  const parallaxX = useTransform(springX, [-1, 1], [-12, 12]);
+  const parallaxY = useTransform(springY, [-1, 1], [-12, 12]);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      mouseX.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
+      mouseY.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    },
+    [mouseX, mouseY]
+  );
+
+  /* ── Mouse-position hover detection ──────────────────────────── */
+  const handleDiagramMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const el = e.currentTarget;
+      const rect = el.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const w = rect.width;
+      const h = rect.height;
+
+      const nx = (mx / w) * 2 - 1;
+      const ny = (my / h) * 2 - 1;
+
+      const circleAreaX = nx / 0.8;
+      const circleAreaY = ny / 0.8;
+      const inCircleArea = circleAreaX * circleAreaX + circleAreaY * circleAreaY < 1.2;
+
+      if (!inCircleArea) {
+        setHoveredCircle(null);
+        return;
+      }
+
+      if (nx < -0.08) {
+        setHoveredCircle("chatbot");
+      } else if (nx > 0.08) {
+        setHoveredCircle("sesli");
+      } else {
+        setHoveredCircle("yazilim");
+      }
+    },
+    []
+  );
+
+  const handleDiagramMouseLeave = useCallback(() => {
+    setHoveredCircle(null);
+  }, []);
+
+  /* ── ResizeObservers ─────────────────────────────────────────── */
+  useEffect(() => {
+    const observers: ResizeObserver[] = [];
+    if (circleRef.current) {
+      const ro = new ResizeObserver(([e]) => setCircleCw(e.contentRect.width));
+      ro.observe(circleRef.current);
+      observers.push(ro);
+    }
+    if (gridRef.current) {
+      const ro = new ResizeObserver(([e]) => setGridW(e.contentRect.width));
+      ro.observe(gridRef.current);
+      observers.push(ro);
+    }
+    return () => observers.forEach((r) => r.disconnect());
+  }, []);
+
+  /* ── Viewport trigger ───────────────────────────────────────── */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (startAnimations) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setStartAnimations(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -18% 0px",
+        threshold: 0.22,
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [startAnimations]);
+
+  const circleH = circleCw * ASPECT;
+  const isMobile = viewportW < 768;
+  const isCompact = viewportW < 1100;
+  const sectionPad = isMobile ? 16 : 24;
+  const labelTitleSize = isMobile ? 18 : 20;
+  const labelBodySize = isMobile ? 13.5 : 14.5;
+  const centerLabelSize = isMobile ? 18 : isCompact ? 20 : 22;
+  const activeTabBarW = isMobile ? 86 : 110;
+  const idleTabBarW = isMobile ? 52 : 65;
+  const hoverTabBarW = isMobile ? 78 : 100;
+  const colW = isCompact ? 220 : 260;
+
+  /* ── Derived hover — either circle or label triggers both ───── */
+  const activeHover = hoveredCircle || hoveredLabel;
+
+  function isHighlighted(id: string) {
+    return activeHover === id || pulsingLabel === id;
+  }
+
+  function handleTabClick(i: number, nodeId: string) {
+    setActiveTab(i);
+    setPulsingLabel(nodeId);
+    setTimeout(() => setPulsingLabel(null), 750);
+  }
+
+  /* ── SVG line coordinates (in grid-wide pixel space) ────────── */
+  // Left column = 260px, center column starts at 260px
+  // Lines go from right edge of left column → left edge of circles
+  // and from left edge of right column → right edge of circles
+  const centerStart = colW; // where center column begins in grid
+  const centerEnd = gridW - colW;
+
+  const svgLines = [
+    // chatbot: from right edge of left column area → left circle edge
+    {
+      id: "chatbot",
+      x1: colW - 10,
+      y1: circleH * 0.22,
+      x2: centerStart + circleCw * 0.22,
+      y2: circleH * 0.32,
+    },
+    // sesli: from left edge of right column area → right circle edge
+    {
+      id: "sesli",
+      x1: centerEnd + 10,
+      y1: circleH * 0.38,
+      x2: centerEnd - circleCw * 0.22,
+      y2: circleH * 0.38,
+    },
+    // yazilim: from right edge of left column area → center circle bottom-left
+    {
+      id: "yazilim",
+      x1: colW - 10,
+      y1: circleH * 0.78,
+      x2: centerStart + circleCw * 0.35,
+      y2: circleH * 0.72,
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      style={{
+        position: "relative",
+        width: "100%",
+        minHeight: isCompact ? "auto" : "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: isMobile ? 38 : 50,
+        paddingBottom: isMobile ? 64 : 80,
+        background: `
+          radial-gradient(ellipse 50% 45% at 50% 50%, rgba(255,45,120,0.06) 0%, transparent 70%),
+          radial-gradient(ellipse 70% 60% at 50% 45%, rgba(90,20,55,0.35) 0%, transparent 70%),
+          radial-gradient(ellipse 40% 50% at 20% 60%, rgba(60,10,40,0.2) 0%, transparent 60%),
+          radial-gradient(ellipse 40% 50% at 80% 40%, rgba(70,15,45,0.2) 0%, transparent 60%),
+          linear-gradient(180deg, #0d0608 0%, #12080c 30%, #150a10 60%, #0d0608 100%)
+        `,
+        overflow: "hidden",
+        fontFamily: FONT,
+      }}
+    >
+      {/* ── Ambient glow ──────────────────────────────────────────── */}
+      <motion.div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 55% 50% at 50% 48%, rgba(80,15,45,0.45) 0%, rgba(40,8,25,0.25) 40%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: startAnimations ? [0.3, 0.5, 0.3] : 0 }}
+        transition={
+          startAnimations
+            ? { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            : { duration: 0.8 }
+        }
+      />
+
+      {/* ── Typography ────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          textAlign: "center",
+          paddingLeft: sectionPad,
+          paddingRight: sectionPad,
+        }}
+      >
+        <h2
+          className="tk-futura-pt"
+          style={{
+            fontFamily: '"futura-pt", sans-serif',
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: isMobile ? "clamp(24px, 7.2vw, 34px)" : "clamp(28px, 4vw, 48px)",
+            color: "rgba(255,255,255,0.85)",
+            letterSpacing: "0.01em",
+            lineHeight: 1.15,
+            marginBottom: 12,
+            marginTop: 0,
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "0 0.3em",
+          }}
+        >
+          Yapay Zeka Hizmetlerimize Göz Atın
+        </h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: startAnimations ? 1 : 0 }}
+          transition={{ duration: 0.5, delay: startAnimations ? 0.25 : 0, ease: "easeOut" }}
+          style={{
+            fontSize: isMobile ? "14px" : "clamp(14px, 1.6vw, 18px)",
+            fontWeight: 400,
+            color: "rgba(255,255,255,0.45)",
+            marginBottom: isMobile ? 32 : 50,
+          }}
+        >
+          İşletmenize özel, yaşayan araçlar geliştiriyoruz.
+        </motion.p>
+      </div>
+
+      {/* ── 3-Column Grid: Labels | Circles | Label ───────────────── */}
+      <div
+        ref={gridRef}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "grid",
+          gridTemplateColumns: isCompact
+            ? isMobile
+              ? "1fr"
+              : "minmax(0, 1fr) minmax(0, 1fr)"
+            : "260px 1fr 260px",
+          gridTemplateAreas: isCompact
+            ? isMobile
+              ? '"center" "left" "right"'
+              : '"center center" "left right"'
+            : '"left center right"',
+          maxWidth: isCompact ? 980 : 1200,
+          width: "100%",
+          alignItems: "stretch",
+          rowGap: isCompact ? (isMobile ? 24 : 28) : 0,
+          columnGap: isCompact ? 22 : 0,
+          paddingLeft: sectionPad,
+          paddingRight: sectionPad,
+        }}
+      >
+        {/* ── SVG connecting lines (overlay spanning full grid) ───── */}
+        {!isCompact && (
+          <svg
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: circleH,
+              pointerEvents: "none",
+              zIndex: 15,
+              overflow: "visible",
+            }}
+          >
+            {svgLines.map((line) => {
+              const lit = isHighlighted(line.id);
+              return (
+                <motion.path
+                  key={line.id}
+                  d={`M ${line.x1},${line.y1} L ${line.x2},${line.y2}`}
+                  fill="none"
+                  style={{
+                    stroke: lit
+                      ? "rgba(255,45,120,0.5)"
+                      : "rgba(255,255,255,0.15)",
+                    strokeWidth: lit ? 1.5 : 0.8,
+                    transition: "stroke 0.4s ease, stroke-width 0.4s ease",
+                  }}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{
+                    pathLength: startAnimations ? 1 : 0,
+                    opacity: startAnimations ? 1 : 0,
+                  }}
+                  transition={{
+                    pathLength: { duration: 0.5, delay: startAnimations ? 0.45 : 0, ease: "easeOut" },
+                    opacity: { duration: 0.3, delay: startAnimations ? 0.45 : 0 },
+                  }}
+                />
+              );
+            })}
+          </svg>
+        )}
+
+        {/* ── LEFT COLUMN — Labels 1 & 3 ─────────────────────────── */}
+        <div
+          style={{
+            gridArea: "left",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: isCompact ? "flex-start" : "space-between",
+            gap: isCompact ? 18 : 0,
+            paddingRight: isCompact ? 0 : 30,
+            height: isCompact ? "auto" : circleH,
+            zIndex: 16,
+          }}
+        >
+          {/* Label 1: Akıllı Chatbot (top) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: !startAnimations ? 0 : pulsingLabel === "chatbot" ? [1, 0.4, 1] : 1,
+              y: startAnimations ? 0 : 20,
+            }}
+            transition={
+              !startAnimations
+                ? { duration: 0.2 }
+                : pulsingLabel === "chatbot"
+                ? { opacity: { duration: 0.7, ease: "easeInOut" } }
+                : { duration: 0.5, delay: 0.6, ease: "easeOut" }
+            }
+            onMouseEnter={() => setHoveredLabel("chatbot")}
+            onMouseLeave={() => setHoveredLabel(null)}
+            style={{
+              maxWidth: isCompact ? "100%" : 260,
+              cursor: "default",
+              paddingTop: isCompact ? 0 : 20,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelTitleSize,
+                fontWeight: 700,
+                color: isHighlighted("chatbot") ? "#fff" : "rgba(255,255,255,0.95)",
+                letterSpacing: "0.01em",
+                lineHeight: 1.4,
+                marginBottom: 0,
+                textShadow: isHighlighted("chatbot")
+                  ? "0 0 15px rgba(255, 45, 120, 0.3)"
+                  : "none",
+                transition: "color 0.4s ease, text-shadow 0.4s ease",
+              }}
+            >
+              Akıllı Chatbot
+            </p>
+            <TypingDots bright={isHighlighted("chatbot")} />
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelBodySize,
+                color: isHighlighted("chatbot")
+                  ? "rgba(255,255,255,0.75)"
+                  : "rgba(255,255,255,0.55)",
+                lineHeight: 1.7,
+                transition: "color 0.4s ease",
+              }}
+            >
+              <RichText
+                text="**WhatsApp** hesabınıza entegre edilir, müşterilerinizle **7/24** iletişim kurar ve işletmenizin tüm yazışmalarını **profesyonelce** yönetir."
+                brightBold={isHighlighted("chatbot")}
+              />
+            </p>
+          </motion.div>
+
+          {/* Label 3: Özel Yazılım (bottom) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: !startAnimations ? 0 : pulsingLabel === "yazilim" ? [1, 0.4, 1] : 1,
+              y: startAnimations ? 0 : 20,
+            }}
+            transition={
+              !startAnimations
+                ? { duration: 0.2 }
+                : pulsingLabel === "yazilim"
+                ? { opacity: { duration: 0.7, ease: "easeInOut" } }
+                : { duration: 0.5, delay: 0.8, ease: "easeOut" }
+            }
+            onMouseEnter={() => setHoveredLabel("yazilim")}
+            onMouseLeave={() => setHoveredLabel(null)}
+            style={{
+              maxWidth: isCompact ? "100%" : 260,
+              cursor: "default",
+              paddingBottom: isCompact ? 0 : 20,
+            }}
+          >
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelTitleSize,
+                fontWeight: 700,
+                color: isHighlighted("yazilim") ? "#fff" : "rgba(255,255,255,0.95)",
+                letterSpacing: "0.01em",
+                lineHeight: 1.4,
+                marginBottom: 8,
+                textShadow: isHighlighted("yazilim")
+                  ? "0 0 15px rgba(255, 45, 120, 0.3)"
+                  : "none",
+                transition: "color 0.4s ease, text-shadow 0.4s ease",
+              }}
+            >
+              Özel Yazılım
+            </p>
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelBodySize,
+                color: isHighlighted("yazilim")
+                  ? "rgba(255,255,255,0.75)"
+                  : "rgba(255,255,255,0.55)",
+                lineHeight: 1.7,
+                transition: "color 0.4s ease",
+              }}
+            >
+              <RichText
+                text="**Chatbot ve sesli asistanın birleşimi** — işletmenizin tüm iletişim süreçlerini **tek bir akıllı sistem**de toplar, size sadece **sonuçları** sunar."
+                brightBold={isHighlighted("yazilim")}
+              />
+            </p>
+          </motion.div>
+        </div>
+
+        {/* ── CENTER COLUMN — Circles ─────────────────────────────── */}
+        <motion.div
+          ref={circleRef}
+          onMouseMove={handleDiagramMouseMove}
+          onMouseLeave={handleDiagramMouseLeave}
+          style={{
+            gridArea: "center",
+            position: "relative",
+            width: "100%",
+            minWidth: isCompact ? 0 : 400,
+            maxWidth: isCompact ? (isMobile ? 640 : 760) : "none",
+            margin: isCompact ? "0 auto" : 0,
+            height: circleH,
+            overflow: "visible",
+            x: isCompact ? 0 : parallaxX,
+            y: isCompact ? 0 : parallaxY,
+            cursor: "default",
+          }}
+        >
+          {/* Elips 3 — center circle, BACK layer */}
+          <AnimatedLayer
+            src="/circles/elips3.png"
+            start={startAnimations}
+            entranceDelay={0.5}
+            breatheScale={[1, 1.06, 1]}
+            breatheOpacity={[0.92, 1, 0.92]}
+            breatheDuration={3}
+            transformOrigin="50% 44%"
+            zIndex={1}
+            hovered={activeHover === "yazilim"}
+            hoverScale={1.04}
+          />
+
+          {/* Elips 2 — right crescent, MIDDLE layer */}
+          <AnimatedLayer
+            src="/circles/elips2.png"
+            start={startAnimations}
+            entranceDelay={0.8}
+            breatheScale={[1, 1.045, 1]}
+            breatheOpacity={[0.85, 1, 0.85]}
+            breatheDuration={4.5}
+            breatheDelay={1.3}
+            transformOrigin="62% 38%"
+            zIndex={2}
+            hovered={activeHover === "sesli"}
+            hoverTranslateX={isCompact ? 16 : 30}
+            hoverScale={1.05}
+          />
+
+          {/* Elips 1 — left crescent, FRONT layer */}
+          <AnimatedLayer
+            src="/circles/elips1.png"
+            start={startAnimations}
+            entranceDelay={0.7}
+            breatheScale={[1, 1.045, 1]}
+            breatheOpacity={[0.85, 1, 0.85]}
+            breatheDuration={4}
+            breatheDelay={0.8}
+            transformOrigin="38% 50%"
+            zIndex={3}
+            hovered={activeHover === "chatbot"}
+            hoverTranslateX={isCompact ? -16 : -30}
+            hoverScale={1.05}
+          />
+
+          {/* CENTER LABEL — Özel Yazılım */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: startAnimations ? 1 : 0 }}
+            transition={{ duration: 0.45, delay: startAnimations ? 0.7 : 0 }}
+            style={{
+              position: "absolute",
+              top: "46%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              whiteSpace: "pre-line",
+              zIndex: 16,
+              pointerEvents: "none",
+              fontFamily: FONT,
+              fontSize: centerLabelSize,
+              fontWeight: 500,
+              color: isHighlighted("yazilim")
+                ? "#fff"
+                : "rgba(255,255,255,0.9)",
+              letterSpacing: isMobile ? "0.08em" : "0.1em",
+              lineHeight: 1.6,
+              textShadow: isHighlighted("yazilim")
+                ? "0 0 15px rgba(255, 45, 120, 0.3)"
+                : "0 0 20px rgba(255, 45, 120, 0.15)",
+              transition: "color 0.4s ease, text-shadow 0.4s ease",
+            }}
+          >
+            {"Özel\nYazılım"}
+            <MergeIcon bright={isHighlighted("yazilim")} />
+          </motion.div>
+
+          {/* Orbital particles */}
+          <OrbitalParticle start={startAnimations} animName="svc-orbit-1" duration={18} delay={2.5} />
+          <OrbitalParticle start={startAnimations} animName="svc-orbit-2" duration={22} delay={2.8} />
+          <OrbitalParticle start={startAnimations} animName="svc-orbit-3" duration={16} delay={3.0} />
+          <OrbitalParticle start={startAnimations} animName="svc-orbit-4" duration={25} delay={3.3} />
+        </motion.div>
+
+        {/* ── RIGHT COLUMN — Label 2 ─────────────────────────────── */}
+        <div
+          style={{
+            gridArea: "right",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: isCompact ? "flex-start" : "center",
+            paddingLeft: isCompact ? 0 : 30,
+            height: isCompact ? "auto" : circleH,
+            zIndex: 16,
+          }}
+        >
+          {/* Label 2: Sesli Asistan */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: !startAnimations ? 0 : pulsingLabel === "sesli" ? [1, 0.4, 1] : 1,
+              y: startAnimations ? 0 : 20,
+            }}
+            transition={
+              !startAnimations
+                ? { duration: 0.2 }
+                : pulsingLabel === "sesli"
+                ? { opacity: { duration: 0.7, ease: "easeInOut" } }
+                : { duration: 0.5, delay: 0.7, ease: "easeOut" }
+            }
+            onMouseEnter={() => setHoveredLabel("sesli")}
+            onMouseLeave={() => setHoveredLabel(null)}
+            style={{
+              maxWidth: isCompact ? "100%" : 260,
+              textAlign: "left",
+              cursor: "default",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelTitleSize,
+                fontWeight: 700,
+                color: isHighlighted("sesli") ? "#fff" : "rgba(255,255,255,0.95)",
+                letterSpacing: "0.01em",
+                lineHeight: 1.4,
+                marginBottom: 0,
+                textShadow: isHighlighted("sesli")
+                  ? "0 0 15px rgba(255, 45, 120, 0.3)"
+                  : "none",
+                transition: "color 0.4s ease, text-shadow 0.4s ease",
+              }}
+            >
+              Sesli Asistan
+            </p>
+            <WaveformBars bright={isHighlighted("sesli")} />
+            <p
+              style={{
+                fontFamily: FONT,
+                fontSize: labelBodySize,
+                color: isHighlighted("sesli")
+                  ? "rgba(255,255,255,0.75)"
+                  : "rgba(255,255,255,0.55)",
+                lineHeight: 1.7,
+                transition: "color 0.4s ease",
+              }}
+            >
+              <RichText
+                text="**Restoranlar, klinikler** ve işletmeler için telefon üzerinden **rezervasyon** alır, müşterilerinizle doğal bir şekilde konuşur ve size **anlık geri bildirim** sağlar."
+                brightBold={isHighlighted("sesli")}
+              />
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ── Bottom service tabs ────────────────────────────────────── */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          alignItems: "flex-start",
+          gap: isMobile ? 14 : "clamp(20px, 4vw, 40px)",
+          marginTop: isMobile ? 38 : 55,
+          paddingLeft: sectionPad,
+          paddingRight: sectionPad,
+          flexWrap: "wrap",
+          justifyContent: isMobile ? "space-between" : "center",
+          maxWidth: isMobile ? 640 : 1200,
+          width: "100%",
+        }}
+      >
+        {TABS.map((tab, i) => {
+          const isActive = activeTab === i;
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: startAnimations ? 1 : 0, y: startAnimations ? 0 : 22 }}
+              transition={{
+                duration: 0.5,
+                delay: startAnimations ? 0.95 + i * 0.12 : 0,
+                ease: "easeOut",
+              }}
+              whileHover="hover"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: isMobile ? "center" : "flex-start",
+                cursor: "pointer",
+                fontFamily: FONT,
+                flex: isMobile ? "1 1 calc(33.333% - 10px)" : "0 0 auto",
+              }}
+              onClick={() => handleTabClick(i, tab.nodeId)}
+            >
+              {/* Pink accent bar */}
+              <motion.div
+                variants={{
+                  hover: {
+                    width: isActive ? activeTabBarW : hoverTabBarW,
+                    background: "#FF2D78",
+                  },
+                }}
+                animate={{
+                  width: isActive ? activeTabBarW : idleTabBarW,
+                  background: isActive
+                    ? "#FF2D78"
+                    : "linear-gradient(to right, #FF2D78, rgba(255,45,120,0.35))",
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                style={{ height: 4, borderRadius: 2, marginBottom: 10 }}
+              />
+              {/* Label text */}
+              <motion.span
+                variants={{
+                  hover: { y: -2, color: "rgba(255,255,255,1)" },
+                }}
+                animate={{
+                  y: 0,
+                  color: isActive
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.55)",
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                style={{
+                  fontSize: isMobile ? 13 : 14,
+                  fontWeight: 700,
+                  lineHeight: 1.35,
+                  whiteSpace: "pre-line",
+                  display: "block",
+                }}
+              >
+                {tab.label}
+              </motion.span>
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
