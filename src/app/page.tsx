@@ -38,13 +38,6 @@ const videoTestimonials = [
 
 const blocks = [
   {
-    title: "hizmetlerimiz",
-    description: "dijital strateji, sosyal medya yönetimi, içerik üretimi ve marka danışmanlığı.",
-    items: ["Sosyal Medya Yönetimi", "İçerik Üretimi", "Marka Danışmanlığı", "Dijital Strateji"],
-    backgroundImage: "/images/services-digital-premium-optimized.webp",
-    href: "/hizmetler",
-  },
-  {
     title: "projelerimiz",
     description: "markaların dijital dönüşüm hikayelerini birlikte yazıyoruz.",
     items: ["UI/UX Tasarım", "Web Geliştirme", "AI İçerik", "Video Prodüksiyon"],

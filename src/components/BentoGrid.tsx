@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useCallback, type CSSProperties } from "react";
-import Link from "next/link";
-import { motion, MotionConfig, AnimatePresence } from "framer-motion";
-import BentoCard from "@/components/BentoCard";
+import { type CSSProperties } from "react";
+import { motion, MotionConfig } from "framer-motion";
+import ProjectCoverflow from "@/components/ProjectCoverflow";
 
 interface Project {
   name: string;
@@ -224,292 +223,6 @@ function SocialRowCards({ block }: { block: Block }) {
   );
 }
 
-function ProjectSlider({
-  projects,
-}: {
-  title: string;
-  projects: Project[];
-}) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const active = projects[activeIdx];
-  const n = projects.length;
-  const isItalic = activeIdx % 2 === 1;
-
-  const goPrev = useCallback(() => setActiveIdx((i) => (i - 1 + n) % n), [n]);
-  const goNext = useCallback(() => setActiveIdx((i) => (i + 1) % n), [n]);
-
-  const monoStyle: CSSProperties = {
-    fontFamily: "var(--font-jost), ui-monospace, monospace",
-    letterSpacing: "0.16em",
-    textTransform: "uppercase" as const,
-  };
-
-  return (
-    <div>
-      {/* ── Başlık bölümü ── */}
-      <div className="mb-5 md:mb-6">
-        {/* Üst bar: etiket sol · sayaç + oklar sağ */}
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-[10px] text-foreground/40" style={monoStyle}>
-            ↳ seçili işler
-          </p>
-          <div className="flex items-center gap-2.5">
-            <span
-              style={{
-                fontFamily: "var(--font-instrument), serif",
-                fontSize: "1.3rem",
-                letterSpacing: "-0.01em",
-                color: "var(--foreground)",
-              }}
-            >
-              <span style={{ color: "#EC4899" }}>{String(activeIdx + 1).padStart(2, "0")}</span>
-              <span style={{ opacity: 0.3, margin: "0 3px" }}>/</span>
-              <span style={{ opacity: 0.45 }}>{String(n).padStart(2, "0")}</span>
-            </span>
-            <button
-              type="button"
-              aria-label="Önceki proje"
-              onClick={goPrev}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/12 bg-foreground/[0.04] text-foreground/50 transition-all duration-200 hover:border-foreground/22 hover:bg-foreground/[0.08] hover:text-foreground active:scale-95"
-            >
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M10 12L6 8L10 4" /></svg>
-            </button>
-            <button
-              type="button"
-              aria-label="Sonraki proje"
-              onClick={goNext}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/12 bg-foreground/[0.04] text-foreground/50 transition-all duration-200 hover:border-foreground/22 hover:bg-foreground/[0.08] hover:text-foreground active:scale-95"
-            >
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4L10 8L6 12" /></svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Tam genişlik serif başlık */}
-        <h3
-          className="leading-[0.93] text-foreground"
-          style={{
-            fontFamily: "var(--font-instrument), serif",
-            fontWeight: 400,
-            fontSize: "clamp(2.4rem, 6.5vw, 4.4rem)",
-            letterSpacing: "-0.028em",
-          }}
-        >
-          <em style={{ fontStyle: "italic" }}>Sahne</em> arkası, tek tek.
-        </h3>
-      </div>
-
-      {/* ── Numaralı proje listesi — card'ın üstünde ── */}
-      <div className="mb-3 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-        <div className="flex min-w-max border-b border-foreground/8 md:min-w-0 md:justify-center">
-          {projects.map((p, i) => {
-            const isActive = i === activeIdx;
-            return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setActiveIdx(i)}
-                aria-label={p.name}
-                className="group relative flex shrink-0 items-baseline gap-2 border-r border-foreground/8 px-4 py-3 text-left transition-colors duration-200 last:border-r-0 focus-visible:outline-none md:shrink md:px-5"
-              >
-                {/* aktif göstergesi — alt çizgi (card'a doğru) */}
-                <span
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[1.5px] transition-all duration-300"
-                  style={{ background: isActive ? "#EC4899" : "transparent" }}
-                />
-                <span
-                  className="text-[9px] transition-colors duration-200"
-                  style={{ ...monoStyle, color: isActive ? "#EC4899" : "rgba(255,255,255,0.22)" }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className="whitespace-nowrap text-[12.5px] font-medium transition-colors duration-200 md:text-[13px]"
-                  style={{
-                    color: isActive
-                      ? "var(--foreground)"
-                      : "color-mix(in srgb, var(--foreground) 40%, transparent)",
-                  }}
-                >
-                  {p.name}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Featured card ── */}
-      <div
-        className="overflow-hidden rounded-[20px] border border-foreground/8 md:rounded-[28px]"
-        style={{ background: "color-mix(in srgb, var(--background) 93%, white 7%)" }}
-      >
-        {/* Mobile: görsel üstte, metin altta | Desktop: grid 1fr 1.35fr */}
-        <div className="flex flex-col md:grid md:min-h-[520px]" style={{ gridTemplateColumns: "1fr 1.35fr" }}>
-
-          {/* Sol — metin paneli */}
-          <div
-            className="order-last flex flex-col justify-between border-t border-foreground/8 p-6 md:order-first md:border-r md:border-t-0 md:p-10"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={activeIdx}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="flex h-full flex-col justify-between"
-              >
-                {/* Üst blok */}
-                <div>
-                  {/* Tags — mono */}
-                  {active.tags && active.tags.length > 0 && (
-                    <div className="mb-5 flex flex-wrap gap-1.5">
-                      {active.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full px-2.5 py-1 text-[9px] text-pink-400"
-                          style={{
-                            ...monoStyle,
-                            background: "rgba(236,72,153,0.10)",
-                            letterSpacing: "0.13em",
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Meta — №01 · yıl · müşteri */}
-                  <p className="mb-3 text-[10px] text-foreground/35" style={monoStyle}>
-                    №{String(activeIdx + 1).padStart(2, "0")}
-                    {active.year ? ` · ${active.year}` : ""}
-                    {active.client ? ` · ${active.client.toUpperCase()}` : ""}
-                  </p>
-
-                  {/* Proje adı — büyük Instrument Serif, değişen italic */}
-                  <h4
-                    className="text-foreground"
-                    style={{
-                      fontFamily: "var(--font-instrument), serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(2rem, 4vw, 3.6rem)",
-                      lineHeight: 1,
-                      letterSpacing: "-0.02em",
-                      fontStyle: isItalic ? "italic" : "normal",
-                    }}
-                  >
-                    {active.name}
-                  </h4>
-
-                  {/* Kısa açıklama */}
-                  {active.description && (
-                    <p className="mt-4 max-w-[38ch] text-[13.5px] leading-relaxed text-foreground/55 md:text-[14.5px]">
-                      {active.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Alt blok — butonlar */}
-                <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                  {active.slug ? (
-                    <Link
-                      href={`/projeler/${active.slug}`}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#EC4899] px-5 py-2.5 text-[12.5px] font-medium text-white transition-all duration-200 hover:bg-[#DB2777] active:scale-95"
-                      style={{ boxShadow: "0 0 22px rgba(236,72,153,0.30)" }}
-                    >
-                      Projeyi incele
-                      <svg width="12" height="12" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M6 22 L22 6 M14 6 L22 6 L22 14" />
-                      </svg>
-                    </Link>
-                  ) : null}
-                  <Link
-                    href="/projeler"
-                    className="inline-flex items-center rounded-full border border-foreground/12 px-5 py-2.5 text-[12.5px] font-medium text-foreground/60 transition-all duration-200 hover:border-foreground/22 hover:text-foreground/80"
-                  >
-                    Tüm işler
-                  </Link>
-                  {/* Mobil sayaç */}
-                  <span className="ml-auto text-[10px] text-foreground/30 md:hidden" style={monoStyle}>
-                    {String(activeIdx + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(n).padStart(2, "0")}
-                  </span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Sağ — görsel */}
-          <div className="relative order-first h-[220px] md:order-last md:h-auto">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={activeIdx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `url(${active.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: active.imagePosition ?? "center",
-                }}
-              />
-            </AnimatePresence>
-            {/* Köşe rozeti */}
-            <div
-              className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[9px] text-foreground/80"
-              style={{
-                ...monoStyle,
-                background: "rgba(0,0,0,0.50)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#EC4899]" style={{ boxShadow: "0 0 6px #EC4899" }} />
-              canlı
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  );
-}
-
-function MobileCard({
-  block,
-  idx,
-  heightClass,
-}: {
-  block: Block;
-  idx: number;
-  heightClass: string;
-}) {
-  const inner = (
-    <motion.div
-      variants={revealVariants}
-      initial={idx === 0 ? "visible" : "hidden"}
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-      custom={idx * 0.08}
-      className={heightClass}
-    >
-      <BentoCard {...block} mobile />
-    </motion.div>
-  );
-
-  return block.href ? (
-    <Link href={block.href} className="block">
-      {inner}
-    </Link>
-  ) : (
-    inner
-  );
-}
-
 export default function BentoGrid({ blocks, sectionId }: BentoGridProps) {
   return (
     <MotionConfig reducedMotion="user">
@@ -519,24 +232,15 @@ export default function BentoGrid({ blocks, sectionId }: BentoGridProps) {
       >
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-8 md:gap-9" style={{ overflow: "visible" }}>
-            <MobileCard
-              block={blocks[0]}
-              idx={0}
-              heightClass="h-[290px] md:h-[420px]"
-            />
-
-            {blocks[1]?.projects && (
+            {blocks[0]?.projects && (
               <motion.div
                 variants={revealVariants}
-                initial="hidden"
+                initial="visible"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                custom={0.1}
+                custom={0}
               >
-                <ProjectSlider
-                  title={blocks[1].title}
-                  projects={blocks[1].projects}
-                />
+                <ProjectCoverflow projects={blocks[0].projects} />
               </motion.div>
             )}
 
@@ -545,9 +249,9 @@ export default function BentoGrid({ blocks, sectionId }: BentoGridProps) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              custom={0.18}
+              custom={0.1}
             >
-              <SocialRowCards block={blocks[2]} />
+              <SocialRowCards block={blocks[1]} />
             </motion.div>
           </div>
         </div>

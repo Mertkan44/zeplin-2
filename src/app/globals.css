@@ -605,3 +605,75 @@ body:where(.dark *) {
 @media (prefers-reduced-motion: reduce) {
   .hero-blob-d, .hero-veil { animation: none; }
 }
+
+/* Proje coverflow — yay üzerinde 3B kart dizilimi.
+   Ölçüler CSS değişkeninde tutuluyor ki kırılım noktasında yalnızca burası
+   değişsin; component yalnızca slot işaretini (-2..2) uyguluyor.
+   Konumlar konteynerin (max-w-6xl) içine sığacak şekilde hesaplı: dış kart
+   kenarda kırpılıp şerit gibi kalmasın diye açılar yumuşak, dizilim yelpaze
+   gibi hafif bindirmeli. Bölümün kendi zemini yok — sayfa temasını alır. */
+.coverflow {
+  --cf-w: 240px;
+  --cf-h: 360px;
+  --cf-stage: 420px;
+  --cf-persp: 1100px;
+  --cf-x1: 150px;
+  --cf-x2: 290px;
+  --cf-z1: 100px;
+  --cf-z2: 220px;
+  --cf-ry1: 32deg;
+  --cf-ry2: 42deg;
+  --cf-shadow: 0 24px 50px rgba(23, 23, 23, 0.22);
+  --cf-shadow-active: 0 32px 64px rgba(23, 23, 23, 0.3);
+  --cf-glow: rgba(219, 39, 119, 0.08);
+  --cf-dim-1: brightness(0.8) saturate(0.9);
+  --cf-dim-2: brightness(0.65) saturate(0.8);
+}
+
+.dark .coverflow {
+  --cf-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+  --cf-shadow-active: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --cf-glow: rgba(219, 39, 119, 0.14);
+  --cf-dim-1: brightness(0.62) saturate(0.8);
+  --cf-dim-2: brightness(0.44) saturate(0.65);
+}
+
+@media (min-width: 768px) {
+  .coverflow {
+    --cf-w: 290px;
+    --cf-h: 430px;
+    --cf-stage: 500px;
+    --cf-persp: 1500px;
+    --cf-x1: 225px;
+    --cf-x2: 415px;
+    --cf-z1: 110px;
+    --cf-z2: 230px;
+    --cf-ry1: 34deg;
+    --cf-ry2: 42deg;
+  }
+}
+
+@media (min-width: 1280px) {
+  .coverflow {
+    --cf-w: 340px;
+    --cf-h: 500px;
+    --cf-stage: 580px;
+    --cf-persp: 1600px;
+    --cf-x1: 300px;
+    --cf-x2: 555px;
+  }
+}
+
+.coverflow-card {
+  transform-style: preserve-3d;
+  transition:
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coverflow-card {
+    transition-duration: 1ms;
+  }
+}
