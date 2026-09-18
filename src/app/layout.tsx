@@ -13,14 +13,16 @@ import {
   websiteJsonLd,
 } from "@/lib/seo";
 
+/* latin-ext şart: ş, ğ, ı, İ yalnızca bu alt kümede. Onsuz Türkçe harfler
+   fallback fonttan gelir ve web fontu inince yazı gözle görülür değişir. */
 const jost = Jost({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-jost",
 });
 
 const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: "400",
   style: ["normal", "italic"],
   display: "swap",

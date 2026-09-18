@@ -159,9 +159,10 @@ export default function HeroStage() {
           }}
         >
           <motion.img
-            src="/images/hand-left.png"
+            src="/images/hand-left.webp"
             alt=""
             aria-hidden="true"
+            fetchPriority="high"
             className="w-full origin-left select-none"
             style={{
               x: still !== undefined ? 0 : leftX,
@@ -180,9 +181,10 @@ export default function HeroStage() {
           }}
         >
           <motion.img
-            src="/images/hand-right.png"
+            src="/images/hand-right.webp"
             alt=""
             aria-hidden="true"
+            fetchPriority="high"
             className="w-full origin-right select-none"
             style={{
               x: still !== undefined ? 0 : rightX,
