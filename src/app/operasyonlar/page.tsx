@@ -8,21 +8,10 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
-import { useReliableInView } from "@/lib/motion";
+import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
 
 /* ── Constants ────────────────────────────────────────────────────── */
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
-
-const revealVariants = {
-  hidden: { opacity: 0.16, y: 24, scale: 0.99 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.54, ease: EASE, delay },
-  }),
-};
 
 /* ── CountUp ──────────────────────────────────────────────────────── */
 function CountUp({

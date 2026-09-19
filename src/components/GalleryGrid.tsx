@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
+import { EASE } from "@/lib/motion";
 
 /* ── Types ─────────────────────────────────────────────────────────── */
 
@@ -54,7 +55,6 @@ const NUM_ROWS = 6;
 
 /* ── Constants ─────────────────────────────────────────────────────── */
 
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const GAP_D = 14;   // desktop gap (px)
 const GAP_M = 12;   // mobile gap (px)
 const MW    = 0.68; // mobile card width scale

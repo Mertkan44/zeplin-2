@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { EASE } from "@/lib/motion";
 
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const container = {
   hidden: {},
