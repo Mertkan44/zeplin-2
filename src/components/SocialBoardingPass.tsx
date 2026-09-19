@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, MotionConfig } from "framer-motion";
+import { EASE, DUR, STAGGER } from "@/lib/motion";
 import type { CSSProperties } from "react";
 
 interface Social {
@@ -11,8 +12,6 @@ interface Social {
 interface SocialBoardingPassProps {
   socials: Social[];
 }
-
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const monoStyle: CSSProperties = {
   fontFamily: "var(--font-jost), ui-monospace, monospace",
@@ -115,13 +114,13 @@ const ticketVariants = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.58, ease: EASE, delay: 0.08 + i * 0.09 },
+    transition: { duration: DUR[4], ease: EASE, delay: 0.08 + i * STAGGER },
   }),
 };
 
 const headerVariants = {
   hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.52, ease: EASE } },
+  visible: { opacity: 1, y: 0, transition: { duration: DUR[4], ease: EASE } },
 };
 
 export default function SocialBoardingPass({ socials }: SocialBoardingPassProps) {

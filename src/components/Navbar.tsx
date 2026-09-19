@@ -517,7 +517,7 @@ export default function Navbar() {
 
       <nav
         data-site-nav
-        className={`fixed top-5 left-1/2 z-50 hidden w-auto -translate-x-1/2 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:block ${
+        className={`fixed top-5 left-1/2 z-50 hidden w-auto -translate-x-1/2 transition-[opacity,transform] duration-[var(--dur-3)] md:block ${
           navVisible ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-4 opacity-0"
         }`}
       >

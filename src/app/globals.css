@@ -11,6 +11,32 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-jost), sans-serif;
+
+  /* Tailwind'in varsayılan geçiş eğrisini markanınkine bağlıyoruz: böylece
+     `transition-*` yazan ~130 yer, ayrıca ease sınıfı eklemeden aynı dili
+     konuşuyor. Ahengin büyük kısmı bu tek satırdan geliyor. */
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); /* = --ease-zeplin */
+  --default-transition-duration: 220ms;
+}
+
+/* ── Hareket sistemi ──────────────────────────────────────────────────
+   Tek eğri, tek süre ölçeği, tek gecikme aralığı. Önceden 17 ayrı süre ve
+   iki neredeyse-aynı expo eğrisi vardı; birbirine yakın ama eşit olmayan
+   değerler siteyi "akortsuz" gösteriyordu.
+
+   --ease-zeplin  : hızlı kalkış, uzun süzülüş. Giren/yerleşen her şey.
+   --ease-exit    : hızlanarak çıkış. Yalnızca SAHNEDEN AYRILAN öğeler. */
+:root {
+  --ease-zeplin: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);
+
+  --dur-1: 160ms;  /* renk, opaklık — anlık geri bildirim */
+  --dur-2: 260ms;  /* buton, ikon, küçük kaldırma */
+  --dur-3: 420ms;  /* kart hareketi, öğe geçişi */
+  --dur-4: 620ms;  /* bölüm girişi, carousel */
+  --dur-5: 900ms;  /* hero girişi */
+
+  --stagger: 70ms; /* kardeş öğeler sırayla girerken tek ritim */
 }
 
 :root.dark {
@@ -46,20 +72,6 @@ body.theme-ready {
 body:where(.dark *) {
   background-color: #0a0a0a;
 }
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.animate-shimmer {
-  animation: shimmer 3s ease-in-out infinite;
-}
-
 @keyframes hero-pan {
   0% {
     transform: scale(1.06) translate3d(0, 0, 0);
@@ -68,18 +80,6 @@ body:where(.dark *) {
     transform: scale(1.1) translate3d(-14px, -8px, 0);
   }
 }
-
-@keyframes hero-title-in {
-  0% {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes hero-text-float {
   0%, 100% {
     transform: translateY(0px);
@@ -88,16 +88,6 @@ body:where(.dark *) {
     transform: translateY(-4px);
   }
 }
-
-@keyframes hero-text-glow {
-  0%, 100% {
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-  }
-  50% {
-    text-shadow: 0 10px 26px rgba(244, 114, 182, 0.22);
-  }
-}
-
 .hero-text-float {
   animation: hero-text-float 6.4s ease-in-out 0.9s infinite;
   will-change: transform;
@@ -105,7 +95,7 @@ body:where(.dark *) {
 
 .hero-headline {
   animation:
-    hero-title-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both 100ms,
+    hero-title-in 600ms var(--ease-zeplin) both 100ms,
     hero-text-glow 6.4s ease-in-out 0.9s infinite;
   will-change: transform, opacity;
 }
@@ -168,29 +158,29 @@ body:where(.dark *) {
 }
 
 .menu-overlay-enter {
-  animation: menu-overlay-in 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: menu-overlay-in 600ms var(--ease-zeplin) forwards;
 }
 
 .menu-overlay-exit {
-  animation: menu-overlay-out 450ms cubic-bezier(0.55, 0, 1, 0.45) forwards;
+  animation: menu-overlay-out 450ms var(--ease-exit) forwards;
 }
 
 .menu-link-enter {
   opacity: 0;
-  animation: menu-link-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: menu-link-in 500ms var(--ease-zeplin) forwards;
   animation-delay: var(--stagger-delay, 0ms);
 }
 
 .menu-separator-enter {
   transform: scaleX(0);
   transform-origin: left;
-  animation: menu-separator-grow 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: menu-separator-grow 400ms var(--ease-zeplin) forwards;
   animation-delay: var(--stagger-delay, 0ms);
 }
 
 .menu-bottom-enter {
   opacity: 0;
-  animation: menu-bottom-in 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: menu-bottom-in 500ms var(--ease-zeplin) forwards;
   animation-delay: var(--stagger-delay, 0ms);
 }
 
@@ -204,130 +194,8 @@ body:where(.dark *) {
 }
 
 /* ── Mobile navbar glow pulse ──────────────────────────────────────── */
-
-@keyframes navbar-glow-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.7; }
-}
-
-.mobile-navbar-glow {
-  position: relative;
-}
-
-.mobile-navbar-glow::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: 36px;
-  background: linear-gradient(135deg, rgba(244,114,182,0.3) 0%, rgba(219,39,119,0.15) 50%, rgba(244,114,182,0.3) 100%);
-  filter: blur(8px);
-  opacity: 0.5;
-  animation: none;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.dark .mobile-navbar-glow::before {
-  background: linear-gradient(135deg, rgba(244,114,182,0.2) 0%, rgba(190,24,93,0.12) 50%, rgba(244,114,182,0.2) 100%);
-  opacity: 0.6;
-}
-
 /* ── Mobile social cards motion ─────────────────────────────────────── */
-
-@keyframes social-sheen-sweep {
-  0% {
-    transform: translateX(-125%) rotate(8deg);
-  }
-  100% {
-    transform: translateX(125%) rotate(8deg);
-  }
-}
-
-@keyframes social-press-pulse {
-  0% {
-    box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12);
-  }
-  45% {
-    box-shadow: 0 18px 30px rgba(236, 72, 153, 0.38), 0 10px 18px rgba(15, 23, 42, 0.18);
-  }
-  100% {
-    box-shadow: 0 12px 24px rgba(157, 23, 77, 0.3), 0 4px 10px rgba(15, 23, 42, 0.14);
-  }
-}
-
-.social-card {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12);
-  transform: translateY(0) scale(1);
-  transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 220ms ease;
-  touch-action: manipulation;
-}
-
-.social-card::before {
-  content: "";
-  position: absolute;
-  inset: -24% -42%;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(108deg, transparent 30%, rgba(255, 255, 255, 0.42) 50%, transparent 70%);
-  transform: translateX(-125%) rotate(8deg);
-}
-
-.social-card:hover,
-.social-card:focus-visible,
-.social-card.is-pressed {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 14px 28px rgba(157, 23, 77, 0.34), 0 7px 14px rgba(15, 23, 42, 0.2);
-  filter: saturate(1.05);
-}
-
-.social-card:hover::before,
-.social-card:focus-visible::before,
-.social-card.is-pressed::before {
-  opacity: 1;
-  animation: social-sheen-sweep 760ms cubic-bezier(0.22, 1, 0.36, 1) var(--sheen-delay, 0ms) 1;
-}
-
-.social-card.is-pressed {
-  animation: social-press-pulse 280ms ease-out 1;
-}
-
-.social-icon-wrap {
-  transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms ease,
-    background-color 220ms ease;
-}
-
-.social-card:hover .social-icon-wrap,
-.social-card:focus-visible .social-icon-wrap,
-.social-card.is-pressed .social-icon-wrap {
-  transform: scale(1.08);
-  background-color: rgba(131, 24, 67, 0.38);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
-}
-
 /* ── Gallery helpers ─────────────────────────────────────────────────── */
-
-.gallery-tile {
-}
-
-@keyframes gallery-scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes gallery-scroll-right {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .hero-text-float,
   .hero-headline {
@@ -345,37 +213,10 @@ body:where(.dark *) {
     clip-path: none !important;
   }
 
-  .mobile-navbar-glow::before {
-    animation: none !important;
-    opacity: 0.5 !important;
-  }
 
-  .social-card,
-  .social-card::before,
-  .social-card.is-pressed,
-  .social-icon-wrap {
-    animation: none !important;
-    transition: none !important;
-  }
 
-  .social-card:hover,
-  .social-card:focus-visible,
-  .social-card.is-pressed {
-    transform: none !important;
-    box-shadow: 0 8px 20px rgba(157, 23, 77, 0.26), 0 2px 8px rgba(15, 23, 42, 0.12) !important;
-    filter: none !important;
-  }
 
-  .social-card::before {
-    opacity: 0 !important;
-  }
 
-  .social-card:hover .social-icon-wrap,
-  .social-card:focus-visible .social-icon-wrap,
-  .social-card.is-pressed .social-icon-wrap {
-    transform: none !important;
-    box-shadow: none !important;
-  }
 
   .gallery-tile {
     animation: none !important;
@@ -409,11 +250,6 @@ body:where(.dark *) {
   initial-value: 0deg;
   inherits: false;
 }
-
-@keyframes rotate-gradient {
-  to { --angle: 360deg; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-\[blink_1s_step-end_infinite\] {
     animation: none !important;
@@ -465,8 +301,8 @@ body:where(.dark *) {
 }
 
 .video-card {
-  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 380ms var(--ease-zeplin),
+              box-shadow 380ms var(--ease-zeplin);
 }
 
 @media (min-width: 768px) {
@@ -510,7 +346,7 @@ body:where(.dark *) {
   height: 100%;
   border-radius: 9999px;
   border: 1px solid rgba(244, 114, 182, 0.4);
-  animation: notfound-radar-ping 3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  animation: notfound-radar-ping 3s var(--ease-zeplin) infinite;
 }
 
 @keyframes notfound-star-twinkle {
@@ -553,8 +389,8 @@ body:where(.dark *) {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero-rise { animation: heroRise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.hero-fade { animation: heroFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero-rise { animation: heroRise var(--dur-5) var(--ease-zeplin) both; }
+.hero-fade { animation: heroFade var(--dur-5) var(--ease-zeplin) both; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-rise, .hero-fade {
@@ -564,47 +400,31 @@ body:where(.dark *) {
   }
 }
 
-/* Hero arka planı — nefes alan degrade lekeleri.
-   Bilinçli olarak CSS: JS kare döngüsüne yük binmiyor ve yalnızca transform
-   animasyonu var, yani kompozitörde çalışıyor, hiç yeniden boyama yok. */
-@keyframes blobA {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(5%, -4%, 0) scale(1.14); }
+/* Eller sahneyi kuruyor: sayfa açılırken dışarıdan içeri süzülüp yerleşiyor,
+   başlık onların üstüne biniyor. Giriş ayrı bir katmanda çünkü iç katmanların
+   transform'u framer-motion'a ait (imleç parallax'ı + scroll). İki el farklı
+   gecikmeyle geliyor — simetrik tek bir şekil değil, iki ayrı el gibi dursun. */
+@keyframes hero-hand-left-in {
+  from { opacity: 0; transform: translate3d(-7%, -5%, 0) scale(1.05); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
-@keyframes blobB {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.06); }
-  50%      { transform: translate3d(-6%, 5%, 0) scale(0.94); }
+@keyframes hero-hand-right-in {
+  from { opacity: 0; transform: translate3d(7%, 5%, 0) scale(1.05); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
-@keyframes blobC {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(0.96); }
-  50%      { transform: translate3d(4%, 6%, 0) scale(1.12); }
-}
-.hero-blob { will-change: transform; }
-.hero-blob-a { animation: blobA 19s ease-in-out infinite; }
-.hero-blob-b { animation: blobB 26s ease-in-out infinite; }
-.hero-blob-c { animation: blobC 33s ease-in-out infinite; }
+
+.hero-hand-l { animation: hero-hand-left-in 1100ms var(--ease-zeplin) 80ms both; }
+.hero-hand-r { animation: hero-hand-right-in 1100ms var(--ease-zeplin) 160ms both; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-blob-a, .hero-blob-b, .hero-blob-c { animation: none; }
+  .hero-hand-l,
+  .hero-hand-r {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
-/* Işık alanı katmanları — imleçle birlikte kayan derinlik.
-   Nefes animasyonu iç katmanda, imleç ötelemesi dış katmanda: ikisi ayrı
-   elemanda olunca transform'lar çakışmıyor ve ikisi de kompozitörde kalıyor. */
-@keyframes blobD {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.02) rotate(0deg); }
-  50%      { transform: translate3d(-4%, -5%, 0) scale(0.92) rotate(8deg); }
-}
-@keyframes veilPulse {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 0.85; }
-}
-.hero-blob-d { animation: blobD 41s ease-in-out infinite; }
-.hero-veil   { animation: veilPulse 24s ease-in-out infinite; will-change: opacity; }
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-blob-d, .hero-veil { animation: none; }
-}
 
 /* Proje coverflow — yay üzerinde 3B kart dizilimi.
    Ölçüler CSS değişkeninde tutuluyor ki kırılım noktasında yalnızca burası
@@ -667,8 +487,8 @@ body:where(.dark *) {
 .coverflow-card {
   transform-style: preserve-3d;
   transition:
-    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 620ms var(--ease-zeplin),
+    opacity 620ms var(--ease-zeplin);
   will-change: transform;
 }
 
@@ -684,8 +504,8 @@ body:where(.dark *) {
 .bp-ticket {
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
   transition:
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 420ms var(--ease-zeplin),
+    box-shadow 420ms var(--ease-zeplin);
 }
 
 .bp-notch {
@@ -694,7 +514,7 @@ body:where(.dark *) {
 
 .bp-badge,
 .bp-arrow {
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 420ms var(--ease-zeplin);
 }
 
 .bp-ticket:hover .bp-arrow {

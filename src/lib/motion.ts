@@ -1,6 +1,22 @@
 import { useEffect, useState, type RefObject } from "react";
 
+/* Hareket sistemi — globals.css'teki --ease-* / --dur-* değişkenlerinin
+   JS karşılığı. İki taraf aynı sayıları kullansın diye tek yerde duruyor;
+   CSS tarafını değiştirirsen burayı da değiştir. */
 export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+export const EASE_EXIT: [number, number, number, number] = [0.55, 0, 1, 0.45];
+
+/** saniye cinsinden — framer-motion süreleri saniye bekliyor */
+export const DUR = {
+  1: 0.16, // renk, opaklık
+  2: 0.26, // buton, ikon
+  3: 0.42, // kart hareketi
+  4: 0.62, // bölüm girişi
+  5: 0.9,  // hero girişi
+} as const;
+
+/** kardeş öğeler sırayla girerken tek ritim (globals: --stagger) */
+export const STAGGER = 0.07;
 
 export const FONT = { fontFamily: 'var(--font-jost), sans-serif' } as const;
 
@@ -10,7 +26,7 @@ export const revealVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.52, ease: EASE, delay },
+    transition: { duration: DUR[4], ease: EASE, delay },
   }),
 };
 

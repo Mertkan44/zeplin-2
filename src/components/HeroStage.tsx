@@ -150,8 +150,8 @@ export default function HeroStage() {
         {/* Sarmalayıcı imleç parallax'ını, görselin kendisi scroll hareketini
             taşıyor. İki kaynağı ayrı katmanlara bölmek, yüzde/piksel birimlerini
             calc ile toplama zorunluluğunu ortadan kaldırıyor. */}
+        <div className="hero-hand hero-hand-l pointer-events-none absolute -left-[13%] -top-[15%] w-[40vw] max-w-[580px]">
         <motion.div
-          className="pointer-events-none absolute -left-[13%] -top-[15%] w-[40vw] max-w-[580px]"
           style={{
             x: still !== undefined ? 0 : leftPX,
             y: still !== undefined ? 0 : leftPY,
@@ -172,8 +172,9 @@ export default function HeroStage() {
             }}
           />
         </motion.div>
+        </div>
+        <div className="hero-hand hero-hand-r pointer-events-none absolute -right-[13%] -bottom-[15%] w-[40vw] max-w-[580px]">
         <motion.div
-          className="pointer-events-none absolute -right-[13%] -bottom-[15%] w-[40vw] max-w-[580px]"
           style={{
             x: still !== undefined ? 0 : rightPX,
             y: still !== undefined ? 0 : rightPY,
@@ -194,6 +195,7 @@ export default function HeroStage() {
             }}
           />
         </motion.div>
+        </div>
 
         {/* Ortada başlık — gerçek monopo'da da var, kaldırmam hatalıydı */}
         <motion.div

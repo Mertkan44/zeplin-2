@@ -3,6 +3,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import ProjectCoverflow from "@/components/ProjectCoverflow";
 import SocialBoardingPass from "@/components/SocialBoardingPass";
+import { EASE, DUR } from "@/lib/motion";
 
 interface Project {
   name: string;
@@ -37,8 +38,6 @@ interface BentoGridProps {
 }
 
 /* ── Framer-motion reveal variants ── */
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
 const revealVariants = {
   hidden: {
     opacity: 0.16,
@@ -50,7 +49,7 @@ const revealVariants = {
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.52,
+      duration: DUR[4],
       ease: EASE,
       delay,
     },

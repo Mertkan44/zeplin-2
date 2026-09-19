@@ -207,7 +207,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
                         : depth === 1
                         ? "var(--cf-dim-1)"
                         : "var(--cf-dim-2)",
-                      transition: "filter 620ms cubic-bezier(0.22, 1, 0.36, 1)",
+                      transition: "filter var(--dur-4) var(--ease-zeplin)",
                     }}
                   />
 
