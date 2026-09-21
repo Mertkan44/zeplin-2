@@ -252,9 +252,10 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
                       <p
                         className="m-0 text-white"
                         style={{
-                          fontFamily: "var(--font-instrument), serif",
-                          fontSize: isActive ? "1.45rem" : "1.2rem",
-                          lineHeight: 1.2,
+                          fontFamily: "var(--font-jost), sans-serif",
+                          fontWeight: 500,
+                          fontSize: isActive ? "1.3rem" : "1.05rem",
+                          lineHeight: 1.28,
                           letterSpacing: "-0.005em",
                           textWrap: "pretty",
                         }}
