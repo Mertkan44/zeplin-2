@@ -157,7 +157,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
             letterSpacing: "-0.02em",
           }}
         >
-          <em style={{ fontStyle: "italic" }}>Sahne</em> arkası, tek tek.
+          Son <em style={{ fontStyle: "italic" }}>işlerimiz</em>, tek tek.
         </h3>
       </div>
 
