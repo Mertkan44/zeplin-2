@@ -14,7 +14,7 @@ const ERROR_TEXT: Record<keyof FieldErrors, string> = {
 };
 
 const inputCls =
-  "mt-2 w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-[#DB2777] focus:outline-none focus:ring-2 focus:ring-[#DB2777]/25 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/35";
+  "mt-2 w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-[#DB2777] focus:outline-none focus:ring-2 focus:ring-[#DB2777]/25 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60";
 const labelCls = "block text-sm font-semibold text-zinc-800 dark:text-white/85";
 const errCls = "mt-1.5 text-sm text-red-600 dark:text-red-400";
 

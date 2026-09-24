@@ -200,8 +200,8 @@ function DashboardMockup({ isActive }: { isActive: boolean }) {
           <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/50" />
           <div className="h-2.5 w-2.5 rounded-full bg-green-500/50" />
         </div>
-        <span className="mx-auto text-[11px] text-white/25" style={FONT}>Zeplin · Yönetim Paneli</span>
-        <span className="flex items-center gap-1 text-[10px] text-emerald-400/70">
+        <span className="mx-auto text-[12px] text-white/55" style={FONT}>Zeplin · Yönetim Paneli</span>
+        <span className="flex items-center gap-1 text-[12px] text-emerald-400/70">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />canlı
         </span>
       </div>
@@ -235,16 +235,16 @@ function DashboardMockup({ isActive }: { isActive: boolean }) {
                 transition={{ duration: 0.35, delay: 0.2 + i * 0.07, ease: EASE }}
                 className="rounded-[10px] border border-white/[0.05] bg-white/[0.02] p-2.5"
               >
-                <p className="text-[9px] text-white/30 truncate" style={FONT}>{s.label}</p>
+                <p className="text-[12px] text-white/60 truncate" style={FONT}>{s.label}</p>
                 <p className="mt-0.5 text-[14px] font-semibold leading-none text-white" style={FONT}>{s.value}</p>
-                <p className="mt-1 text-[9px] text-emerald-400/70">{s.trend}</p>
+                <p className="mt-1 text-[12px] text-emerald-400/70">{s.trend}</p>
               </motion.div>
             ))}
           </div>
 
           {/* Chart area */}
           <div className="rounded-[12px] border border-white/[0.05] bg-white/[0.015] p-3">
-            <p className="mb-3 text-[10px] text-white/30" style={FONT}>Son 7 Gün · Konuşma Hacmi</p>
+            <p className="mb-3 text-[12px] text-white/60" style={FONT}>Son 7 Gün · Konuşma Hacmi</p>
             <div className="flex items-end gap-1.5" style={{ height: 72 }}>
               {[38, 52, 44, 68, 60, 76, 88].map((h, i) => (
                 <motion.div
@@ -278,7 +278,7 @@ function DashboardMockup({ isActive }: { isActive: boolean }) {
                 transition={{ duration: 0.3, delay: 0.8 + i * 0.08 }}
                 className="flex items-center gap-2"
               >
-                <span className="w-12 text-[9px] text-white/30 shrink-0" style={FONT}>{ch.name}</span>
+                <span className="w-12 text-[12px] text-white/60 shrink-0" style={FONT}>{ch.name}</span>
                 <div className="flex-1 h-[5px] rounded-full bg-white/[0.05]">
                   <motion.div
                     className="h-full rounded-full"
@@ -288,7 +288,7 @@ function DashboardMockup({ isActive }: { isActive: boolean }) {
                     transition={{ duration: 0.6, delay: 0.9 + i * 0.08, ease: EASE }}
                   />
                 </div>
-                <span className="w-7 text-right text-[9px] text-white/25 shrink-0" style={FONT}>{ch.pct}%</span>
+                <span className="w-7 text-right text-[12px] text-white/55 shrink-0" style={FONT}>{ch.pct}%</span>
               </motion.div>
             ))}
           </div>
@@ -321,13 +321,13 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
               variants={revealVariants} initial="hidden" whileInView="visible"
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
             >
-              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>
+              <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>
                 entegrasyon merkezi
               </span>
               <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
                 Hepsi Tek<br />Sistemde
               </h2>
-              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/45" style={FONT}>
+              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/70" style={FONT}>
                 Chatbot, sesli asistan, CRM, ERP ve tüm iş araçlarınız tek merkezden yönetilir. Veri akışı kesintisiz, süreçler birbirine bağlı.
               </p>
 
@@ -372,7 +372,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-10"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>
             yönetim paneli
           </span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
@@ -403,7 +403,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
             className="mb-12"
           >
-            <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>özellikler</span>
+            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>özellikler</span>
             <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
               Platform Ne Sunar?
             </h2>
@@ -425,7 +425,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
                   </span>
                   <div>
                     <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-white" style={FONT}>{f.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-[1.7] text-white/40" style={FONT}>{f.desc}</p>
+                    <p className="mt-1.5 text-[13px] leading-[1.7] text-white/70" style={FONT}>{f.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -441,7 +441,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-12"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>çalışma süreci</span>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>çalışma süreci</span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
             Nasıl Kurulur?
           </h2>

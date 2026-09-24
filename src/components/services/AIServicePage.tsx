@@ -109,7 +109,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
           className="mb-8 md:mb-10"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             hizmetlerimiz
@@ -177,7 +177,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                       {item.icon}
                     </span>
                     <motion.span
-                      className="text-zinc-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#DB2777] dark:text-zinc-700 dark:group-hover:text-[#F472B6]"
+                      className="text-zinc-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#DB2777] dark:text-zinc-400 dark:group-hover:text-[#F472B6]"
                       aria-hidden
                     >
                       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -211,7 +211,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             nasıl çalışır
@@ -246,7 +246,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             çözümlerimiz
@@ -299,7 +299,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                           {cap.title}
                         </h3>
                         <p
-                          className="mt-0.5 text-[13px] text-zinc-400 dark:text-zinc-500"
+                          className="mt-0.5 text-[13px] text-zinc-600 dark:text-zinc-400"
                           style={FONT}
                         >
                           {cap.subtitle}
@@ -324,7 +324,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                           stroke="currentColor"
                           strokeWidth="1.5"
                           strokeLinecap="round"
-                          className="text-zinc-400 dark:text-zinc-500"
+                          className="text-zinc-600 dark:text-zinc-400"
                         />
                       </svg>
                     </motion.div>
@@ -386,7 +386,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
             className="mb-12 md:mb-16"
           >
             <span
-              className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30"
+              className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60"
               style={FONT}
             >
               çalışma sürecimiz
@@ -428,7 +428,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                     {step.title}
                   </h3>
                   <p
-                    className="mt-2 max-w-[24ch] text-[13px] leading-[1.65] text-white/45"
+                    className="mt-2 max-w-[24ch] text-[13px] leading-[1.65] text-white/70"
                     style={FONT}
                   >
                     {step.desc}
@@ -464,7 +464,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                     <CountUp value={m.value} suffix={m.suffix} delay={i * 0.14} />
                   </span>
                   <span
-                    className="mt-2 block max-w-[14ch] text-[11px] leading-[1.35] tracking-[0.08em] text-zinc-500 dark:text-zinc-500 md:tracking-[0.14em]"
+                    className="mt-2 block max-w-[14ch] text-[12px] leading-[1.35] tracking-[0.08em] text-zinc-500 dark:text-zinc-400 md:tracking-[0.14em]"
                     style={FONT}
                   >
                     {m.label}
@@ -541,7 +541,7 @@ function ChatDemo() {
           <span className="block text-[14px] font-semibold text-zinc-900 dark:text-white" style={FONT}>
             Zeplin AI Asistan
           </span>
-          <span className="flex items-center gap-1.5 text-[12px] text-zinc-400 dark:text-zinc-500">
+          <span className="flex items-center gap-1.5 text-[12px] text-zinc-600 dark:text-zinc-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             Çevrimiçi
           </span>

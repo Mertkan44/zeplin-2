@@ -263,14 +263,14 @@ export default function HeroStage() {
                 style={{ animationDelay: `${0.5 + i * 0.14}s` }}
               >
                 <div className="font-semibold text-white">{st[0]}</div>
-                <div className="text-white/45">{st[1]}</div>
+                <div className="text-white/70">{st[1]}</div>
               </div>
             ))}
           </div>
 
           {/* alt satır: saat · konum · kaydırma ipucu */}
           <div
-            className="hero-fade mt-9 flex items-end justify-between text-[0.66rem] tracking-[0.18em] text-white/35"
+            className="hero-fade mt-9 flex items-end justify-between text-[0.66rem] tracking-[0.18em] text-white/60"
             style={{ animationDelay: "1.05s" }}
           >
             <span className="tabular-nums">{time || " "}</span>

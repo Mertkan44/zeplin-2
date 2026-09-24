@@ -405,7 +405,7 @@ export default function VideoTestimonials({
               className="mb-6 text-center md:mb-7 md:text-left"
             >
               <span
-                className="text-[11px] font-medium uppercase tracking-[0.22em] text-[#DB2777] dark:text-[#F472B6] md:text-[12px] md:tracking-[0.26em]"
+                className="text-[12px] font-medium uppercase tracking-[0.22em] text-[#DB2777] dark:text-[#F472B6] md:text-[12px] md:tracking-[0.26em]"
                 style={FONT}
               >
                 Referanslar
@@ -478,18 +478,18 @@ export default function VideoTestimonials({
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className="flex items-center text-[10px] font-medium uppercase tracking-[0.26em] text-[#F9A8D4] sm:text-[11px]"
+                      className="flex items-center text-[12px] font-medium uppercase tracking-[0.26em] text-[#F9A8D4] sm:text-[12px]"
                       style={FONT}
                     >
                       <PulseDot />
                       Zeplin etkisi
                     </span>
                     <span
-                      className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/45 sm:text-[11px]"
+                      className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/70 sm:text-[12px]"
                       style={FONT}
                     >
                       2026
-                      <span className="mx-1.5 text-white/25">/</span>
+                      <span className="mx-1.5 text-white/55">/</span>
                       Q2
                     </span>
                   </div>
@@ -518,7 +518,7 @@ export default function VideoTestimonials({
                     <div className="flex items-center gap-2.5 pb-2 sm:gap-3 sm:pb-3">
                       <div className="h-7 w-px bg-white/25" />
                       <span
-                        className="text-[9px] font-semibold uppercase leading-tight tracking-[0.22em] text-white/70 sm:text-[10px]"
+                        className="text-[12px] font-semibold uppercase leading-tight tracking-[0.22em] text-white/70 sm:text-[12px]"
                         style={FONT}
                       >
                         aktif
@@ -570,7 +570,7 @@ export default function VideoTestimonials({
                       className="min-w-0"
                     >
                       <span
-                        className="text-[10px] font-semibold tabular-nums tracking-[0.18em] text-[#DB2777] dark:text-[#F472B6]"
+                        className="text-[12px] font-semibold tabular-nums tracking-[0.18em] text-[#DB2777] dark:text-[#F472B6]"
                         style={FONT}
                       >
                         0{i + 1}
@@ -588,13 +588,13 @@ export default function VideoTestimonials({
                         />
                       </p>
                       <p
-                        className="mt-2.5 text-[11.5px] font-semibold leading-tight text-zinc-900 dark:text-white/85"
+                        className="mt-2.5 text-[12px] font-semibold leading-tight text-zinc-900 dark:text-white/85"
                         style={FONT}
                       >
                         {metric.label}
                       </p>
                       <p
-                        className="mt-1.5 text-[11.5px] leading-relaxed text-zinc-500 dark:text-white/45"
+                        className="mt-1.5 text-[12px] leading-relaxed text-zinc-500 dark:text-white/70"
                         style={FONT}
                       >
                         {metric.desc}

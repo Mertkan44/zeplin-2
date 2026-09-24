@@ -22,7 +22,7 @@ export function CTABanner() {
           <div className="relative flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
             <div>
               <span
-                className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/30"
+                className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
                 style={FONT}
               >
                 iletişim
@@ -34,7 +34,7 @@ export function CTABanner() {
                 Projenizi konuşalım.
               </h2>
               <p
-                className="mt-3 max-w-[38ch] text-[15px] leading-[1.7] text-white/45"
+                className="mt-3 max-w-[38ch] text-[15px] leading-[1.7] text-white/70"
                 style={FONT}
               >
                 İhtiyaçlarınıza özel çözüm önerisi için bizimle iletişime geçin.

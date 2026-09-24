@@ -16,7 +16,7 @@ export default function ProjelerPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: EASE }}
-            className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-pink-400"
+            className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400"
           >
             Portföy
           </motion.p>
@@ -89,7 +89,7 @@ export default function ProjelerPage() {
                         {project.tags.slice(0, 2).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-sm"
+                            className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-sm"
                           >
                             {tag}
                           </span>
@@ -122,7 +122,7 @@ export default function ProjelerPage() {
           custom={0}
           className="mx-auto max-w-xl"
         >
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-pink-400">
+          <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400">
             Siz de listede yerinizi alın
           </p>
           <h2 className="mb-6 text-3xl font-bold leading-snug text-white md:text-4xl">

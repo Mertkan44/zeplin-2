@@ -104,7 +104,7 @@ export default function HizmetlerPage() {
             initial="hidden"
             animate="visible"
             custom={0.1}
-            className="mt-2 max-w-[600px] text-base font-light text-zinc-400 dark:text-zinc-500 sm:text-lg"
+            className="mt-2 max-w-[600px] text-base font-light text-zinc-600 dark:text-zinc-400 sm:text-lg"
             style={FONT}
           >
             Markanızın görünümünü, içeriğini ve operasyon ritmini aynı masada kuran çözümler.
@@ -136,7 +136,7 @@ export default function HizmetlerPage() {
                   <span className="block text-[28px] font-medium leading-none tracking-[-0.05em] text-zinc-950 dark:text-white md:text-[40px]" style={FONT}>
                     <CountUp value={m.value} suffix={m.suffix} delay={i * 0.14} />
                   </span>
-                  <span className="mt-2 block max-w-[12ch] text-[11px] leading-[1.35] tracking-[0.08em] text-zinc-500 dark:text-zinc-500 md:max-w-[14ch] md:tracking-[0.14em]" style={FONT}>
+                  <span className="mt-2 block max-w-[12ch] text-[12px] leading-[1.35] tracking-[0.08em] text-zinc-500 dark:text-zinc-400 md:max-w-[14ch] md:tracking-[0.14em]" style={FONT}>
                     {m.label}
                   </span>
                 </div>
@@ -262,7 +262,7 @@ export default function HizmetlerPage() {
             <div className="grid md:min-h-[460px] md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               {/* Left — dark text panel */}
               <div className="bg-[linear-gradient(180deg,#2a1525_0%,#1f0c18_100%)] px-7 py-8 text-white dark:bg-[linear-gradient(180deg,#1a0e17_0%,#120a10_100%)] md:px-14 md:py-16">
-                <span className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/42">
+                <span className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/70">
                   gelişmiş hizmetler
                 </span>
                 <h2 className="mt-7 text-[2.4rem] font-semibold leading-[0.96] tracking-[-0.055em] text-white md:text-[5.1rem]">
@@ -323,7 +323,7 @@ export default function HizmetlerPage() {
                 >
                   {item.label}
                 </span>
-                <span className="mt-1 block text-[13px] leading-[1.6] text-zinc-400 dark:text-zinc-500">
+                <span className="mt-1 block text-[13px] leading-[1.6] text-zinc-600 dark:text-zinc-400">
                   {item.desc}
                 </span>
               </div>
@@ -349,7 +349,7 @@ export default function HizmetlerPage() {
             <div className="relative flex h-full flex-col justify-between">
               <div>
                 <span
-                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/35"
+                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
                   style={FONT}
                 >
                   tüm hizmetler
@@ -397,7 +397,7 @@ export default function HizmetlerPage() {
             <div className="relative flex h-full flex-col justify-between">
               <div>
                 <span
-                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-[#9D174D]/60 dark:text-white/35"
+                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-[#9D174D]/60 dark:text-white/60"
                   style={FONT}
                 >
                   iletişim

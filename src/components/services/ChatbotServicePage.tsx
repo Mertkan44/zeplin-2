@@ -136,7 +136,7 @@ function ChatMockup() {
         </div>
         <div>
           <span className="block text-[13px] font-semibold text-white" style={FONT}>Zeplin Asistan</span>
-          <span className="flex items-center gap-1.5 text-[11px] text-white/40">
+          <span className="flex items-center gap-1.5 text-[12px] text-white/70">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />çevrimiçi
           </span>
         </div>
@@ -185,7 +185,7 @@ function ChatMockup() {
 
       {/* Input bar */}
       <div className="flex items-center gap-2 border-t border-white/[0.06] px-4 py-3">
-        <div className="flex-1 rounded-full bg-white/[0.06] px-4 py-2 text-[12px] text-white/25" style={FONT}>
+        <div className="flex-1 rounded-full bg-white/[0.06] px-4 py-2 text-[12px] text-white/55" style={FONT}>
           Mesajınızı yazın…
         </div>
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#DB2777]">
@@ -220,7 +220,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-10"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>
             entegrasyon
           </span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
@@ -268,13 +268,13 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
               variants={revealVariants} initial="hidden" whileInView="visible"
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
             >
-              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>
+              <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>
                 performans
               </span>
               <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
                 7/24 Kesintisiz<br />Müşteri İletişimi
               </h2>
-              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/45" style={FONT}>
+              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/70" style={FONT}>
                 Chatbot devreye girdiğinde ekibiniz rutin sorularla değil, gerçek sorunlarla ilgilenir.
               </p>
 
@@ -289,7 +289,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
                     <span className="block text-[28px] font-semibold leading-none tracking-[-0.04em] text-white" style={FONT}>
                       {m.value}
                     </span>
-                    <span className="mt-2 block text-[11px] leading-[1.4] tracking-[0.1em] text-white/35" style={FONT}>
+                    <span className="mt-2 block text-[12px] leading-[1.4] tracking-[0.1em] text-white/60" style={FONT}>
                       {m.label}
                     </span>
                   </motion.div>
@@ -315,7 +315,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-10"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>
             özellikler
           </span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
@@ -356,7 +356,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
             className="mb-14"
           >
-            <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>çalışma süreci</span>
+            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>çalışma süreci</span>
             <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
               Nasıl Kurulur?
             </h2>
@@ -376,7 +376,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
                     <span className="text-[14px] font-bold tabular-nums text-[#F472B6]" style={FONT}>{step.step}</span>
                   </div>
                   <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-white" style={FONT}>{step.title}</h3>
-                  <p className="mt-2 max-w-[22ch] text-[12.5px] leading-[1.65] text-white/40" style={FONT}>{step.desc}</p>
+                  <p className="mt-2 max-w-[22ch] text-[12.5px] leading-[1.65] text-white/70" style={FONT}>{step.desc}</p>
                 </motion.div>
               ))}
             </div>

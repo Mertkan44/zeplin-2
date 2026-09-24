@@ -112,7 +112,7 @@ function ExpandingCard({
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors duration-500 ${
             isOpen
               ? "bg-[#DB2777]/15 text-[#F472B6]"
-              : "bg-white/[0.05] text-white/40"
+              : "bg-white/[0.05] text-white/70"
           }`}
         >
           {icon}
@@ -126,7 +126,7 @@ function ExpandingCard({
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.3, ease: EASE }}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-white/40"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-white/70"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
@@ -350,7 +350,7 @@ export default function OperasyonlarPage() {
             initial="hidden"
             animate="visible"
             custom={0.1}
-            className="mt-2 max-w-[600px] text-base font-light text-zinc-400 dark:text-zinc-500 sm:text-lg"
+            className="mt-2 max-w-[600px] text-base font-light text-zinc-600 dark:text-zinc-400 sm:text-lg"
             style={FONT}
           >
             Takvim, üretim, yayın ve raporlamayı tek merkezde topluyoruz
@@ -408,7 +408,7 @@ export default function OperasyonlarPage() {
                   <CountUp value={m.value} suffix={m.suffix} delay={i * 0.15} />
                 </span>
                 <span
-                  className="mt-2 block text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-600"
+                  className="mt-2 block text-[12px] font-medium uppercase tracking-[0.14em] text-zinc-600 dark:text-zinc-400"
                   style={FONT}
                 >
                   {m.label}
@@ -469,7 +469,7 @@ export default function OperasyonlarPage() {
 
                 {/* Subtitle */}
                 <span
-                  className="block text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600"
+                  className="block text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400"
                   style={FONT}
                 >
                   {op.subtitle}
@@ -496,7 +496,7 @@ export default function OperasyonlarPage() {
                   {op.features.map((f) => (
                     <span
                       key={f}
-                      className="rounded-full border border-zinc-200 px-2.5 py-1 text-[11px] font-medium text-zinc-500 dark:border-white/[0.08] dark:text-zinc-500"
+                      className="rounded-full border border-zinc-200 px-2.5 py-1 text-[12px] font-medium text-zinc-500 dark:border-white/[0.08] dark:text-zinc-400"
                       style={FONT}
                     >
                       {f}
@@ -517,7 +517,7 @@ export default function OperasyonlarPage() {
                     />
                   </span>
                   <span
-                    className="ml-2 text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-600"
+                    className="ml-2 text-[12px] font-medium uppercase tracking-[0.14em] text-zinc-600 dark:text-zinc-400"
                     style={FONT}
                   >
                     {op.metric.label}
@@ -541,7 +541,7 @@ export default function OperasyonlarPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
             transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/30"
+            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
             style={FONT}
           >
             İş Akışımız
@@ -627,7 +627,7 @@ export default function OperasyonlarPage() {
                       {step.title}
                     </h3>
                     <p
-                      className="mt-1.5 text-[13px] leading-[1.65] text-white/40"
+                      className="mt-1.5 text-[13px] leading-[1.65] text-white/70"
                       style={FONT}
                     >
                       {step.desc}
@@ -651,7 +651,7 @@ export default function OperasyonlarPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
             transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/30"
+            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
             style={FONT}
           >
             Neden 360°

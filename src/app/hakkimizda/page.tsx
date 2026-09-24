@@ -214,7 +214,7 @@ export default function HakkimizdaPage() {
             initial="hidden"
             animate="visible"
             custom={0.1}
-            className="mt-2 max-w-[600px] text-base font-light text-zinc-400 dark:text-zinc-500 sm:text-lg"
+            className="mt-2 max-w-[600px] text-base font-light text-zinc-600 dark:text-zinc-400 sm:text-lg"
             style={FONT}
           >
             Strateji, üretim ve operasyonu aynı masada buluşturan yaratıcı ekip.
@@ -263,7 +263,7 @@ export default function HakkimizdaPage() {
                 )}
               </span>
               <span
-                className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-600 md:text-[12px]"
+                className="whitespace-nowrap text-[12px] font-medium uppercase tracking-[0.18em] text-zinc-600 dark:text-zinc-400 md:text-[12px]"
                 style={FONT}
               >
                 {m.label}
@@ -399,7 +399,7 @@ export default function HakkimizdaPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
             transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/30"
+            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
             style={FONT}
           >
             Sürecimiz
@@ -484,7 +484,7 @@ export default function HakkimizdaPage() {
                       {step.title}
                     </h3>
                     <p
-                      className="mt-1.5 text-[13px] leading-[1.65] text-white/40"
+                      className="mt-1.5 text-[13px] leading-[1.65] text-white/70"
                       style={FONT}
                     >
                       {step.desc}
@@ -611,7 +611,7 @@ export default function HakkimizdaPage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/30"
+            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
             style={FONT}
           >
             Felsefemiz
@@ -653,7 +653,7 @@ export default function HakkimizdaPage() {
                     >
                       {quotes[activeQuote].name}
                     </span>
-                    <span className="text-[12px] text-white/40">
+                    <span className="text-[12px] text-white/70">
                       {quotes[activeQuote].role}
                     </span>
                   </div>

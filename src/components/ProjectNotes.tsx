@@ -75,11 +75,11 @@ export default function ProjectNotes({
 
             <dl className="mt-5 space-y-4 text-[15px] leading-[1.65]" style={FONT}>
               <div>
-                <dt className="text-[13px] font-semibold text-zinc-500 dark:text-zinc-500">İhtiyaç</dt>
+                <dt className="text-[13px] font-semibold text-zinc-500 dark:text-zinc-400">İhtiyaç</dt>
                 <dd className="mt-1 text-zinc-700 dark:text-zinc-300">{note!.brief}</dd>
               </div>
               <div>
-                <dt className="text-[13px] font-semibold text-zinc-500 dark:text-zinc-500">Yaptığımız</dt>
+                <dt className="text-[13px] font-semibold text-zinc-500 dark:text-zinc-400">Yaptığımız</dt>
                 <dd className="mt-1 text-zinc-700 dark:text-zinc-300">{note!.delivered}</dd>
               </div>
             </dl>

@@ -43,7 +43,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             ne sunuyoruz
@@ -113,7 +113,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
             className="mb-12 md:mb-16"
           >
             <span
-              className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30"
+              className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60"
               style={FONT}
             >
               çalışma sürecimiz
@@ -159,7 +159,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
                     {step.title}
                   </h3>
                   <p
-                    className="mt-2 max-w-[28ch] text-[13px] leading-[1.65] text-white/45"
+                    className="mt-2 max-w-[28ch] text-[13px] leading-[1.65] text-white/70"
                     style={FONT}
                   >
                     {step.desc}
@@ -182,7 +182,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             uygulama alanları
@@ -238,7 +238,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
               {/* Left panel */}
               <div className="bg-[linear-gradient(180deg,#2a1525_0%,#1f0c18_100%)] px-7 py-8 text-white dark:bg-[linear-gradient(180deg,#1a0e17_0%,#120a10_100%)] md:px-14 md:py-14">
                 <span
-                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/35"
+                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
                   style={FONT}
                 >
                   {service.categoryLabel}

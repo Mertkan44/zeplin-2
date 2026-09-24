@@ -470,7 +470,7 @@ export default function Navbar() {
                         )}
                         <svg
                           className={`h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 ${
-                            active ? "text-white" : "text-white/40 group-hover:text-white/70"
+                            active ? "text-white" : "text-white/70 group-hover:text-white/70"
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"

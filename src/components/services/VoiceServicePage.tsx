@@ -123,7 +123,7 @@ function PhoneCallMockup() {
     >
       {/* Status bar */}
       <div className="flex items-center justify-between px-6 pt-4 pb-2">
-        <span className="text-[11px] font-medium text-white/50">09:41</span>
+        <span className="text-[12px] font-medium text-white/50">09:41</span>
         <div className="flex gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
           <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -143,7 +143,7 @@ function PhoneCallMockup() {
           </svg>
         </motion.div>
 
-        <span className="mb-1 text-[13px] text-white/40" style={FONT}>Aktif Çağrı</span>
+        <span className="mb-1 text-[13px] text-white/70" style={FONT}>Aktif Çağrı</span>
         <span className="text-[20px] font-semibold text-white" style={FONT}>Müşteri Araması</span>
 
         {/* Timer */}
@@ -162,7 +162,7 @@ function PhoneCallMockup() {
         </div>
 
         {/* Status */}
-        <span className="rounded-full border border-[#DB2777]/20 bg-[#DB2777]/8 px-4 py-1.5 text-[11px] font-medium tracking-[0.1em] text-[#F472B6]" style={FONT}>
+        <span className="rounded-full border border-[#DB2777]/20 bg-[#DB2777]/8 px-4 py-1.5 text-[12px] font-medium tracking-[0.1em] text-[#F472B6]" style={FONT}>
           Dinliyorum…
         </span>
       </div>
@@ -227,13 +227,13 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.1}
               className="order-1 md:order-2"
             >
-              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>
+              <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>
                 sesli yapay zeka
               </span>
               <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
                 Telefonu Açan<br />Yapay Zeka
               </h2>
-              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/45" style={FONT}>
+              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/70" style={FONT}>
                 Müşterileriniz her ne zaman arasalar, eğitilmiş bir sesli asistan karşılar, yönlendirir ve gerekirse ekibinize bağlar.
               </p>
 
@@ -248,7 +248,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
                     <span className="block text-[26px] font-semibold leading-none tracking-[-0.04em] text-white" style={FONT}>
                       {m.value}
                     </span>
-                    <span className="mt-2 block text-[11px] leading-[1.4] tracking-[0.1em] text-white/35" style={FONT}>
+                    <span className="mt-2 block text-[12px] leading-[1.4] tracking-[0.1em] text-white/60" style={FONT}>
                       {m.label}
                     </span>
                   </motion.div>
@@ -266,7 +266,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-10"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>
             sektörler
           </span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
@@ -294,7 +294,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
 
               {/* Sample dialogue */}
               <div className="mb-4 rounded-[14px] border border-zinc-200 bg-white px-4 py-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
-                <span className="mb-1 block text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-600">Müşteri diyor ki:</span>
+                <span className="mb-1 block text-[12px] font-medium uppercase tracking-[0.12em] text-zinc-600 dark:text-zinc-400">Müşteri diyor ki:</span>
                 <p className="text-[13px] italic leading-[1.6] text-zinc-600 dark:text-zinc-300" style={FONT}>{uc.example}</p>
               </div>
 
@@ -322,7 +322,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
             viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
             className="mb-12"
           >
-            <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30" style={FONT}>özellikler</span>
+            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>özellikler</span>
             <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
               Sistem Neler Yapabilir?
             </h2>
@@ -341,7 +341,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
                 </div>
                 <div>
                   <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-white" style={FONT}>{f.title}</h3>
-                  <p className="mt-1 text-[13px] leading-[1.7] text-white/40" style={FONT}>{f.desc}</p>
+                  <p className="mt-1 text-[13px] leading-[1.7] text-white/70" style={FONT}>{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -356,7 +356,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
           className="mb-12"
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600" style={FONT}>çalışma süreci</span>
+          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>çalışma süreci</span>
           <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
             Nasıl Kurulur?
           </h2>

@@ -45,7 +45,7 @@ export function ServiceHero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.44, ease: EASE, delay: 0.06 }}
-          className="mb-4 inline-block rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white"
+          className="mb-4 inline-block rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)] px-4 py-1.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white"
           style={FONT}
         >
           {categoryLabel}

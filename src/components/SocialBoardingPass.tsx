@@ -141,7 +141,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
         {/* başlık */}
         <motion.div variants={headerVariants} className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="mb-2.5 text-[10px] font-semibold text-white/55" style={monoStyle} >
+            <div className="mb-2.5 text-[12px] font-semibold text-white/55" style={monoStyle} >
               Bizi takip edin
             </div>
             <h2 className="m-0 text-white" style={{ fontFamily: "var(--font-instrument), serif", fontWeight: 400, fontSize: "clamp(1.9rem, 4.2vw, 2.65rem)", lineHeight: 1.08, letterSpacing: "-0.01em" }}>
@@ -156,7 +156,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
             <span className="block h-[14px] w-[26px] shrink-0">
               <Zeppelin tone="muted" />
             </span>
-            <span className="text-[11px] text-white/50" style={monoStyle}>
+            <span className="text-[12px] text-white/50" style={monoStyle}>
               ZPL Air · Boarding · 2026
             </span>
           </div>
@@ -199,7 +199,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                   style={{ background: "#EC4899" }}
                 >
                   <span
-                    className="text-[8px] font-semibold text-white"
+                    className="text-[12px] font-semibold text-white"
                     style={{ ...monoStyle, letterSpacing: "0.3em", writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                   >
                     Boarding
@@ -221,13 +221,13 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                     style={{ border: "2px solid #EC4899" }}
                     aria-hidden="true"
                   >
-                    <span className="text-[9px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.12em" }}>Yanıt</span>
-                    <span className="text-[11px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.08em" }}>{t.stamp}</span>
+                    <span className="text-[12px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.12em" }}>Yanıt</span>
+                    <span className="text-[12px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.08em" }}>{t.stamp}</span>
                     <span className="text-[7px]" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.2em" }}>ZPL Air</span>
                   </span>
                 )}
 
-                <span className="flex justify-between text-[9px] font-semibold" style={{ ...monoStyle, color: "rgba(26,18,22,0.55)", letterSpacing: "0.18em" }}>
+                <span className="flex justify-between text-[12px] font-semibold" style={{ ...monoStyle, color: "rgba(26,18,22,0.55)", letterSpacing: "0.18em" }}>
                   <span>Zeplin Air</span>
                   <span>{t.gate}</span>
                 </span>
@@ -243,7 +243,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                   {t.subtitle}
                 </span>
 
-                <span className="mt-3 flex justify-between text-[8.5px]" style={{ ...monoStyle, color: "rgba(26,18,22,0.5)", letterSpacing: "0.14em" }}>
+                <span className="mt-3 flex justify-between text-[12px]" style={{ ...monoStyle, color: "rgba(26,18,22,0.5)", letterSpacing: "0.14em" }}>
                   <span>{t.flight}</span>
                   <span>{t.frequency}</span>
                 </span>
@@ -257,7 +257,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                 <span className="flex items-center gap-3.5">
                   <span className="flex-1">
                     <span className="block h-[30px]" style={{ background: t.barcode }} />
-                    <span className="mt-1.5 block text-[9px]" style={{ ...monoStyle, color: "rgba(26,18,22,0.55)", letterSpacing: "0.16em" }}>
+                    <span className="mt-1.5 block text-[12px]" style={{ ...monoStyle, color: "rgba(26,18,22,0.55)", letterSpacing: "0.16em" }}>
                       {t.handle}
                     </span>
                   </span>
@@ -278,7 +278,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
 
         <motion.div
           variants={headerVariants}
-          className="relative mt-9 flex flex-wrap justify-between gap-2 text-[10px] text-white/35 md:mt-8"
+          className="relative mt-9 flex flex-wrap justify-between gap-2 text-[12px] text-white/60 md:mt-8"
           style={monoStyle}
         >
           <span>Son çağrı — takip için binişe geçin</span>

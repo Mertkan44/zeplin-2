@@ -79,7 +79,7 @@ export default function ProjectCaseStudyPage({
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80 backdrop-blur-sm"
+                  className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-white/80 backdrop-blur-sm"
                 >
                   {tag}
                 </span>
@@ -116,19 +116,19 @@ export default function ProjectCaseStudyPage({
       >
         <div className="mx-auto flex max-w-5xl flex-wrap gap-8 md:gap-16">
           <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/40">
+            <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground/65">
               Müşteri
             </p>
             <p className="text-base font-semibold text-foreground">{project.client}</p>
           </div>
           <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/40">
+            <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground/65">
               Yıl
             </p>
             <p className="text-base font-semibold text-foreground">{project.year}</p>
           </div>
           <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/40">
+            <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground/65">
               Hizmetler
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -181,7 +181,7 @@ export default function ProjectCaseStudyPage({
             viewport={revealViewport}
             custom={0}
           >
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-400">
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
               Brief
             </p>
             <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
@@ -197,7 +197,7 @@ export default function ProjectCaseStudyPage({
             viewport={revealViewport}
             custom={0.08}
           >
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-400">
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
               Çözüm
             </p>
             <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
@@ -219,7 +219,7 @@ export default function ProjectCaseStudyPage({
             custom={0}
             className="mb-8 md:mb-12"
           >
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-400">
+            <p className="mb-2 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
               Çalışmalar
             </p>
             <h2 className="text-2xl font-bold text-foreground md:text-3xl">
@@ -317,7 +317,7 @@ export default function ProjectCaseStudyPage({
             className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between"
           >
             <div>
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground/40">
+              <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.2em] text-foreground/65">
                 Sonraki Proje
               </p>
               <p className="text-xl font-bold text-foreground md:text-2xl">{nextProject.name}</p>
@@ -360,7 +360,7 @@ export default function ProjectCaseStudyPage({
           custom={0}
           className="relative z-10 mx-auto max-w-xl"
         >
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-pink-400">
+          <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400">
             Sizin için de çalışalım
           </p>
           <h2 className="mb-6 text-3xl font-bold leading-snug text-white md:text-4xl">

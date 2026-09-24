@@ -90,7 +90,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             showreel
@@ -142,7 +142,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
                 >
                   {vid.title}
                 </span>
-                <span className="mt-1 block text-[11px] text-white/50" style={FONT}>
+                <span className="mt-1 block text-[12px] text-white/50" style={FONT}>
                   {vid.client}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
           className="mb-10 md:mb-14"
         >
           <span
-            className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
             style={FONT}
           >
             video türleri
@@ -201,7 +201,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
               {/* Content */}
               <div className="relative flex h-full min-h-[340px] flex-col justify-end p-7 md:p-8">
                 {/* Duration badge */}
-                <span className="mb-3 inline-block w-fit rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-medium tabular-nums tracking-[0.06em] text-white/70 backdrop-blur-sm">
+                <span className="mb-3 inline-block w-fit rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[12px] font-medium tabular-nums tracking-[0.06em] text-white/70 backdrop-blur-sm">
                   {vt.duration}
                 </span>
 
@@ -229,7 +229,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="mt-2 max-w-[40ch] text-[14px] leading-[1.6] text-white/45 line-clamp-2"
+                      className="mt-2 max-w-[40ch] text-[14px] leading-[1.6] text-white/70 line-clamp-2"
                     >
                       {vt.desc}
                     </motion.p>
@@ -257,7 +257,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
             className="mb-12 md:mb-16"
           >
             <span
-              className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/30"
+              className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60"
               style={FONT}
             >
               prodüksiyon süreci
@@ -300,7 +300,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
                     {step.title}
                   </h3>
                   <p
-                    className="mt-2 max-w-[24ch] text-[13px] leading-[1.65] text-white/45"
+                    className="mt-2 max-w-[24ch] text-[13px] leading-[1.65] text-white/70"
                     style={FONT}
                   >
                     {step.desc}
@@ -342,7 +342,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
               className="mb-8"
             >
               <span
-                className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+                className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
                 style={FONT}
               >
                 ekipman & yetenek
@@ -373,7 +373,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
                     {feat.title}
                   </h4>
                   <p
-                    className="mt-1.5 text-[13px] leading-[1.6] text-zinc-400 dark:text-zinc-500"
+                    className="mt-1.5 text-[13px] leading-[1.6] text-zinc-600 dark:text-zinc-400"
                     style={FONT}
                   >
                     {feat.desc}

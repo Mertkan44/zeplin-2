@@ -242,7 +242,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
                   {/* alt-sol altyazı */}
                   <div className="absolute inset-x-5 bottom-5">
                     <div
-                      className="mb-1.5 text-[11px] text-[#F9A8D4]"
+                      className="mb-1.5 text-[12px] text-[#F9A8D4]"
                       style={{ ...monoStyle, letterSpacing: "0.16em" }}
                     >
                       {project.name}

@@ -19,7 +19,7 @@ export function RelatedServices({ services }: { services: ServiceData[] }) {
         className="mb-8 md:mb-12"
       >
         <span
-          className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700"
+          className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
           style={FONT}
         >
           İlgili hizmetler
@@ -52,7 +52,7 @@ export function RelatedServices({ services }: { services: ServiceData[] }) {
 
               {/* Content */}
               <div className="relative flex h-full min-h-[280px] flex-col justify-end p-7 md:p-8">
-                <span className="mb-3 inline-block w-fit rounded-full border border-white/20 px-3 py-1 text-[11px] font-medium tracking-[0.12em] text-white/70 backdrop-blur-sm">
+                <span className="mb-3 inline-block w-fit rounded-full border border-white/20 px-3 py-1 text-[12px] font-medium tracking-[0.12em] text-white/70 backdrop-blur-sm">
                   {svc.categoryLabel}
                 </span>
                 <h4
