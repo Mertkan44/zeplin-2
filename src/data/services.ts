@@ -62,15 +62,17 @@ export interface ServiceTab {
 
 /* ── All Services ─────────────────────────────────────────────────── */
 
+/* Gerçek proje işleri (Milo, Pam, Ritim, Babi) öncelikli; kalan kartlar
+   docs/gorsel-promptlari.md ile üretilecek görsellerle değişecek. */
 const serviceImages = {
   design: "/images/generated/service-design-system.webp",
   content: "/images/generated/service-content-studio.webp",
-  video: "/images/generated/service-video-production.webp",
+  video: "/images/projects-milo-cover.webp",
   ai: "/images/generated/service-ai-automation.webp",
-  postDesign: "/images/generated/service-cards/service-card-post-design.webp",
+  postDesign: "/images/services/post-tasarimi.webp",
   businessCard: "/images/generated/service-cards/service-card-business-card.webp",
-  logoDesign: "/images/generated/service-cards/service-card-logo-design.webp",
-  bannerPoster: "/images/generated/service-cards/service-card-banner-poster.webp",
+  logoDesign: "/images/services/logo-kimlik.webp",
+  bannerPoster: "/images/services/banner-afis.webp",
   blogWriting: "/images/generated/service-cards/service-card-blog-writing.webp",
   socialCopy: "/images/generated/service-cards/service-card-social-copy.webp",
   emailMarketing: "/images/generated/service-cards/service-card-email-marketing.webp",
@@ -83,8 +85,10 @@ const serviceImages = {
   motionGraphics: "/images/generated/operations-command-center.webp",
   photography: "/images/projects-milo-gallery-3.jpg",
   website: "/images/services-digital-premium-optimized.webp",
-  socialManagement: "/images/generated/service-content-studio.webp",
+  socialManagement: "/images/projects-milo-gallery-5.jpg",
   adsManagement: "/images/generated/operations-command-center.webp",
+  software: "/images/generated/service-cards/service-card-workflow-automation.webp",
+  aiBand: "/images/generated/service-ai-automation.webp",
 } as const;
 
 export const services: ServiceData[] = [
@@ -374,7 +378,7 @@ export const services: ServiceData[] = [
     shortDesc: "Tüm AI kanallarını tek merkezde birleştiren platform",
     longDesc:
       "Chatbot ve sesli asistanı tek bir akıllı sistemde birleştiren özel yazılım platformu. İşletmenizin tüm iletişim süreçlerini yönetir, raporlar ve optimize eder — size sadece sonuçları sunar.",
-    heroImage: serviceImages.workflowAutomation,
+    heroImage: serviceImages.software,
     dark: true,
     features: [
       { title: "Merkezi Yönetim Paneli", desc: "Tüm AI kanallarını ve konuşmalarını tek ekrandan yönetme" },
@@ -535,6 +539,8 @@ export function getRelatedServices(slugs: string[]): ServiceData[] {
 
 /* ── Tab structure for /hizmetler listing ─────────────────────────── */
 
+export const AI_BAND_IMAGE = serviceImages.aiBand;
+
 export const serviceTabs: ServiceTab[] = [
   {
     id: "foto-video",
@@ -573,7 +579,7 @@ export const serviceTabs: ServiceTab[] = [
     label: CATEGORY_LABELS.web,
     cards: [
       { slug: "kurumsal-web-sitesi", title: "Kurumsal Web Sitesi", desc: "Tasarımdan yayına, mobil uyumlu kurumsal site", img: serviceImages.website, dark: true },
-      { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "Panel, raporlama ve mevcut sistemlerle entegrasyon", img: serviceImages.crmIntegration, dark: false },
+      { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "Panel, raporlama ve mevcut sistemlerle entegrasyon", img: serviceImages.software, dark: false },
     ],
   },
   {

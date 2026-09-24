@@ -8,7 +8,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { EASE, FONT, revealVariants, useReliableInView } from "@/lib/motion";
-import { LEGACY_TAB_IDS, serviceTabs } from "@/data/services";
+import { AI_BAND_IMAGE, LEGACY_TAB_IDS, serviceTabs } from "@/data/services";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import ProjectNotes from "@/components/ProjectNotes";
 
@@ -279,7 +279,7 @@ export default function HizmetlerPage() {
               <div className="relative min-h-[260px] overflow-hidden border-t border-white/8 bg-[#160812] md:min-h-full md:border-l md:border-t-0 md:border-white/8">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: "url('/images/generated/service-ai-automation.webp')" }}
+                  style={{ backgroundImage: `url('${AI_BAND_IMAGE}')` }}
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,12,24,0.82)_0%,rgba(31,12,24,0.18)_52%,rgba(31,12,24,0)_100%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_46%,rgba(236,72,153,0.32),transparent_38%)]" />
