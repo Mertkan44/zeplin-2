@@ -5,11 +5,10 @@ import {
   motion,
   useMotionValue,
   useSpring,
-  AnimatePresence,
 } from "framer-motion";
 import Link from "next/link";
 import { EASE, FONT, revealVariants, useReliableInView } from "@/lib/motion";
-import { serviceTabs } from "@/data/services";
+import { LEGACY_TAB_IDS, serviceTabs } from "@/data/services";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import ProjectNotes from "@/components/ProjectNotes";
 
@@ -61,7 +60,8 @@ export default function HizmetlerPage() {
   // Aktif sekmeyi ?tab= parametresiyle eşitle (breadcrumb, yenileme, geri/ileri)
   useEffect(() => {
     const syncFromUrl = () => {
-      const id = new URLSearchParams(window.location.search).get("tab");
+      const raw = new URLSearchParams(window.location.search).get("tab") ?? "";
+      const id = LEGACY_TAB_IDS[raw] ?? raw;
       const index = serviceTabs.findIndex((t) => t.id === id);
       setActiveTab(index === -1 ? 0 : index);
     };
@@ -146,12 +146,116 @@ export default function HizmetlerPage() {
         </motion.div>
       </section>
 
+      {/* ── Interactive Service Tabs ──────────────────────────────── */}
+      <section className="mx-auto max-w-[1200px] px-6 py-10 md:py-16">
+        <motion.div
+          variants={revealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
+          custom={0}
+        >
+          {/* Tab bar */}
+          <div
+            role="tablist"
+            aria-label="Hizmet grupları"
+            className="-mx-6 mb-10 overflow-x-auto px-6 [scrollbar-width:none] md:mx-0 md:mb-14 md:px-0 [&::-webkit-scrollbar]:hidden"
+          >
+          <div className="relative flex w-max gap-1">
+            {serviceTabs.map((tab, i) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === i}
+                onClick={() => selectTab(i)}
+                className={`relative z-10 whitespace-nowrap rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-300 md:px-6 md:py-3 md:text-[15px] ${
+                  activeTab === i
+                    ? "text-white"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                }`}
+                style={FONT}
+              >
+                {activeTab === i && (
+                  <motion.span
+                    layoutId="pill"
+                    className="absolute inset-0 rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)]"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    style={{ zIndex: -1 }}
+                  />
+                )}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          </div>
+
+          {/* Cards — tall visual layout */}
+          {/* Çıkış animasyonu beklenmez: sekme değişince (tıklama ya da ?tab=)
+              doğru kartlar hemen DOM'da olur, yalnızca girişte belirir. */}
+          <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.36, ease: EASE }}
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+            >
+              {serviceTabs[activeTab].cards.map((card, ci) => (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.46, ease: EASE, delay: ci * 0.08 }}
+                >
+                  <Link
+                    href={`/hizmetler/${card.slug}`}
+                    className="group relative block cursor-pointer overflow-hidden rounded-[24px] border border-transparent transition-[border-color,box-shadow] duration-500 hover:border-[#F472B6]/20 hover:shadow-[0_8px_40px_rgba(219,39,119,0.1)] dark:hover:border-[#9D174D]/30 dark:hover:shadow-[0_8px_40px_rgba(157,23,77,0.12)]"
+                    style={{ minHeight: "340px" }}
+                  >
+                    {/* BG image */}
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                      style={{ backgroundImage: `url('${card.img}')` }}
+                    />
+
+                    {/* Overlay — monochrome dark, image speaks for itself */}
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_5%,rgba(15,10,13,0.88)_62%)] transition-all duration-500 group-hover:bg-[linear-gradient(180deg,transparent_5%,rgba(15,10,13,0.80)_62%)]" />
+
+                    {/* Content pinned to bottom */}
+                    <div className="relative flex h-full min-h-[340px] flex-col justify-end p-7 md:p-8">
+                      <span className="mb-3 inline-block w-fit rounded-full border border-white/20 px-3 py-1 text-[12px] font-medium tracking-[0.08em] text-white/85 backdrop-blur-sm">
+                        {serviceTabs[activeTab].label}
+                      </span>
+                      <h4
+                        className="text-[22px] font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-[26px]"
+                        style={FONT}
+                      >
+                        {card.title}
+                      </h4>
+                      <p className="mt-2 max-w-[32ch] text-[15px] leading-[1.6] text-white/80">
+                        {card.desc}
+                      </p>
+                      <span className="mt-5 inline-flex w-fit items-center gap-1.5 text-[14px] font-semibold text-[#F9A8D4]">
+                        Detaylar
+                        <svg width="14" height="14" viewBox="0 0 12 12" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
+                          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+        </motion.div>
+      </section>
+
       {/* ── Yapay Zeka Hizmetlerimiz — Hero Card ─────────────────── */}
       <section className="mx-auto max-w-[1200px] px-6 pb-4 pt-8 md:pb-6 md:pt-14">
         <motion.div
           variants={revealVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
           custom={0.08}
         >
           <div className="overflow-hidden rounded-[34px] border border-[#F9A8D4]/50 bg-[linear-gradient(180deg,#FBCFE8_0%,#F9A8D4_100%)] shadow-[0_24px_70px_rgba(219,39,119,0.14)] dark:border-[#9D174D]/30 dark:bg-[linear-gradient(180deg,#9D174D_0%,#831843_100%)] dark:shadow-[0_24px_70px_rgba(157,23,77,0.25)]">
@@ -182,101 +286,6 @@ export default function HizmetlerPage() {
               </div>
             </div>
           </div>
-        </motion.div>
-      </section>
-
-      {/* ── Interactive Service Tabs ──────────────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-10 md:py-16">
-        <motion.div
-          variants={revealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-          custom={0}
-        >
-          {/* Tab bar */}
-          <div className="relative mb-10 flex gap-1 md:mb-14">
-            {serviceTabs.map((tab, i) => (
-              <button
-                key={tab.id}
-                onClick={() => selectTab(i)}
-                className={`relative z-10 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-300 md:px-7 md:py-3 md:text-[15px] ${
-                  activeTab === i
-                    ? "text-white"
-                    : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200"
-                }`}
-                style={FONT}
-              >
-                {activeTab === i && (
-                  <motion.span
-                    layoutId="pill"
-                    className="absolute inset-0 rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    style={{ zIndex: -1 }}
-                  />
-                )}
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Cards — tall visual layout */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.36, ease: EASE }}
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-            >
-              {serviceTabs[activeTab].cards.map((card, ci) => (
-                <motion.div
-                  key={card.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.46, ease: EASE, delay: ci * 0.08 }}
-                >
-                  <Link
-                    href={`/hizmetler/${card.slug}`}
-                    className="group relative block cursor-pointer overflow-hidden rounded-[24px] border border-transparent transition-[border-color,box-shadow] duration-500 hover:border-[#F472B6]/20 hover:shadow-[0_8px_40px_rgba(219,39,119,0.1)] dark:hover:border-[#9D174D]/30 dark:hover:shadow-[0_8px_40px_rgba(157,23,77,0.12)]"
-                    style={{ minHeight: "340px" }}
-                  >
-                    {/* BG image */}
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                      style={{ backgroundImage: `url('${card.img}')` }}
-                    />
-
-                    {/* Overlay — monochrome dark, image speaks for itself */}
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_5%,rgba(15,10,13,0.88)_62%)] transition-all duration-500 group-hover:bg-[linear-gradient(180deg,transparent_5%,rgba(15,10,13,0.80)_62%)]" />
-
-                    {/* Content pinned to bottom */}
-                    <div className="relative flex h-full min-h-[340px] flex-col justify-end p-7 md:p-8">
-                      <span className="mb-3 inline-block w-fit rounded-full border border-white/20 px-3 py-1 text-[11px] font-medium tracking-[0.12em] text-white/70 backdrop-blur-sm">
-                        {serviceTabs[activeTab].label}
-                      </span>
-                      <h4
-                        className="text-[22px] font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-[26px]"
-                        style={FONT}
-                      >
-                        {card.title}
-                      </h4>
-                      <p className="mt-2 max-w-[32ch] text-[14px] leading-[1.6] text-white/60">
-                        {card.desc}
-                      </p>
-                      <span className="mt-5 inline-flex w-fit items-center gap-1.5 text-[13px] font-semibold text-[#F472B6] opacity-0 transition-all duration-400 group-hover:opacity-100">
-                        detaylar
-                        <svg width="14" height="14" viewBox="0 0 12 12" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
         </motion.div>
       </section>
 

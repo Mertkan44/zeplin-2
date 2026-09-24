@@ -11,10 +11,29 @@ export interface ServiceProcess {
   desc: string;
 }
 
+/** Hizmetler müşterinin satın aldığı biçimde gruplanır; id'ler /hizmetler?tab= değeridir. */
+export type ServiceCategory = "foto-video" | "sosyal-icerik" | "marka-tasarim" | "web" | "ai-otomasyon";
+
+export const CATEGORY_LABELS: Record<ServiceCategory, string> = {
+  "foto-video": "Fotoğraf & Video",
+  "sosyal-icerik": "Sosyal Medya & İçerik",
+  "marka-tasarim": "Marka & Tasarım",
+  web: "Web & Yazılım",
+  "ai-otomasyon": "AI & Otomasyon",
+};
+
+/** Eski sekme adresleri (paylaşılmış bağlantılar) yeni gruplara yönlenir. */
+export const LEGACY_TAB_IDS: Record<string, ServiceCategory> = {
+  tasarim: "marka-tasarim",
+  icerik: "sosyal-icerik",
+  video: "foto-video",
+  otomasyon: "ai-otomasyon",
+};
+
 export interface ServiceData {
   slug: string;
   title: string;
-  category: "tasarim" | "icerik" | "video" | "otomasyon";
+  category: ServiceCategory;
   categoryLabel: string;
   shortDesc: string;
   longDesc: string;
@@ -62,6 +81,10 @@ const serviceImages = {
   videoReels: "/images/projects-babi-cover.webp",
   videoSpot: "/images/projects-ritim-jewellery-cover.webp",
   motionGraphics: "/images/generated/operations-command-center.webp",
+  photography: "/images/projects-milo-gallery-3.jpg",
+  website: "/images/services-digital-premium-optimized.webp",
+  socialManagement: "/images/generated/service-content-studio.webp",
+  adsManagement: "/images/generated/operations-command-center.webp",
 } as const;
 
 export const services: ServiceData[] = [
@@ -69,8 +92,8 @@ export const services: ServiceData[] = [
   {
     slug: "post-tasarimi",
     title: "Post Tasarımı",
-    category: "tasarim",
-    categoryLabel: "Tasarım",
+    category: "marka-tasarim",
+    categoryLabel: CATEGORY_LABELS["marka-tasarim"],
     shortDesc: "Sosyal medya için dikkat çekici görseller",
     longDesc:
       "Markanızın sosyal medya akışını rastgele görsellerden çıkarıp, kampanya hedefi olan bir tasarım sistemine dönüştürüyoruz. Her post; mesaj, hiyerarşi, ritim ve platform davranışı düşünülerek hazırlanır.",
@@ -93,8 +116,8 @@ export const services: ServiceData[] = [
   {
     slug: "kartvizit-tasarimi",
     title: "Kartvizit Tasarımı",
-    category: "tasarim",
-    categoryLabel: "Tasarım",
+    category: "marka-tasarim",
+    categoryLabel: CATEGORY_LABELS["marka-tasarim"],
     shortDesc: "Profesyonel ve akılda kalıcı kartvizitler",
     longDesc:
       "Kartviziti yalnızca iletişim bilgisi taşıyan bir yüzey olarak değil, markanın elden ele dolaşan ilk temas noktası olarak ele alıyoruz. Baskıya hazır, rafine ve marka diliyle tutarlı tasarımlar üretiriz.",
@@ -117,8 +140,8 @@ export const services: ServiceData[] = [
   {
     slug: "logo-tasarimi",
     title: "Logo Tasarımı",
-    category: "tasarim",
-    categoryLabel: "Tasarım",
+    category: "marka-tasarim",
+    categoryLabel: CATEGORY_LABELS["marka-tasarim"],
     shortDesc: "Markanızı tanımlayan özgün logolar",
     longDesc:
       "Markanızın karakterini tek bakışta anlatan, ölçeklenebilir ve uzun ömürlü logo sistemleri tasarlıyoruz. Sadece işaret değil; kullanım, renk, tipografi ve uygulama mantığını da birlikte kuruyoruz.",
@@ -141,8 +164,8 @@ export const services: ServiceData[] = [
   {
     slug: "banner-afis",
     title: "Banner & Afiş",
-    category: "tasarim",
-    categoryLabel: "Tasarım",
+    category: "marka-tasarim",
+    categoryLabel: CATEGORY_LABELS["marka-tasarim"],
     shortDesc: "Dijital ve basılı reklam görselleri",
     longDesc:
       "Dijital reklamdan fiziksel afişe kadar kampanya mesajını doğru formatta taşıyan görseller hazırlıyoruz. Tek bir ana fikri; ekran, mecra ve ölçüye göre tutarlı varyasyonlara dönüştürürüz.",
@@ -167,8 +190,8 @@ export const services: ServiceData[] = [
   {
     slug: "blog-yazilari",
     title: "Blog Yazıları",
-    category: "icerik",
-    categoryLabel: "İçerik",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
     shortDesc: "SEO uyumlu, değer katan blog içerikleri",
     longDesc:
       "Markanızın uzmanlığını görünür kılan, arama niyetiyle uyumlu ve okunabilir blog içerikleri üretiyoruz. Konu araştırmasından yayın planına kadar içerik hattını sakin bir sistemle yönetiriz.",
@@ -191,8 +214,8 @@ export const services: ServiceData[] = [
   {
     slug: "sosyal-medya-metni",
     title: "Sosyal Medya Metni",
-    category: "icerik",
-    categoryLabel: "İçerik",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
     shortDesc: "Etkileşim odaklı caption ve copyler",
     longDesc:
       "Sosyal medya metinlerini yalnızca caption olarak değil, markanın günlük konuşma ritmi olarak ele alıyoruz. Platform diline, kampanya amacına ve görsel hiyerarşiye göre kısa ama etkili metinler yazarız.",
@@ -215,8 +238,8 @@ export const services: ServiceData[] = [
   {
     slug: "e-posta-pazarlama",
     title: "E-posta Pazarlama",
-    category: "icerik",
-    categoryLabel: "İçerik",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
     shortDesc: "Dönüşüm sağlayan e-posta kampanyaları",
     longDesc:
       "E-posta akışlarını tek seferlik duyurular yerine, müşteri yolculuğunu besleyen düzenli temaslara dönüştürüyoruz. Segment, konu satırı, içerik ve tasarımı birlikte optimize ederiz.",
@@ -239,8 +262,8 @@ export const services: ServiceData[] = [
   {
     slug: "senaryo-script",
     title: "Senaryo & Script",
-    category: "icerik",
-    categoryLabel: "İçerik",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
     shortDesc: "Video ve reklam senaryoları",
     longDesc:
       "Video, reklam ve sesli içerikler için izleyiciyi ilk saniyede yakalayan senaryo akışları kuruyoruz. Mesajı netleştirir, sahne ritmini planlar ve prodüksiyona hazır metinler teslim ederiz.",
@@ -265,8 +288,8 @@ export const services: ServiceData[] = [
   {
     slug: "video-produksiyon",
     title: "Video Prodüksiyon",
-    category: "video",
-    categoryLabel: "Video",
+    category: "foto-video",
+    categoryLabel: CATEGORY_LABELS["foto-video"],
     shortDesc: "Profesyonel video prodüksiyon hizmetleri",
     longDesc:
       "Tanıtım filmlerinden reels içeriklerine kadar video üretimini fikir, senaryo, çekim ve kurgu hattında tek ekip gibi yönetiyoruz. Her kareyi yayınlanacağı platformun temposuna göre planlarız.",
@@ -293,8 +316,8 @@ export const services: ServiceData[] = [
   {
     slug: "akilli-chatbot",
     title: "Akıllı Chatbot",
-    category: "otomasyon",
-    categoryLabel: "Otomasyon",
+    category: "ai-otomasyon",
+    categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
     customPage: "chatbot",
     shortDesc: "7/24 yapay zeka destekli müşteri iletişimi",
     longDesc:
@@ -319,8 +342,8 @@ export const services: ServiceData[] = [
   {
     slug: "sesli-asistan",
     title: "Sesli Asistan",
-    category: "otomasyon",
-    categoryLabel: "Otomasyon",
+    category: "ai-otomasyon",
+    categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
     customPage: "voice",
     shortDesc: "Telefon görüşmelerinde akıllı rezervasyon ve yönlendirme",
     longDesc:
@@ -345,8 +368,8 @@ export const services: ServiceData[] = [
   {
     slug: "ozel-yazilim",
     title: "Özel Yazılım",
-    category: "otomasyon",
-    categoryLabel: "Otomasyon",
+    category: "web",
+    categoryLabel: CATEGORY_LABELS["web"],
     customPage: "software",
     shortDesc: "Tüm AI kanallarını tek merkezde birleştiren platform",
     longDesc:
@@ -373,8 +396,8 @@ export const services: ServiceData[] = [
   {
     slug: "yapay-zeka",
     title: "Yapay Zeka Hizmetleri",
-    category: "otomasyon",
-    categoryLabel: "Otomasyon",
+    category: "ai-otomasyon",
+    categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
     shortDesc: "AI destekli otomasyon çözümleri",
     longDesc:
       "Chatbot, callbot ve otomasyon akışlarını markanızın günlük operasyonuna sade ama güçlü bir katman olarak yerleştiriyoruz. Müşteri desteği, CRM, raporlama ve tekrar eden süreçleri tek bir akışta bağlarız.",
@@ -396,6 +419,107 @@ export const services: ServiceData[] = [
     ],
     relatedSlugs: ["e-posta-pazarlama", "blog-yazilari", "post-tasarimi"],
   },
+  /* ── Yeni: Fotoğraf, Sosyal Medya Yönetimi, Reklam, Web ─────────── */
+  {
+    slug: "fotograf-cekimi",
+    title: "Fotoğraf Çekimi",
+    category: "foto-video",
+    categoryLabel: CATEGORY_LABELS["foto-video"],
+    shortDesc: "Ürün, menü ve mekân fotoğrafçılığı",
+    longDesc:
+      "Ürününüzü, menünüzü ve mekânınızı sosyal medya, web sitesi ve basılı işlerde kullanılabilecek bir görsel arşive dönüştürüyoruz. Işık, kadraj ve stil, markanın geri kalan görsel diliyle birlikte planlanır.",
+    heroImage: serviceImages.photography,
+    dark: true,
+    features: [
+      { title: "Ürün & Menü Çekimi", desc: "Stüdyo veya mekânda, kullanım yerine göre planlanmış ürün kareleri" },
+      { title: "Mekân & Atmosfer", desc: "İç mekân, ekip ve misafir deneyimini anlatan kareler" },
+      { title: "Platforma Göre Kadraj", desc: "Aynı çekimden dikey, kare ve yatay kullanım için alternatifler" },
+      { title: "Renk & Rötuş", desc: "Seçilen karelerde marka tonuna uygun renk düzenleme ve rötuş" },
+    ],
+    process: [
+      { step: "01", title: "Brief", desc: "Kullanım yeri, kare listesi ve stil referansları" },
+      { step: "02", title: "Planlama", desc: "Çekim günü, ışık, dekor ve ürün hazırlığı" },
+      { step: "03", title: "Çekim", desc: "Mekânda veya stüdyoda çekim" },
+      { step: "04", title: "Seçim & Rötuş", desc: "Birlikte seçim, renk ve rötuş" },
+      { step: "05", title: "Teslimat", desc: "Web ve baskı için hazır dosyalar" },
+    ],
+    relatedSlugs: ["video-produksiyon", "sosyal-medya-yonetimi", "post-tasarimi"],
+  },
+  {
+    slug: "sosyal-medya-yonetimi",
+    title: "Sosyal Medya Yönetimi",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
+    shortDesc: "Planlama, üretim ve yayını tek ekipte toplayan hesap yönetimi",
+    longDesc:
+      "Aylık içerik planından çekim, tasarım, metin ve yayına kadar sosyal medya hesaplarınızı tek bir ekip olarak yönetiyoruz. Ne paylaşılacağını birlikte planlar, onayınızdan sonra yayınlar ve ay sonunda neyin işe yaradığını birlikte değerlendiririz.",
+    heroImage: serviceImages.socialManagement,
+    dark: true,
+    features: [
+      { title: "Aylık İçerik Planı", desc: "Kampanya, dönem ve ürün takvimine göre hazırlanan paylaşım planı" },
+      { title: "Üretim", desc: "Post, reels, story ve metinlerin tek görsel dilde üretimi" },
+      { title: "Onay & Yayın", desc: "Paylaşımlar onayınızdan sonra planlanan saatte yayında" },
+      { title: "Aylık Değerlendirme", desc: "Hangi içeriğin işe yaradığını gösteren sade rapor ve sonraki ay önerileri" },
+    ],
+    process: [
+      { step: "01", title: "Tanışma", desc: "Hedefler, hedef kitle ve mevcut hesapların incelenmesi" },
+      { step: "02", title: "Plan", desc: "Aylık içerik takvimi ve konsept" },
+      { step: "03", title: "Üretim", desc: "Çekim, tasarım ve metin" },
+      { step: "04", title: "Yayın", desc: "Onaylanan içeriklerin paylaşımı" },
+      { step: "05", title: "Değerlendirme", desc: "Ay sonu rapor ve iyileştirme" },
+    ],
+    relatedSlugs: ["reklam-yonetimi", "post-tasarimi", "sosyal-medya-metni"],
+  },
+  {
+    slug: "reklam-yonetimi",
+    title: "Reklam Yönetimi",
+    category: "sosyal-icerik",
+    categoryLabel: CATEGORY_LABELS["sosyal-icerik"],
+    shortDesc: "Meta ve Google reklamlarının kurulumu, yönetimi ve raporlanması",
+    longDesc:
+      "Reklam bütçenizi hedefe göre kurgulanmış kampanyalara dönüştürüyoruz. Hedef kitle, kreatif ve bütçe dağılımını birlikte planlar; kampanya süresince performansı izleyip düzenli olarak iyileştiririz.",
+    heroImage: serviceImages.adsManagement,
+    dark: true,
+    features: [
+      { title: "Kampanya Kurulumu", desc: "Hedefe uygun kampanya yapısı, hedef kitle ve ölçüm kurulumu" },
+      { title: "Reklam Kreatifleri", desc: "Platforma ve hedefe göre görsel, video ve metin varyasyonları" },
+      { title: "Bütçe Yönetimi", desc: "Bütçenin performansa göre kampanyalar arasında dağıtılması" },
+      { title: "Raporlama", desc: "Harcama ve sonuçları anlaşılır biçimde gösteren düzenli rapor" },
+    ],
+    process: [
+      { step: "01", title: "Hedef", desc: "Satış, mesaj, ziyaret veya bilinirlik hedefinin netleşmesi" },
+      { step: "02", title: "Kurulum", desc: "Hesap, ölçüm ve hedef kitle kurulumu" },
+      { step: "03", title: "Kreatif", desc: "Test edilecek reklam varyasyonlarının üretimi" },
+      { step: "04", title: "Yayın & İzleme", desc: "Kampanyanın takibi ve düzenli iyileştirme" },
+      { step: "05", title: "Rapor", desc: "Sonuçların ve sonraki adımların paylaşılması" },
+    ],
+    relatedSlugs: ["sosyal-medya-yonetimi", "video-produksiyon", "banner-afis"],
+  },
+  {
+    slug: "kurumsal-web-sitesi",
+    title: "Kurumsal Web Sitesi",
+    category: "web",
+    categoryLabel: CATEGORY_LABELS.web,
+    shortDesc: "Tasarımdan yayına, mobil uyumlu kurumsal web sitesi",
+    longDesc:
+      "Markanızı, hizmetlerinizi ve ürünlerinizi net anlatan, mobilde rahat kullanılan ve arama motorlarında bulunabilen bir web sitesi tasarlayıp geliştiriyoruz. Yayından sonra içerikleri güncelleyebilmeniz için gereken yapıyı da birlikte kuruyoruz.",
+    heroImage: serviceImages.website,
+    dark: true,
+    features: [
+      { title: "UI/UX Tasarım", desc: "Ziyaretçinin aradığını hızlı bulduğu sayfa yapısı ve arayüz" },
+      { title: "Mobil Uyum", desc: "Telefon, tablet ve masaüstünde aynı özenle çalışan tasarım" },
+      { title: "SEO Altyapısı", desc: "Metadata, site haritası ve hız gibi teknik temeller" },
+      { title: "İletişim & Form", desc: "Talep formu, WhatsApp ve harita gibi iletişim bağlantıları" },
+    ],
+    process: [
+      { step: "01", title: "Keşif", desc: "Hedefler, içerik envanteri ve referanslar" },
+      { step: "02", title: "Site Haritası", desc: "Sayfa yapısı ve içerik planı" },
+      { step: "03", title: "Tasarım", desc: "Masaüstü ve mobil arayüz tasarımı" },
+      { step: "04", title: "Geliştirme", desc: "Kodlama, içerik girişi ve testler" },
+      { step: "05", title: "Yayın", desc: "Alan adı, yayın ve teslim sonrası destek" },
+    ],
+    relatedSlugs: ["ozel-yazilim", "logo-tasarimi", "akilli-chatbot"],
+  },
 ];
 
 /* ── Helpers ──────────────────────────────────────────────────────── */
@@ -408,58 +532,57 @@ export function getRelatedServices(slugs: string[]): ServiceData[] {
   return slugs.map((s) => services.find((svc) => svc.slug === s)).filter(Boolean) as ServiceData[];
 }
 
-/** Mapping from individual video/otomasyon card slugs to their custom page slug */
-export const categoryRedirects: Record<string, string> = {
-  "tanitim-filmi": "video-produksiyon",
-  "reels-shorts": "video-produksiyon",
-  "reklam-spotu": "video-produksiyon",
-  "motion-graphics": "video-produksiyon",
-  "ai-chatbot": "akilli-chatbot",
-  "ai-callbot": "sesli-asistan",
-  "is-akisi": "ozel-yazilim",
-  "crm-entegrasyonu": "ozel-yazilim",
-};
 
 /* ── Tab structure for /hizmetler listing ─────────────────────────── */
 
 export const serviceTabs: ServiceTab[] = [
   {
-    id: "tasarim",
-    label: "Tasarım",
-    cards: [
-      { slug: "post-tasarimi", title: "Post Tasarımı", desc: "Sosyal medya için sistemli ve dikkat çeken görseller", img: serviceImages.postDesign, dark: true },
-      { slug: "kartvizit-tasarimi", title: "Kartvizit Tasarımı", desc: "İlk temas için rafine ve baskıya hazır kimlik parçaları", img: serviceImages.businessCard, dark: false },
-      { slug: "logo-tasarimi", title: "Logo Tasarımı", desc: "Markanızı taşıyacak ölçeklenebilir görsel kimlik", img: serviceImages.logoDesign, dark: false },
-      { slug: "banner-afis", title: "Banner & Afiş", desc: "Dijital ve basılı kampanyalar için güçlü görseller", img: serviceImages.bannerPoster, dark: true },
-    ],
-  },
-  {
-    id: "icerik",
-    label: "İçerik",
-    cards: [
-      { slug: "blog-yazilari", title: "Blog Yazıları", desc: "Arama niyetiyle uyumlu, değer katan içerikler", img: serviceImages.blogWriting, dark: true },
-      { slug: "sosyal-medya-metni", title: "Sosyal Medya Metni", desc: "Platform ritmine uygun caption ve kampanya metinleri", img: serviceImages.socialCopy, dark: false },
-      { slug: "e-posta-pazarlama", title: "E-posta Pazarlama", desc: "Segmentli, ölçülebilir ve dönüşüm odaklı e-posta akışları", img: serviceImages.emailMarketing, dark: true },
-      { slug: "senaryo-script", title: "Senaryo & Script", desc: "Video ve reklam fikirlerini prodüksiyona hazır metne çevirme", img: serviceImages.scriptWriting, dark: false },
-    ],
-  },
-  {
-    id: "video",
-    label: "Video",
+    id: "foto-video",
+    label: CATEGORY_LABELS["foto-video"],
     cards: [
       { slug: "video-produksiyon", title: "Tanıtım Filmi", desc: "Markanızı sinematik bir dille anlatan prodüksiyon", img: serviceImages.video, dark: true },
       { slug: "video-produksiyon", title: "Reels & Shorts", desc: "Kısa format için hızlı, ritimli ve güçlü içerikler", img: serviceImages.videoReels, dark: false },
-      { slug: "video-produksiyon", title: "Reklam Spotu", desc: "Dijital platformlara uygun performans videoları", img: serviceImages.videoSpot, dark: true },
-      { slug: "video-produksiyon", title: "Motion Graphics", desc: "Karmaşık mesajları hareketli grafikle sadeleştirme", img: serviceImages.motionGraphics, dark: false },
+      { slug: "video-produksiyon", title: "Reklam Filmi", desc: "Dijital platformlara uygun reklam videoları", img: serviceImages.videoSpot, dark: true },
+      { slug: "fotograf-cekimi", title: "Fotoğraf Çekimi", desc: "Ürün, menü ve mekân fotoğrafçılığı", img: serviceImages.photography, dark: true },
     ],
   },
   {
-    id: "otomasyon",
-    label: "Otomasyon",
+    id: "sosyal-icerik",
+    label: CATEGORY_LABELS["sosyal-icerik"],
     cards: [
-      { slug: "akilli-chatbot", title: "AI Chatbot", desc: "7/24 akıllı müşteri destek sistemi", img: serviceImages.ai, dark: true },
+      { slug: "sosyal-medya-yonetimi", title: "Sosyal Medya Yönetimi", desc: "Planlama, üretim ve yayın tek ekipte", img: serviceImages.socialManagement, dark: true },
+      { slug: "reklam-yonetimi", title: "Reklam Yönetimi", desc: "Meta ve Google reklamlarının kurulumu ve yönetimi", img: serviceImages.adsManagement, dark: true },
+      { slug: "sosyal-medya-metni", title: "Sosyal Medya Metni", desc: "Platform ritmine uygun caption ve kampanya metinleri", img: serviceImages.socialCopy, dark: false },
+      { slug: "senaryo-script", title: "Senaryo & Script", desc: "Video ve reklam fikirlerini prodüksiyona hazır metne çevirme", img: serviceImages.scriptWriting, dark: false },
+      { slug: "blog-yazilari", title: "Blog Yazıları", desc: "Arama niyetiyle uyumlu, değer katan içerikler", img: serviceImages.blogWriting, dark: true },
+      { slug: "e-posta-pazarlama", title: "E-posta Pazarlama", desc: "Segmentli ve ölçülebilir e-posta akışları", img: serviceImages.emailMarketing, dark: true },
+    ],
+  },
+  {
+    id: "marka-tasarim",
+    label: CATEGORY_LABELS["marka-tasarim"],
+    cards: [
+      { slug: "logo-tasarimi", title: "Logo & Kimlik", desc: "Markanızı taşıyacak ölçeklenebilir görsel kimlik", img: serviceImages.logoDesign, dark: false },
+      { slug: "post-tasarimi", title: "Post Tasarımı", desc: "Sosyal medya için sistemli ve dikkat çeken görseller", img: serviceImages.postDesign, dark: true },
+      { slug: "banner-afis", title: "Banner & Afiş", desc: "Dijital ve basılı kampanyalar için güçlü görseller", img: serviceImages.bannerPoster, dark: true },
+      { slug: "kartvizit-tasarimi", title: "Kartvizit Tasarımı", desc: "İlk temas için rafine ve baskıya hazır kimlik parçaları", img: serviceImages.businessCard, dark: false },
+    ],
+  },
+  {
+    id: "web",
+    label: CATEGORY_LABELS.web,
+    cards: [
+      { slug: "kurumsal-web-sitesi", title: "Kurumsal Web Sitesi", desc: "Tasarımdan yayına, mobil uyumlu kurumsal site", img: serviceImages.website, dark: true },
+      { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "Panel, raporlama ve mevcut sistemlerle entegrasyon", img: serviceImages.crmIntegration, dark: false },
+    ],
+  },
+  {
+    id: "ai-otomasyon",
+    label: CATEGORY_LABELS["ai-otomasyon"],
+    cards: [
+      { slug: "akilli-chatbot", title: "AI Chatbot", desc: "Web ve WhatsApp için akıllı müşteri destek sistemi", img: serviceImages.ai, dark: true },
       { slug: "sesli-asistan", title: "AI Callbot", desc: "Sesli yanıt ve yönlendirme otomasyonu", img: serviceImages.aiCallbot, dark: false },
-      { slug: "ozel-yazilim", title: "İş Akışı", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
+      { slug: "yapay-zeka", title: "İş Akışı Otomasyonu", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
       { slug: "ozel-yazilim", title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle temiz veri akışı", img: serviceImages.crmIntegration, dark: false },
     ],
   },

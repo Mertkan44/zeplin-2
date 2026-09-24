@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return createPageMetadata({
-    title: `${service.title} Hizmeti`,
+    title: /hizmet/i.test(service.title) ? service.title : `${service.title} Hizmeti`,
     description: `${service.shortDesc}. ${service.longDesc}`,
     path: `/hizmetler/${service.slug}`,
     image: service.heroImage,
