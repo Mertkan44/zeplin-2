@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useReducedMotion } from "framer-motion";
 
 interface Project {
   name: string;
@@ -61,36 +62,34 @@ function slotTransform(slot: number): CSSProperties {
 
 export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
   const [activeIdx, setActiveIdx] = useState(0);
+  /* Otomatik geçiş yalnızca kimse karusele dokunmuyorken çalışır:
+     kullanıcı duraklattıysa, elle gezindiyse, fare/odak içerideyse veya
+     azaltılmış hareket tercihi varsa durur. */
+  const [userPaused, setUserPaused] = useState(false);
+  const [hovering, setHovering] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
+  const reducedMotion = useReducedMotion();
   const touchStartXRef = useRef<number | null>(null);
   const touchDeltaXRef = useRef(0);
-  const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const n = projects.length;
   const active = projects[activeIdx];
-
-  /* Elle gezinince sayaç baştan başlasın diye interval her seferinde kurulur. */
-  const restartAutoplay = useCallback(() => {
-    if (autoplayRef.current) clearInterval(autoplayRef.current);
-    autoplayRef.current = setInterval(() => {
-      setActiveIdx((i) => (i + 1) % n);
-    }, 5500);
-  }, [n]);
+  const autoplaying = !userPaused && !reducedMotion;
+  const running = autoplaying && !hovering && !focusWithin;
 
   useEffect(() => {
-    restartAutoplay();
-    return () => {
-      if (autoplayRef.current) clearInterval(autoplayRef.current);
-    };
-  }, [restartAutoplay]);
+    if (!running) return;
+    const id = setInterval(() => setActiveIdx((i) => (i + 1) % n), 5500);
+    return () => clearInterval(id);
+  }, [running, n, activeIdx]);
 
-  const goPrev = useCallback(() => {
-    setActiveIdx((i) => (i - 1 + n) % n);
-    restartAutoplay();
-  }, [n, restartAutoplay]);
-  const goNext = useCallback(() => {
-    setActiveIdx((i) => (i + 1) % n);
-    restartAutoplay();
-  }, [n, restartAutoplay]);
+  /* Elle gezinmek otomatik geçişi kalıcı olarak kapatır. */
+  const select = useCallback((i: number) => {
+    setActiveIdx(i);
+    setUserPaused(true);
+  }, []);
+  const goPrev = useCallback(() => select((activeIdx - 1 + n) % n), [activeIdx, n, select]);
+  const goNext = useCallback(() => select((activeIdx + 1) % n), [activeIdx, n, select]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     touchStartXRef.current = e.touches[0].clientX;
@@ -130,6 +129,12 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      onFocus={() => setFocusWithin(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocusWithin(false);
+      }}
     >
       {/* merkezdeki karta arkadan hafif marka ışıması */}
       <div
@@ -144,10 +149,10 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
 
       {/* başlık */}
       <div className="relative text-center">
-        <p className="text-[10px] text-foreground/40" style={monoStyle}>
+        <p className="text-[12px] text-foreground/60" style={monoStyle}>
           ↳ seçili işler
         </p>
-        <h3
+        <h2
           className="mt-4 text-foreground"
           style={{
             fontFamily: "var(--font-instrument), serif",
@@ -158,7 +163,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
           }}
         >
           Son <em style={{ fontStyle: "italic" }}>işlerimiz</em>, tek tek.
-        </h3>
+        </h2>
       </div>
 
       {/* yay — perspective kartların DOĞRUDAN ebeveyninde olmalı, yoksa
@@ -219,31 +224,26 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
                     }}
                   />
 
-                  {isActive && (
+                  {isActive && project.slug && (
                     <div
-                      className="absolute right-3.5 top-3.5 flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[8.5px] text-white/90"
+                      className="absolute right-3.5 top-3.5 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold text-white"
                       style={{
-                        ...monoStyle,
-                        letterSpacing: "0.14em",
-                        background: "rgba(0,0,0,0.45)",
+                        background: "rgba(0,0,0,0.5)",
                         backdropFilter: "blur(8px)",
                         WebkitBackdropFilter: "blur(8px)",
-                        border: "1px solid rgba(255,255,255,0.14)",
+                        border: "1px solid rgba(255,255,255,0.18)",
                       }}
+                      aria-hidden="true"
                     >
-                      <span
-                        className="h-[5px] w-[5px] rounded-full bg-[#F472B6]"
-                        style={{ boxShadow: "0 0 6px #F472B6" }}
-                      />
-                      canlı
+                      Projeyi incele →
                     </div>
                   )}
 
                   {/* alt-sol altyazı */}
                   <div className="absolute inset-x-5 bottom-5">
                     <div
-                      className="mb-1.5 text-[9px] text-[#F472B6]"
-                      style={{ ...monoStyle, letterSpacing: "0.18em" }}
+                      className="mb-1.5 text-[11px] text-[#F9A8D4]"
+                      style={{ ...monoStyle, letterSpacing: "0.16em" }}
                     >
                       {project.name}
                       {isActive && project.year ? ` · ${project.year}` : ""}
@@ -278,10 +278,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => {
-                        setActiveIdx(i);
-                        restartAutoplay();
-                      }}
+                      onClick={() => select(i)}
                       tabIndex={hidden ? -1 : 0}
                       className="absolute inset-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EC4899]"
                     >
@@ -301,13 +298,12 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
           type="button"
           aria-label="Önceki proje"
           onClick={goPrev}
-          className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-foreground/15 text-foreground/50 transition-colors duration-200 hover:border-foreground/30 hover:text-foreground active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/25 text-foreground/70 transition-colors duration-200 hover:border-foreground/40 hover:text-foreground active:scale-95"
         >
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M10 12L6 8L10 4" /></svg>
         </button>
 
         <span
-          aria-live="polite"
           className="text-foreground"
           style={{
             fontFamily: "var(--font-instrument), serif",
@@ -322,9 +318,24 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
 
         <button
           type="button"
+          aria-label={autoplaying ? "Otomatik geçişi durdur" : "Otomatik geçişi başlat"}
+          aria-pressed={!autoplaying}
+          onClick={() => setUserPaused((p) => !p)}
+          disabled={!!reducedMotion}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/25 text-foreground/70 transition-colors duration-200 hover:border-foreground/40 hover:text-foreground disabled:hidden"
+        >
+          {autoplaying ? (
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3.5" y="3" width="3" height="10" rx="1" /><rect x="9.5" y="3" width="3" height="10" rx="1" /></svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" /></svg>
+          )}
+        </button>
+
+        <button
+          type="button"
           aria-label="Sonraki proje"
           onClick={goNext}
-          className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-foreground/15 text-foreground/50 transition-colors duration-200 hover:border-foreground/30 hover:text-foreground active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/25 text-foreground/70 transition-colors duration-200 hover:border-foreground/40 hover:text-foreground active:scale-95"
         >
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4L10 8L6 12" /></svg>
         </button>
@@ -333,14 +344,13 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
       <div className="relative mt-6 text-center">
         <Link
           href="/projeler"
-          className="text-[11px] text-foreground/45 transition-colors duration-200 hover:text-foreground/80"
-          style={monoStyle}
+          className="inline-flex items-center rounded-full border border-foreground/20 px-5 py-2.5 text-[13px] font-semibold text-foreground/80 transition-colors duration-200 hover:border-foreground/40 hover:text-foreground"
         >
-          tüm işler →
+          Tüm işleri gör →
         </Link>
       </div>
 
-      <span className="sr-only" aria-live="polite">
+      <span className="sr-only" aria-live={running ? "off" : "polite"}>
         {active?.name}
       </span>
     </section>

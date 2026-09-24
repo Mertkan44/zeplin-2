@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import HeroField from "./HeroField";
 import {
   motion,
@@ -18,6 +19,8 @@ import {
 
 const HEADLINE_TOP = "Markanızı zirveye";
 const HEADLINE_BOTTOM = "çıkarmaya hazır mısınız?";
+const SERVICE_LINE =
+  "Fotoğraf ve video prodüksiyon, sosyal medya, marka tasarımı, web ve yapay zekâ ile markalara iş üreten İstanbul merkezli yaratıcı ajans.";
 
 function Words({ text, className = "", delay = 0 }: { text: string; className?: string; delay?: number }) {
   const parts = text.split(" ");
@@ -97,7 +100,7 @@ export default function HeroStage() {
   const handScale = useTransform(eased, [0, 1], [1, 1.04]);
 
   // başlık geri çekilip soluyor
-  const textOpacity = useTransform(eased, [0.2, 0.8], [1, 0]);
+  const textOpacity = useTransform(eased, [0.35, 0.9], [1, 0]);
 
   /* İmleç takibi. Merkeze göre -1..1 aralığında normalize ediliyor.
      Burada yay KULLANIYORUZ: fare kesikli bir girdi, araya yay koymak
@@ -126,8 +129,10 @@ export default function HeroStage() {
   const rightPY = useTransform(py, (v) => v * -14);
   const still = reduced ? 0 : undefined;
 
+  /* Kaydırma alanı kısaltıldı (210svh → mobil 135svh / masaüstü 165svh):
+     kimlik ve CTA ilk ekranda, animasyon kısa bir imza olarak kalıyor. */
   return (
-    <section ref={ref} className="relative h-[210svh]">
+    <section ref={ref} className="relative h-[135svh] md:h-[165svh]">
       <div className="sticky top-0 h-svh w-full overflow-hidden bg-[#0A0308]">
         {/* magenta degrade zemin — görsel değil, kod. Rengi buradan ayarlanır. */}
         {/* Akan hacimli ışık alanı — WebGL.
@@ -200,8 +205,15 @@ export default function HeroStage() {
         {/* Ortada başlık — gerçek monopo'da da var, kaldırmam hatalıydı */}
         <motion.div
           style={{ opacity: still !== undefined ? 1 : textOpacity, willChange: "opacity" }}
-          className="pointer-events-none relative z-20 flex h-full items-center justify-center px-6 pb-[14vh]"
+          className="pointer-events-none relative z-20 flex h-full flex-col items-center justify-center px-6 pb-[18vh] sm:pb-[14vh]"
         >
+          <p
+            className="hero-fade mb-5 text-[0.8rem] font-semibold uppercase tracking-[0.32em] text-white/80"
+            style={{ animationDelay: "0.15s" }}
+            lang="en"
+          >
+            Zeplin Media
+          </p>
           <h1
             className="text-center font-[family-name:var(--font-jost)] font-light text-white"
             style={{ fontSize: "clamp(2.2rem, 5.4vw, 4.7rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}
@@ -209,6 +221,29 @@ export default function HeroStage() {
             <Words text={HEADLINE_TOP} className="block" delay={0.3} />
             <Words text={HEADLINE_BOTTOM} className="block text-white/65" delay={0.5} />
           </h1>
+          <p
+            className="hero-fade mt-6 max-w-[38rem] text-center text-[1rem] leading-[1.6] text-white/80 sm:text-[1.08rem]"
+            style={{ animationDelay: "0.75s" }}
+          >
+            {SERVICE_LINE}
+          </p>
+          <div
+            className="hero-fade pointer-events-auto mt-8 flex flex-col items-center gap-3 sm:flex-row"
+            style={{ animationDelay: "0.9s" }}
+          >
+            <Link
+              href="/projeler"
+              className="inline-flex min-w-[13rem] items-center justify-center rounded-full bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-[#9D174D] shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              İşlerimizi Gör
+            </Link>
+            <Link
+              href="/iletisim"
+              className="inline-flex min-w-[13rem] items-center justify-center rounded-full border border-white/60 px-7 py-3.5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              Projeni Anlat
+            </Link>
+          </div>
         </motion.div>
 
         {/* İçerik — monopo dili: orta tamamen boş, bütün metin altta
@@ -220,7 +255,7 @@ export default function HeroStage() {
           }}
           className="absolute inset-x-0 bottom-0 z-20 px-6 pb-8 sm:px-10 sm:pb-10"
         >
-          <div className="grid grid-cols-1 gap-y-7 sm:grid-cols-3 sm:gap-x-10">
+          <div className="hidden sm:grid sm:grid-cols-3 sm:gap-x-10">
             {STATEMENTS.map((st, i) => (
               <div
                 key={st[0]}
