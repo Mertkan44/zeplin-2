@@ -346,6 +346,7 @@ export default function ProjectCaseStudyPage({
 
       {/* ── CTA ────────────────────────────────────────────────── */}
       <section
+        data-footer-under="dark"
         className="relative overflow-hidden px-5 py-16 text-center md:px-12 md:py-24"
         style={{
           background: "radial-gradient(ellipse 80% 60% at 50% 30%, #1C0619 0%, #0D0A0C 65%)",

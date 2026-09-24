@@ -210,7 +210,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
       ref={sectionRef}
       className="relative w-full overflow-hidden"
       style={{
-        padding: "clamp(28px, 5vw, 60px) 0 clamp(8px, 2vw, 20px)",
+        padding: "clamp(28px, 5vw, 60px) 0 clamp(56px, 8vw, 112px)",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(28px)",
         transition:

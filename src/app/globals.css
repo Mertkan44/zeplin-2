@@ -561,3 +561,12 @@ body:where(.dark *) {
   .bp-badge,
   .bp-arrow { transition-duration: 1ms; }
 }
+
+/* Footer'ın yuvarlak üst köşelerinin arkası: sayfanın bittiği renk.
+   Koyu bir bölümle biten sayfalar o bölüme data-footer-under="dark" verir. */
+.site-footer {
+  background: var(--background);
+}
+body:has([data-footer-under="dark"]) .site-footer {
+  background: #0d0a0c;
+}
