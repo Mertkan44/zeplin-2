@@ -60,6 +60,7 @@ export default function ProjelerPage() {
                     src={project.image}
                     alt={project.name}
                     fill
+                    sizes="(min-width: 1024px) 330px, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     style={{ objectPosition: project.imagePosition ?? "center" }}
                   />

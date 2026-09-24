@@ -115,11 +115,6 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://use.typekit.net" />
-        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
-        <link rel="stylesheet" href="https://use.typekit.net/ryi5mzw.css" />
-        <link rel="stylesheet" href="https://use.typekit.net/fad1vyk.css" />
-        <link rel="stylesheet" href="https://use.typekit.net/psq5rwo.css" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={jsonLdScript([

@@ -290,6 +290,7 @@ export default function HakkimizdaPage() {
               src="/images/generated/about-agency-studio.webp"
               alt="Zeplin Media Hikayemiz"
               fill
+              sizes="(min-width: 768px) 45vw, 0px"
               className="object-cover"
             />
             {/* Pink tint overlay */}
