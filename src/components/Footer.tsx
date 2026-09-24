@@ -50,25 +50,25 @@ export default function Footer() {
        Varsayılan sayfa zemini; koyu bir bölümle biten sayfalar o bölüme
        data-footer-under="dark" verir (globals.css). İçerik üstüne binme yok. */
     <footer className="site-footer relative">
-      <div className="relative isolate overflow-hidden rounded-t-[32px] text-white md:rounded-t-[48px]">
+      <div className="relative isolate overflow-hidden rounded-t-[28px] text-white md:rounded-t-[40px]">
         <div
           className="pointer-events-none absolute inset-0 -z-10"
           style={{ background: theme === "dark" ? DARK_FOOTER_GRADIENT : LIGHT_FOOTER_GRADIENT }}
           aria-hidden="true"
         />
 
-        <div className="mx-auto max-w-[1320px] px-6 pt-16 md:px-12 md:pt-24">
+        <div className="mx-auto max-w-[1320px] px-6 pt-14 md:px-12 md:pt-20">
           {/* ── CTA bandı ─────────────────────────────────────── */}
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-16">
             <h2
-              className="max-w-[12ch] text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.02em] text-[#fffaf7]"
+              className="max-w-[12ch] text-[clamp(40px,4.4vw,64px)] leading-[0.95] tracking-[-0.02em] text-[#fffaf7]"
               style={{ fontFamily: "var(--font-instrument), serif" }}
             >
               Burası daha <em>başlangıç.</em>
             </h2>
 
-            <div className="md:max-w-[380px] md:pb-2">
-              <p className="text-[17px] leading-[1.6] text-white/85">
+            <div className="md:max-w-[400px] md:pb-1">
+              <p className="text-[16px] leading-[1.6] text-white/85">
                 Yeni projen için bize yaz; ihtiyacını okuyup bir iş günü içinde dönelim.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -91,10 +91,10 @@ export default function Footer() {
           </div>
 
           {/* ── Bilgi ızgarası ────────────────────────────────── */}
-          <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-white/20 pt-10 text-[16px] text-white/90 md:mt-20 md:grid-cols-12 md:pt-12">
+          <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-white/20 pt-10 text-[15px] text-white/90 md:mt-14 md:grid-cols-12">
             <nav aria-label="Alt menü" className="col-span-2 md:col-span-5">
               <Column title="Sayfalar">
-                <ul className="columns-2 gap-x-8 [&>li]:mb-2.5">
+                <ul className="grid grid-flow-col grid-cols-2 grid-rows-4 gap-x-8 gap-y-2.5">
                   {pageLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className={linkCls}>
@@ -139,15 +139,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ── İmza ve yasal satır ───────────────────────────── */}
-          <div
-            className="mt-16 select-none text-center text-[clamp(88px,17vw,248px)] font-semibold leading-[0.78] tracking-[-0.075em] text-[#fffaf7] md:mt-20"
-            aria-hidden="true"
-          >
-            Zeplin
-          </div>
-
-          <div className="mt-8 flex flex-col gap-3 border-t border-white/20 py-6 text-[14px] text-white/75 sm:flex-row sm:items-center sm:justify-between">
+          {/* ── Yasal satır ───────────────────────────────────── */}
+          <div className="mt-12 flex flex-col gap-3 border-t border-white/20 py-6 md:mt-16 text-[14px] text-white/75 sm:flex-row sm:items-center sm:justify-between">
             <span>
               © 2026 <span lang="en">Zeplin Media</span>
             </span>
