@@ -11,6 +11,7 @@ import Link from "next/link";
 import { EASE, FONT, revealVariants, useReliableInView } from "@/lib/motion";
 import { serviceTabs } from "@/data/services";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
+import ProjectNotes from "@/components/ProjectNotes";
 
 /* ── Metrics ──────────────────────────────────────────────────────── */
 const metrics = [
@@ -50,12 +51,6 @@ function CountUp({ value, suffix, delay }: { value: number; suffix: string; dela
 
 /* ── Service tabs data — imported from @/data/services ─────────── */
 
-/* ── Testimonials ─────────────────────────────────────────────────── */
-const testimonials = [
-  { name: "Milo Restaurant", role: "Fotoğraf ve Reels", text: "Menü çekimi, reels akışı ve sosyal medya görselleri aynı görsel dilde toplandı." },
-  { name: "Foton Sağlık Çözümleri", role: "Kurumsal Web Sitesi", text: "Teknik ürün gamını sade, güven veren ve uluslararası kullanıma uygun bir web yapısına taşıdık." },
-  { name: "Pam Akademi", role: "Kimlik ve Sosyal Medya", text: "Kimlik inşası, web sitesi, takvim ve sosyal medya tasarımlarını tek marka sistemi altında birleştirdik." },
-];
 
 /* ══════════════════════════════════════════════════════════════════════
    PAGE
@@ -423,52 +418,7 @@ export default function HizmetlerPage() {
 
       {/* ── Müşterilerden Alıntı ─────────────────────────────────── */}
       <section className="mx-auto max-w-[1200px] px-6 pb-24 pt-10 md:pb-32 md:pt-16">
-        <motion.div
-          variants={revealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-          custom={0}
-          className="mb-10 md:mb-14"
-        >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700" style={FONT}>
-            Müşterilerimiz ne diyor
-          </span>
-        </motion.div>
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.blockquote
-              key={t.name}
-              variants={revealVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              custom={i * 0.1}
-              className="relative flex flex-col justify-between"
-            >
-              {/* Large decorative quote mark */}
-              <span
-                className="absolute -left-1 -top-4 select-none text-[64px] font-bold leading-none text-zinc-100 dark:text-white/[0.04]"
-                aria-hidden="true"
-              >
-                &ldquo;
-              </span>
-              <p className="relative text-[15px] leading-[1.8] text-zinc-600 dark:text-zinc-400" style={FONT}>
-                {t.text}
-              </p>
-              <div className="mt-6 flex items-center gap-3 border-t border-zinc-100 pt-5 dark:border-white/[0.06]">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,#F472B6,#DB2777)] text-[13px] font-bold text-white dark:bg-[linear-gradient(135deg,#DB2777,#9D174D)]">
-                  {t.name.charAt(0)}
-                </div>
-                <div>
-                  <span className="block text-[14px] font-semibold text-zinc-800 dark:text-zinc-200" style={FONT}>{t.name}</span>
-                  <span className="text-[12px] text-zinc-400 dark:text-zinc-600">{t.role}</span>
-                </div>
-              </div>
-            </motion.blockquote>
-          ))}
-        </div>
+        <ProjectNotes slugs={["milo-restaurant", "foton-saglik-cozumleri", "pam-akademi"]} />
       </section>
     </main>
   );

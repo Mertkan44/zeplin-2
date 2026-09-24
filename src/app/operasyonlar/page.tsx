@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
+import ProjectNotes from "@/components/ProjectNotes";
 
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
@@ -315,23 +316,6 @@ const ticker = [
   "Aylık analiz raporu tamamlandı",
 ];
 
-const testimonials = [
-  {
-    name: "Mehmet Y.",
-    role: "E-Ticaret Müdürü",
-    text: "Sosyal medya ve reklam operasyonlarımızı tek çatı altında yönetmeleri inanılmaz verimli oldu.",
-  },
-  {
-    name: "Elif D.",
-    role: "Pazarlama Direktörü",
-    text: "Haftalık raporlama ve şeffaf iletişim sayesinde her şey kontrol altında. Güvenle çalışıyoruz.",
-  },
-  {
-    name: "Can B.",
-    role: "Startup Kurucusu",
-    text: "AI chatbot entegrasyonu müşteri memnuniyetimizi %40 artırdı. Operasyonel mükemmellik.",
-  },
-];
 
 /* ══════════════════════════════════════════════════════════════════════
    PAGE
@@ -706,7 +690,7 @@ export default function OperasyonlarPage() {
         </div>
       </section>
 
-      {/* ── SECTION 6: Live Ticker + Testimonials ─────────────────── */}
+      {/* ── SECTION 6: Live Ticker + Proje notları ─────────────────── */}
       <section className="py-16 md:py-24">
         {/* Live ticker */}
         <div className="relative mb-14 overflow-hidden border-y border-zinc-200/60 py-4 dark:border-white/[0.06] md:mb-20">
@@ -728,75 +712,12 @@ export default function OperasyonlarPage() {
           </div>
         </div>
 
-        {/* Testimonials */}
+        {/* Proje notları (gerçek projelerden, ajans anlatımı) */}
         <div className="mx-auto max-w-[1200px] px-6">
-          <motion.span
-            initial={{ opacity: 0.12, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-[#DB2777] dark:text-[#F472B6]"
-            style={FONT}
-          >
-            Müşteri Görüşleri
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0.12, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE, delay: 0.08 }}
-            className="mt-3 text-[24px] font-semibold leading-[1.1] tracking-[-0.02em] text-zinc-900 dark:text-white md:text-[30px]"
-            style={FONT}
-          >
-            Markaların güvendiği operasyon.
-          </motion.h2>
-
-          <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={t.name}
-                variants={revealVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                custom={i * 0.1}
-                className="rounded-[24px] border border-zinc-100 bg-white p-6 dark:border-white/[0.06] dark:bg-white/[0.02] md:p-8"
-              >
-                {/* Quote mark */}
-                <span
-                  className="block select-none text-[40px] font-bold leading-none text-zinc-100 dark:text-white/[0.06]"
-                  aria-hidden="true"
-                >
-                  &ldquo;
-                </span>
-                <p
-                  className="mt-2 text-[15px] leading-[1.7] text-zinc-600 dark:text-zinc-400"
-                  style={FONT}
-                >
-                  {t.text}
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,#F472B6,#DB2777)] text-[13px] font-bold text-white">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <span
-                      className="block text-[14px] font-semibold text-zinc-900 dark:text-white"
-                      style={FONT}
-                    >
-                      {t.name}
-                    </span>
-                    <span
-                      className="text-[12px] text-zinc-400 dark:text-zinc-600"
-                      style={FONT}
-                    >
-                      {t.role}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <ProjectNotes
+            slugs={["milo-restaurant", "ritim-jewellery", "pam-akademi"]}
+            heading="Sahada nasıl çalıştığımız."
+          />
         </div>
       </section>
 
