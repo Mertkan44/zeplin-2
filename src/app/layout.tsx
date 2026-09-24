@@ -142,12 +142,13 @@ export default function RootLayout({
           >
             İçeriğe geç
           </a>
-          <Navbar />
-          <div id="icerik" tabIndex={-1} className="outline-none">
-            {children}
-          </div>
-          <Footer />
-          <ScrollRevealRescue />
+          <ScrollRevealRescue>
+            <Navbar />
+            <div id="icerik" tabIndex={-1} className="outline-none">
+              {children}
+            </div>
+            <Footer />
+          </ScrollRevealRescue>
         </ThemeProvider>
       </body>
     </html>

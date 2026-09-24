@@ -37,11 +37,10 @@ export const revealViewport = {
 } as const;
 
 /**
- * Drop-in replacement for framer-motion's `useInView`. Fast scrolling can outrun
- * the IntersectionObserver callback and never report an element as intersecting,
- * leaving scroll-reveal content (fade-ins, counters) stuck forever. This backs
- * the observer with a rect-based poll (on scroll + interval) so the reveal always
- * eventually fires once the element has actually settled on screen.
+ * framer-motion `useInView` yerine. IntersectionObserver'a ek olarak kaydırma
+ * durduğunda tek bir konum kontrolü yapar; çok hızlı kaydırmada gözlemci
+ * tetiklenmese bile sayaç/video gibi içerik sonunda başlar. Sürekli
+ * zamanlayıcı kullanmaz; görünür olduktan sonra tüm dinleyiciler kalkar.
  */
 export function useReliableInView(
   ref: RefObject<Element | null>,
@@ -54,12 +53,17 @@ export function useReliableInView(
     const node = ref.current;
     if (!node) return;
 
+    let timer = 0;
     const checkRect = () => {
       const rect = node.getBoundingClientRect();
       const buffer = window.innerHeight * 0.5;
       if (rect.top < window.innerHeight + buffer && rect.bottom > -buffer) {
         setInView(true);
       }
+    };
+    const onScroll = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(checkRect, 150);
     };
 
     const observer = new IntersectionObserver(
@@ -69,15 +73,12 @@ export function useReliableInView(
       { rootMargin: options?.margin ?? "15% 0px 15% 0px", threshold: options?.amount ?? 0.01 },
     );
     observer.observe(node);
-
-    checkRect();
-    window.addEventListener("scroll", checkRect, { passive: true });
-    const interval = window.setInterval(checkRect, 300);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", checkRect);
-      window.clearInterval(interval);
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [ref, inView, options?.margin, options?.amount]);
 
