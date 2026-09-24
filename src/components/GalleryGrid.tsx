@@ -62,7 +62,7 @@ export default function GalleryGrid() {
   return (
     <section aria-label="Galeri" className="mx-auto max-w-[1200px] px-5 pb-24 md:px-6">
       {/* Filtreler */}
-      <div className="-mx-5 mb-8 overflow-x-auto px-5 md:mx-0 md:px-0">
+      <div className="-mx-5 mb-8 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden">
         <div role="group" aria-label="Projeye göre filtrele" className="flex w-max gap-2 md:w-auto md:flex-wrap">
           {filters.map((f) => {
             const active = f.id === filter;
