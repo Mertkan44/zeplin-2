@@ -1,383 +1,211 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties } from "react";
-
-const SERIF = {
-  fontFamily: "var(--font-instrument), 'Instrument Serif', Georgia, serif",
-} as const;
+import type { ReactNode } from "react";
+import { useTheme } from "./ThemeProvider";
 
 const MONO = {
   fontFamily: "ui-monospace, 'JetBrains Mono', monospace",
 } as const;
 
-/* ── Zeplin Media star — clean CSS asterisk ──────────────────────────── */
-function ZMStar({
-  size,
-  spin = 18,
-  glow = 40,
-}: {
-  size: number;
-  spin?: number;
-  glow?: number;
-}) {
-  const w = Math.round(size * 0.15);
-  const barStyle: CSSProperties = {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    width: size,
-    height: w,
-    background: "#DB2777",
-    borderRadius: 9999,
-    transform: "translate(-50%, -50%)",
-  };
+const LIGHT_BRIDGE =
+  "linear-gradient(180deg, #ffffff 0%, #ffffff 14%, #fdf2f8 38%, #f3c3dc 72%, #e45b9a 100%)";
+
+const DARK_BRIDGE =
+  "linear-gradient(180deg, #0a0a0a 0%, #0a0a0a 16%, #180a12 42%, #4d102c 74%, #8f174b 100%)";
+
+const LIGHT_FOOTER_GRADIENT =
+  "radial-gradient(circle at 9% 8%, rgba(255,205,233,0.34), transparent 30%), radial-gradient(circle at 78% 10%, rgba(248,169,213,0.22), transparent 32%), radial-gradient(circle at 48% 94%, rgba(91,5,35,0.28), transparent 42%), linear-gradient(135deg, #e45b9a 0%, #dc2f78 47%, #bd175b 72%, #8f103d 100%)";
+
+const DARK_FOOTER_GRADIENT =
+  "radial-gradient(circle at 12% 7%, rgba(232,82,148,0.22), transparent 31%), radial-gradient(circle at 76% 10%, rgba(205,43,108,0.18), transparent 32%), radial-gradient(circle at 50% 96%, rgba(44,2,18,0.46), transparent 44%), linear-gradient(135deg, #8f174b 0%, #a91652 46%, #85103f 73%, #570822 100%)";
+
+const footerLinks = [
+  { href: "/", label: "Ana sayfa" },
+  { href: "/hizmetler", label: "Hizmetler" },
+  { href: "/projeler", label: "Projeler" },
+  { href: "/operasyonlar", label: "Operasyonlar" },
+  { href: "/hakkimizda", label: "Hakkımızda" },
+  { href: "/galeri", label: "Galeri" },
+];
+
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/zeplin.media/",
+    label: "Instagram",
+    shortLabel: "IG",
+  },
+  {
+    href: "https://www.linkedin.com/company/zeplin-media/",
+    label: "LinkedIn",
+    shortLabel: "IN",
+  },
+  {
+    href: "https://wa.me/905459407690",
+    label: "WhatsApp",
+    shortLabel: "WA",
+  },
+];
+
+function Label({ children }: { children: ReactNode }) {
   return (
     <div
-      className="animate-spin"
-      style={{
-        width: size,
-        height: size,
-        flexShrink: 0,
-        position: "relative",
-        animationDuration: `${spin}s`,
-        filter: `drop-shadow(0 0 ${glow}px rgba(219,39,119,0.6))`,
-      }}
-      aria-hidden="true"
+      className="mb-4 text-[10px] uppercase tracking-[0.18em] text-white/55"
+      style={MONO}
     >
-      <span style={barStyle} />
-      <span style={{ ...barStyle, transform: "translate(-50%, -50%) rotate(90deg)" }} />
-      <span style={{ ...barStyle, transform: "translate(-50%, -50%) rotate(45deg)" }} />
-      <span style={{ ...barStyle, transform: "translate(-50%, -50%) rotate(-45deg)" }} />
+      {children}
     </div>
   );
 }
 
-/* ── Nav data ───────────────────────────────────────────────────────── */
-const siteLinks = [
-  { href: "/",             label: "Ana sayfa" },
-  { href: "/hizmetler",    label: "Hizmetler" },
-  { href: "/projeler",     label: "Projeler" },
-  { href: "/operasyonlar", label: "Operasyonlar" },
-  { href: "/hakkimizda",   label: "Hakkımızda" },
-  { href: "/galeri",       label: "Galeri" },
-];
-
-const socialLinks: { href: string; label: string; internal?: boolean }[] = [
-  { href: "https://www.instagram.com/zeplin.media/",         label: "Instagram" },
-  { href: "https://www.linkedin.com/company/zeplin-media/",  label: "LinkedIn" },
-  { href: "https://wa.me/905459407690",                       label: "WhatsApp" },
-];
-
-/* ── Footer ─────────────────────────────────────────────────────────── */
 export default function Footer() {
+  const { theme } = useTheme();
+
   return (
-    <footer className="px-3 pb-4 pt-12 md:px-4 md:pb-8 md:pt-16">
-      <div className="mx-auto w-full max-w-[min(1280px,calc(100vw-24px))]">
-        <section
-          className="relative overflow-hidden rounded-[28px] px-5 pb-5 pt-10 md:rounded-[40px] md:px-16 md:pb-8 md:pt-16"
+    <footer>
+      <div
+        className="footer-bridge pointer-events-none"
+        style={{ background: theme === "dark" ? DARK_BRIDGE : LIGHT_BRIDGE }}
+        aria-hidden="true"
+      />
+      <section
+        id="iletisim"
+        className="zeplin-footer relative isolate min-h-[540px] scroll-mt-28 overflow-hidden text-white md:min-h-[470px]"
+      >
+        <div
+          className="footer-gradient pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 30%, #1C0619 0%, #0D0A0C 65%)",
+              theme === "dark" ? DARK_FOOTER_GRADIENT : LIGHT_FOOTER_GRADIENT,
           }}
-        >
-          {/* ── Desktop atmospheric star (off-screen right) ── */}
-          <div
-            className="pointer-events-none absolute hidden md:block"
-            style={{ right: -150, top: 48, opacity: 0.9 }}
-          >
-            <ZMStar size={420} spin={26} glow={100} />
-          </div>
+          aria-hidden="true"
+        />
+        <div className="footer-highlight pointer-events-none absolute inset-0" aria-hidden="true" />
 
-          {/* ── Mobile atmospheric star (top-right, like desktop) ── */}
-          <div
-            className="pointer-events-none absolute md:hidden"
-            style={{ right: -78, top: 22, opacity: 0.9 }}
-          >
-            <ZMStar size={210} spin={22} glow={70} />
-          </div>
-
-          {/* ── Mobile: everything centered (wordmark → tagline → CTA) ── */}
-          <div className="relative z-10 flex flex-col items-center gap-5 text-center md:hidden">
-
-            <h2
-              className="text-[clamp(52px,14vw,72px)] leading-[0.88] text-white"
-              style={{ ...SERIF, fontWeight: 400, fontStyle: "italic" }}
-            >
-              Zeplin
-              <br />
-              <span className="text-white">Media</span>
-              <span className="text-[#DB2777]">.</span>
-            </h2>
-            <p className="max-w-[34ch] text-[15px] leading-[1.5] text-white/55">
-              Old school kaliteyi modern dijital sistemlerle buluşturuyoruz.
-            </p>
-            <a
-              href="https://wa.me/905459407690"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#DB2777] px-7 py-4 text-[15px] font-semibold text-[#0D0A0C] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#EC4899] active:translate-y-0"
-              style={{ boxShadow: "0 14px 36px -10px rgba(219,39,119,0.6)" }}
-            >
-              Projeni anlat
-              <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#0D0A0C]">
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                  <path
-                    d="M2 9L9 2M9 2H3M9 2V8"
-                    stroke="#DB2777"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-            </a>
-            <Link
-              href="/hizmetler"
-              className="text-[14px] text-white/55 transition-colors hover:text-white"
-            >
-              hizmetlere göz at →
-            </Link>
-          </div>
-
-          {/* ── Desktop content grid ── */}
-          <div className="relative z-10 hidden md:grid md:max-w-[720px] md:grid-cols-[1.1fr_1fr] md:gap-16">
-            {/* Brand block */}
-            <div>
-              <div
-                className="text-[11px] uppercase tracking-[0.16em] text-white/40"
-                style={MONO}
-              >
-                ZM · 2026
-              </div>
-
-              <h2
-                className="mt-5 text-[96px] leading-[0.88] text-white"
-                style={{ ...SERIF, fontWeight: 400, fontStyle: "italic" }}
-              >
-                Zeplin
-                <br />
-                Media
+        <div className="relative z-10 flex min-h-[540px] flex-col px-6 pb-5 pt-9 md:min-h-[470px] md:px-12 md:pb-6 md:pt-10 lg:px-[7vw]">
+          <div className="grid gap-9 md:grid-cols-[1.3fr_0.8fr_0.65fr] md:gap-8">
+            <div className="max-w-[380px]">
+              <h2 className="text-[clamp(38px,4.3vw,56px)] font-medium leading-[0.92] tracking-[-0.055em] text-[#fffaf7]">
+                Burası daha başlangıç.
               </h2>
-
-              <p className="mt-6 max-w-[360px] text-[16px] leading-[1.5] text-white/50">
-                Old school kaliteyi modern dijital sistemlerle buluşturuyoruz.
+              <p className="mt-4 max-w-[34ch] text-[14px] leading-relaxed text-white/80">
+                Bizi takip et veya yeni projen için doğrudan yaz.
               </p>
-
-              <div className="mt-7 flex items-center gap-6">
+              <div className="mt-2 flex flex-wrap gap-x-2 text-[14px] text-white/95">
                 <a
-                  href="https://wa.me/905459407690"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-3 rounded-full bg-[#DB2777] px-7 py-4 text-[15px] font-semibold text-[#0D0A0C] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#EC4899] active:translate-y-0"
-                  style={{ boxShadow: "0 8px 32px -8px rgba(219,39,119,0.55)" }}
+                  href="mailto:info@zeplinmedia.com"
+                  className="underline decoration-white/45 underline-offset-4 transition-colors hover:text-[#260712]"
                 >
-                  Projeni anlat
-                  <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-[#0D0A0C]">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                      <path
-                        d="M2 9L9 2M9 2H3M9 2V8"
-                        stroke="#DB2777"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
+                  info@zeplinmedia.com
                 </a>
-                <Link
-                  href="/hizmetler"
-                  className="text-[15px] text-white/55 transition-colors hover:text-white"
+                <span aria-hidden="true">·</span>
+                <a
+                  href="tel:+905459407690"
+                  className="underline decoration-white/45 underline-offset-4 transition-colors hover:text-[#260712]"
                 >
-                  hizmetlere göz at →
+                  +90 545 940 76 90
+                </a>
+              </div>
+            </div>
+
+            <nav aria-label="Alt menü">
+              <Label>Zeplin</Label>
+              <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-[15px] text-white/90 md:grid-cols-1 md:gap-y-1.5">
+                {footerLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="w-fit transition-colors hover:text-[#260712]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </nav>
+
+            <div>
+              <Label>Sosyal</Label>
+              <div className="flex gap-3">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={link.label}
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf7] text-[10px] font-bold tracking-[0.08em] text-[#1b0910] shadow-[0_10px_30px_rgba(82,7,37,0.18)] transition-colors hover:bg-[#ffd8eb]"
+                    style={MONO}
+                  >
+                    {link.shortLabel}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-auto flex flex-col-reverse gap-6 pt-10 sm:flex-row sm:items-end sm:justify-between md:pt-8">
+            <div
+              className="flex shrink-0 flex-col gap-2 text-[9px] uppercase tracking-[0.12em] text-white/70 md:text-[10px]"
+              style={MONO}
+            >
+              <span>© 2026 Zeplin Media</span>
+              <div className="flex gap-4">
+                <Link href="/cerez" className="transition-colors hover:text-white">
+                  Çerezler
+                </Link>
+                <Link href="/gizlilik" className="transition-colors hover:text-white">
+                  Gizlilik
                 </Link>
               </div>
             </div>
 
-            {/* Contact block — desktop */}
-            <div className="flex flex-col gap-8 pt-[18px]">
-              <div>
-                <div
-                  className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
-                  style={MONO}
-                >
-                  Bize yazın
-                </div>
-                <a
-                  href="mailto:info@zeplinmedia.com"
-                  className="block text-[26px] leading-tight text-[#DB2777] transition-colors hover:text-[#EC4899]"
-                  style={{ ...SERIF, fontStyle: "italic", letterSpacing: "-0.01em" }}
-                >
-                  info@zeplinmedia.com
-                </a>
-                <div className="mt-3.5 flex flex-col gap-1.5 text-[14px] text-white/50">
-                  <a
-                    href="tel:+905459407690"
-                    className="w-fit text-white/75 transition-colors hover:text-white"
-                  >
-                    +90 545 940 76 90
-                  </a>
-                  <span>Levent, İstanbul · Türkiye</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5 border-t border-white/[0.08] pt-6">
-                <div>
-                  <div
-                    className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
-                    style={MONO}
-                  >
-                    Site
-                  </div>
-                  <div className="flex flex-col gap-2 text-[14px] text-white/70">
-                    {siteLinks.map((l) => (
-                      <Link
-                        key={l.href}
-                        href={l.href}
-                        className="w-fit transition-colors hover:text-white"
-                      >
-                        {l.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
-                    style={MONO}
-                  >
-                    Sosyal
-                  </div>
-                  <div className="flex flex-col gap-2 text-[14px] text-white/70">
-                    {socialLinks.map((l) =>
-                      l.internal ? (
-                        <Link
-                          key={l.href}
-                          href={l.href}
-                          className="w-fit transition-colors hover:text-white"
-                        >
-                          {l.label} ↗
-                        </Link>
-                      ) : (
-                        <a
-                          key={l.href}
-                          href={l.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-fit transition-colors hover:text-white"
-                        >
-                          {l.label} ↗
-                        </a>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Mobile contact block ── */}
-          <div className="relative z-10 mt-8 border-t border-white/[0.08] pt-6 md:hidden">
-            <div className="text-center">
+            <div className="min-w-0 sm:w-[64%]">
               <div
-                className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
+                className="mb-2 text-right text-[9px] uppercase tracking-[0.16em] text-white/60 md:text-[10px]"
                 style={MONO}
               >
-                Bize yazın
+                İstanbul · 2026
               </div>
-              <a
-                href="mailto:info@zeplinmedia.com"
-                className="block text-[22px] leading-tight text-[#DB2777] transition-colors hover:text-[#EC4899]"
-                style={{ ...SERIF, fontStyle: "italic", letterSpacing: "-0.01em" }}
+              <div
+                className="footer-wordmark whitespace-nowrap text-right text-[clamp(78px,13vw,180px)] font-semibold leading-[0.72] tracking-[-0.085em] text-[#fffaf7]"
+                aria-label="Zeplin"
               >
-                info@zeplinmedia.com
-              </a>
-              <div className="mt-3 flex flex-col items-center gap-1.5 text-[14px] text-white/50">
-                <a
-                  href="tel:+905459407690"
-                  className="text-white/75 transition-colors hover:text-white"
-                >
-                  +90 545 940 76 90
-                </a>
-                <span>Levent, İstanbul · Türkiye</span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-5 border-t border-white/[0.08] pt-5">
-              <div>
-                <div
-                  className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
-                  style={MONO}
-                >
-                  Site
-                </div>
-                <div className="flex flex-col gap-2 text-[14px] text-white/70">
-                  {siteLinks.map((l) => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      className="w-fit transition-colors hover:text-white"
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div
-                  className="mb-3 text-[11px] uppercase tracking-[0.14em] text-white/40"
-                  style={MONO}
-                >
-                  Sosyal
-                </div>
-                <div className="flex flex-col gap-2 text-[14px] text-white/70">
-                  {socialLinks.map((l) =>
-                    l.internal ? (
-                      <Link
-                        key={l.href}
-                        href={l.href}
-                        className="w-fit transition-colors hover:text-white"
-                      >
-                        {l.label} ↗
-                      </Link>
-                    ) : (
-                      <a
-                        key={l.href}
-                        href={l.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="w-fit transition-colors hover:text-white"
-                      >
-                        {l.label} ↗
-                      </a>
-                    )
-                  )}
-                </div>
+                Zeplin
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* ── Legal bar (shared) ── */}
-          <div
-            className="relative z-10 mt-8 flex flex-col gap-3 border-t border-white/[0.08] pt-5 md:mt-12 md:flex-row md:items-center md:justify-between"
-            style={{
-              ...MONO,
-              fontSize: 11,
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.32)",
-            }}
-          >
-            <div>© 2026 — Zeplin Media</div>
-            <div className="flex gap-5">
-              <a href="/cerez" className="transition-colors hover:text-white/60">
-                Cookies
-              </a>
-              <a href="/gizlilik" className="transition-colors hover:text-white/60">
-                Privacy
-              </a>
-            </div>
-          </div>
-        </section>
-      </div>
+      <style jsx>{`
+        .zeplin-footer {
+          background: #d92372;
+        }
+
+        .footer-gradient {
+          background: #d92372;
+        }
+
+        .footer-highlight {
+          background:
+            linear-gradient(112deg, rgba(255, 255, 255, 0.07), transparent 31%),
+            linear-gradient(180deg, transparent 64%, rgba(50, 2, 20, 0.13));
+        }
+
+        .footer-bridge {
+          height: 68px;
+        }
+
+        .footer-wordmark {
+          text-shadow: 0 16px 60px rgba(91, 7, 38, 0.25);
+        }
+
+        @media (max-width: 767px) {
+          .footer-bridge {
+            height: 50px;
+          }
+        }
+      `}</style>
     </footer>
   );
 }
