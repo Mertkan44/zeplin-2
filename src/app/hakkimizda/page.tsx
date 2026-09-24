@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   motion,
   useInView,
@@ -10,6 +11,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
+import { whatsappUrl } from "@/lib/contact";
 
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
@@ -358,14 +360,12 @@ export default function HakkimizdaPage() {
               transition={{ duration: 0.54, ease: EASE, delay: 0.4 }}
               className="mt-8 flex justify-center gap-3 md:justify-start"
             >
-              <a
-                href="https://wa.me/905459407690"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/iletisim"
                 className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#DB2777,#9D174D)] px-6 py-3 text-[14px] font-semibold text-white shadow-[0_8px_24px_rgba(219,39,119,0.3)] transition-all duration-300 hover:shadow-[0_12px_32px_rgba(219,39,119,0.4)] hover:scale-[1.02] active:scale-[0.98]"
                 style={FONT}
               >
-                İletişime Geç
+                Projeni Anlat
                 <svg
                   width="16"
                   height="16"
@@ -380,7 +380,7 @@ export default function HakkimizdaPage() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </a>
+              </Link>
             </motion.div>
           </div>
         </div>
@@ -713,7 +713,7 @@ export default function HakkimizdaPage() {
             </div>
 
             <a
-              href="https://wa.me/905459407690"
+              href={whatsappUrl("Merhaba Zeplin Media, Hakkımızda sayfanızı okudum; projemi konuşmak için bir görüşme ayarlamak istiyorum.")}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-[15px] font-semibold text-[#9D174D] shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] active:scale-[0.98]"

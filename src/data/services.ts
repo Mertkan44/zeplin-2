@@ -22,6 +22,19 @@ export const CATEGORY_LABELS: Record<ServiceCategory, string> = {
   "ai-otomasyon": "AI & Otomasyon",
 };
 
+/** İletişim formunda önceden seçilecek ihtiyaç (lib/contact BRIEF_NEEDS). */
+export const CATEGORY_BRIEF_NEED: Record<ServiceCategory, string> = {
+  "foto-video": "Fotoğraf & Video",
+  "sosyal-icerik": "Sosyal Medya & İçerik",
+  "marka-tasarim": "Marka & Tasarım",
+  web: "Web Sitesi",
+  "ai-otomasyon": "AI & Otomasyon",
+};
+
+export function briefHref(service: Pick<ServiceData, "category">) {
+  return `/iletisim?ihtiyac=${encodeURIComponent(CATEGORY_BRIEF_NEED[service.category])}`;
+}
+
 /** Eski sekme adresleri (paylaşılmış bağlantılar) yeni gruplara yönlenir. */
 export const LEGACY_TAB_IDS: Record<string, ServiceCategory> = {
   tasarim: "marka-tasarim",

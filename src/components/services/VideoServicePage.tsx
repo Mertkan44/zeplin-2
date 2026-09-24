@@ -389,7 +389,7 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
       <RelatedServices services={related} />
 
       {/* ── Bölüm 7: CTA Banner ───────────────────────────────────── */}
-      <CTABanner />
+      <CTABanner service={service} />
     </main>
   );
 }

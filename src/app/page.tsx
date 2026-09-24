@@ -5,6 +5,7 @@ import HomeScrollReset from "@/components/HomeScrollReset";
 import dynamic from "next/dynamic";
 import { projects } from "@/data/projects";
 import { createPageMetadata, siteConfig } from "@/lib/seo";
+import { whatsappUrl } from "@/lib/contact";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Zeplin Media | İstanbul Dijital Ajans",
@@ -64,7 +65,7 @@ const blocks = [
     socials: [
       { name: "Instagram", url: "https://www.instagram.com/zeplin.media/" },
       { name: "LinkedIn", url: "https://www.linkedin.com/company/zeplin-media/" },
-      { name: "WhatsApp", url: "https://wa.me/905459407690" },
+      { name: "WhatsApp", url: whatsappUrl("Merhaba Zeplin Media, web sitenizden ulaşıyorum.") },
     ],
   },
 ];

@@ -62,15 +62,16 @@ A marketer reviewing an email newsletter design on a laptop while checking how i
 ```
 
 ### 6 — kartvizit.jpg
-Bu prompt ortak stil bloğunu kendi içinde barındırıyor; tek başına yapıştır.
+İki yön var; tek başına yapıştır (stil bloğu içinde). Önerilen: **B**.
+
+**A — Kullanım anı**
 ```
-Editorial product photograph for a creative agency website, 3:2 landscape. Soft natural daylight from a window on the left, gentle realistic shadows, true-to-life colors, shot on a 50mm lens from a 45-degree angle above a light oak table.
+Candid documentary photograph, 3:2 landscape, natural window light in a bright Istanbul café. Close-up of a business card being handed from one person to another across a small marble table — the card is sharp and in the upper half of the frame, both hands partially visible, faces out of frame. The card is thick off-white stock with a minimal abstract geometric mark and a thin magenta (#DB2777) edge; no readable text. Two coffee cups and a phone softly blurred, warm café interior out of focus behind. Lower third of the frame calm and uncluttered. Real skin texture, true-to-life colors. No logos, no brand names, no neon, no watermark.
+```
 
-Subject in the UPPER HALF of the frame: a finished premium business card set neatly arranged — a small fanned stack of thick textured off-white cards and a second stack of deep charcoal cards. The top card of each stack shows a simple minimal geometric monogram mark (abstract shapes only, no letters, no words, no numbers). The white cards have a thin magenta (#DB2777) painted edge visible along the stack; the charcoal cards have a subtle blind-debossed mark. One designer's hand enters from the right, placing a single card on top of the white stack, fingertips visible, no watch or jewelry.
-
-Minimal props only: one graphite pencil and a small paper swatch fan partly out of focus at the top edge. The LOWER THIRD of the frame is calm, empty wooden table surface with soft light — no objects there.
-
-Crisp detail on paper texture and card edges, shallow depth of field. Clean, calm, premium, uncluttered. No readable text anywhere, no logos, no brand names, no moodboard photos, no screens, no laptop, no neon, no dark moody desk, no watermark.
+**B — Cesur stüdyo**
+```
+Top-down studio flat lay, 3:2 landscape, on a solid saturated magenta (#DB2777) paper background. A complete stationery system arranged in a clean asymmetric grid in the upper two-thirds: two business cards (one off-white, one charcoal), a small envelope, a folded letterhead corner and a round sticker, all sharing one minimal abstract geometric mark, no readable text. Hard directional sunlight casting crisp long shadows at a 45-degree angle. Lots of negative magenta space, lower third empty. Graphic, editorial, premium print feel, real paper texture. No logos, no brand names, no letters, no watermark.
 ```
 
 ### 7 — ozel-yazilim.jpg

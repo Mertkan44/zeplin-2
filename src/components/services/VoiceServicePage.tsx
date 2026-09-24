@@ -387,7 +387,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
       </section>
 
       <RelatedServices services={related} />
-      <CTABanner />
+      <CTABanner service={service} />
     </main>
   );
 }

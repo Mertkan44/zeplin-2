@@ -10,6 +10,7 @@ import {
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
 import ProjectNotes from "@/components/ProjectNotes";
+import { whatsappUrl } from "@/lib/contact";
 
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
@@ -756,7 +757,7 @@ export default function OperasyonlarPage() {
             </div>
 
             <a
-              href="https://wa.me/905459407690"
+              href={whatsappUrl("Merhaba Zeplin Media, dijital operasyonlarımız için bir görüşme ayarlamak istiyorum.")}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-[15px] font-semibold text-[#9D174D] shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] active:scale-[0.98]"

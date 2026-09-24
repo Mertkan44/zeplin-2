@@ -469,7 +469,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
       </section>
 
       <RelatedServices services={related} />
-      <CTABanner />
+      <CTABanner service={service} />
     </main>
   );
 }

@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { FONT, revealVariants } from "@/lib/motion";
+import { briefHref, type ServiceData } from "@/data/services";
+import { whatsappForService } from "@/lib/contact";
 
-export function CTABanner() {
+export function CTABanner({ service }: { service: ServiceData }) {
   return (
     <section className="px-6 pb-24 pt-6 md:pb-32 md:pt-10">
       <motion.div
@@ -41,30 +44,25 @@ export function CTABanner() {
               </p>
             </div>
 
-            <a
-              href="https://wa.me/905459407690"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)] px-7 py-3.5 text-[14px] font-semibold text-white transition-all duration-300 hover:gap-3.5 hover:shadow-[0_8px_32px_rgba(219,39,119,0.3)]"
-              style={FONT}
-            >
-              WhatsApp ile yazın
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="transition-transform duration-300 group-hover:translate-x-0.5"
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href={briefHref(service)}
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)] px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-300 hover:gap-3.5 hover:shadow-[0_8px_32px_rgba(219,39,119,0.3)]"
+                style={FONT}
               >
-                <path
-                  d="M3 8h10M10 5l3 3-3 3"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+                Projeni Anlat
+                <span aria-hidden="true">→</span>
+              </Link>
+              <a
+                href={whatsappForService(service.title)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
+                style={FONT}
+              >
+                WhatsApp <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </motion.div>

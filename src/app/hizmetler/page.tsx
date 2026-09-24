@@ -11,6 +11,7 @@ import { EASE, FONT, revealVariants, useReliableInView } from "@/lib/motion";
 import { AI_BAND_IMAGE, LEGACY_TAB_IDS, serviceTabs } from "@/data/services";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import ProjectNotes from "@/components/ProjectNotes";
+import { whatsappUrl } from "@/lib/contact";
 
 /* ── Metrics ──────────────────────────────────────────────────────── */
 const metrics = [
@@ -381,7 +382,7 @@ export default function HizmetlerPage() {
 
           {/* İletişim CTA card */}
           <motion.a
-            href="https://wa.me/905459407690"
+            href={whatsappUrl("Merhaba Zeplin Media, Hizmetler sayfanızdan ulaşıyorum; projem için bilgi almak istiyorum.")}
             target="_blank"
             rel="noopener noreferrer"
             variants={revealVariants}

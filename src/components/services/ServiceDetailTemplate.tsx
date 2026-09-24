@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { motion } from "framer-motion";
 import { FONT, revealVariants } from "@/lib/motion";
 import type { ServiceData } from "@/data/services";
-import { getRelatedServices } from "@/data/services";
+import { getRelatedServices, briefHref } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
@@ -260,14 +262,12 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
                   {service.shortDesc} — markanızı bir adım öne taşıyalım.
                 </p>
 
-                <a
-                  href="https://wa.me/905459407690"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group mt-8 inline-flex items-center gap-2 text-[14px] font-semibold text-[#F472B6] transition-all duration-300 hover:gap-3"
+                <Link
+                  href={briefHref(service)}
+                  className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#F472B6] transition-all duration-300 hover:gap-3"
                   style={FONT}
                 >
-                  teklif al
+                  Teklif al
                   <svg
                     width="18"
                     height="18"
@@ -283,7 +283,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
 
               {/* Right visual */}
@@ -304,7 +304,7 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
       <RelatedServices services={related} />
 
       {/* ── Bölüm 7: İletişim Banner ──────────────────────────────── */}
-      <CTABanner />
+      <CTABanner service={service} />
     </main>
   );
 }
