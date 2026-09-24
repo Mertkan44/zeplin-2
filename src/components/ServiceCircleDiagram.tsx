@@ -310,14 +310,16 @@ function RobotFace({ bright, isVisible }: { bright: boolean; isVisible: boolean 
       <motion.circle cx={25} cy={28} r={13}
         fill="rgba(255,45,120,0.05)"
         stroke={ringColor} strokeWidth={1}
-        animate={{ r: [13, 13.6, 13] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scale: [1, 1.046, 1] }}
         transition={{ duration: 3.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut" }}
       />
       {/* Left eye inner ring */}
       <circle cx={25} cy={28} r={8} fill="rgba(255,45,120,0.07)" stroke={ringColor} strokeWidth={0.5} />
       {/* Left pupil — blinks */}
       <motion.ellipse cx={25} cy={28} rx={5} ry={5} fill={eyeColor}
-        animate={{ ry: [5, 5, 0.08, 5] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scaleY: [1, 1, 0.016, 1] }}
         transition={{ duration: 3, repeat: isVisible ? Infinity : 0, times: [0, 0.78, 0.83, 1], ease: ["linear", "easeIn", "easeOut"] }}
       />
       {/* Left highlight */}
@@ -327,14 +329,16 @@ function RobotFace({ bright, isVisible }: { bright: boolean; isVisible: boolean 
       <motion.circle cx={63} cy={28} r={13}
         fill="rgba(255,45,120,0.05)"
         stroke={ringColor} strokeWidth={1}
-        animate={{ r: [13, 13.6, 13] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scale: [1, 1.046, 1] }}
         transition={{ duration: 3.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay: 0.9 }}
       />
       {/* Right eye inner ring */}
       <circle cx={63} cy={28} r={8} fill="rgba(255,45,120,0.07)" stroke={ringColor} strokeWidth={0.5} />
       {/* Right pupil — blinks */}
       <motion.ellipse cx={63} cy={28} rx={5} ry={5} fill={eyeColor}
-        animate={{ ry: [5, 5, 0.08, 5] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scaleY: [1, 1, 0.016, 1] }}
         transition={{ duration: 3, repeat: isVisible ? Infinity : 0, times: [0, 0.78, 0.83, 1], ease: ["linear", "easeIn", "easeOut"], delay: 0.12 }}
       />
       {/* Right highlight */}
@@ -347,25 +351,22 @@ function RobotFace({ bright, isVisible }: { bright: boolean; isVisible: boolean 
         strokeWidth={2}
         fill="none"
         strokeLinecap="round"
+        style={{ transformBox: "fill-box", transformOrigin: "center top" }}
         animate={{
-          d: [
-            "M18,57 Q44,68 70,57",
-            "M18,56 Q44,63 70,56",
-            "M18,57 Q44,68 70,57",
-            "M18,57 Q44,70 70,57",
-            "M18,57 Q44,68 70,57",
-          ],
+          scaleY: [1, 0.64, 1, 1.18, 1],
           opacity: bright ? [0.7, 1, 0.7] : [0.35, 0.75, 0.35],
         }}
         transition={{ duration: 2.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut" }}
       />
       {/* Corner dots */}
       <motion.circle cx={18} cy={57} r={2.5} fill={ledColor}
-        animate={{ r: [2, 2.8, 2], opacity: [0.5, 1, 0.5] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scale: [0.8, 1.12, 0.8], opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut" }}
       />
       <motion.circle cx={70} cy={57} r={2.5} fill={ledColor}
-        animate={{ r: [2, 2.8, 2], opacity: [0.5, 1, 0.5] }}
+        style={{ transformBox: "fill-box", transformOrigin: "center" }}
+        animate={{ scale: [0.8, 1.12, 0.8], opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2.2, repeat: isVisible ? Infinity : 0, ease: "easeInOut", delay: 0.3 }}
       />
     </motion.svg>
