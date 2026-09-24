@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MotionValue } from "framer-motion";
 
 const VERTEX_SHADER = `
@@ -201,8 +201,20 @@ const COLORS = {
   coral: [1.0, 0.23, 0.10],
 };
 
+/* WebGL yoksa, shader derlenemezse ya da bağlam kaybolursa görünen statik
+   yedek. Shader'ın paletine ve genel kompozisyonuna yakın tutuldu. */
+const FALLBACK_BACKGROUND = [
+  "radial-gradient(ellipse 60% 55% at 22% 30%, rgba(250,112,161,0.55), transparent 70%)",
+  "radial-gradient(ellipse 55% 60% at 78% 62%, rgba(255,59,26,0.45), transparent 70%)",
+  "radial-gradient(ellipse 70% 70% at 55% 40%, rgba(219,19,102,0.55), transparent 75%)",
+  "linear-gradient(160deg, #45041f 0%, #0A0308 70%)",
+].join(", ");
+
 export default function HeroField({ scrollProgress }: HeroFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  /* Canvas yalnızca ilk kare başarıyla çizildikten sonra görünür olur;
+     o zamana kadar (ve hata durumunda) yedek degrade görünür. */
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -215,6 +227,13 @@ export default function HeroField({ scrollProgress }: HeroFieldProps) {
       powerPreference: "high-performance",
     });
     if (!gl) return;
+
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      stop();
+      setReady(false);
+    };
+    canvas.addEventListener("webglcontextlost", onContextLost);
 
     const compileShader = (type: number, source: string) => {
       const shader = gl.createShader(type);
@@ -232,17 +251,25 @@ export default function HeroField({ scrollProgress }: HeroFieldProps) {
       return shader;
     };
 
-    const vertexShader = compileShader(gl.VERTEX_SHADER, VERTEX_SHADER);
-    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
-    const program = gl.createProgram();
-    if (!program) return;
-
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error(gl.getProgramInfoLog(program) ?? "WebGL programı bağlanamadı.");
+    let vertexShader: WebGLShader;
+    let fragmentShader: WebGLShader;
+    let program: WebGLProgram | null;
+    try {
+      vertexShader = compileShader(gl.VERTEX_SHADER, VERTEX_SHADER);
+      fragmentShader = compileShader(gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
+      program = gl.createProgram();
+      if (!program) throw new Error("WebGL programı oluşturulamadı.");
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        throw new Error(gl.getProgramInfoLog(program) ?? "WebGL programı bağlanamadı.");
+      }
+    } catch (error) {
+      // Yedek degrade görünür kalır; hero kırılmaz.
+      console.warn("[HeroField] WebGL devre dışı, statik yedek kullanılıyor:", error);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      return;
     }
 
     gl.useProgram(program);
@@ -385,12 +412,9 @@ export default function HeroField({ scrollProgress }: HeroFieldProps) {
     };
 
     const frame = (now: number) => {
-      animationFrame = requestAnimationFrame(frame);
       const delta = Math.min((now - lastFrame) / 1000, 0.05);
       lastFrame = now;
-      if (!isVisible) return;
-
-      if (!prefersReducedMotion) elapsed += delta;
+      elapsed += delta;
 
       const pointerFollow = Math.min(delta * 4.8, 1);
       const trail1Follow = Math.min(delta * 3.0, 1);
@@ -415,30 +439,58 @@ export default function HeroField({ scrollProgress }: HeroFieldProps) {
       targetVelocity.y *= Math.max(0, 1 - delta * 6.5);
       targetActivity *= Math.max(0, 1 - delta * 1.8);
       draw();
+      animationFrame = requestAnimationFrame(frame);
     };
 
-    const resizeObserver = new ResizeObserver(resize);
+    /* Döngü yalnızca hero görünür ve sekme öndeyken çalışır; azaltılmış
+       hareket tercihinde hiç başlamaz (tek kare çizilir). */
+    let running = false;
+    function start() {
+      if (running || prefersReducedMotion || document.hidden || !isVisible) return;
+      running = true;
+      lastFrame = performance.now();
+      animationFrame = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(animationFrame);
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+      if (!running) draw();
+    });
     resizeObserver.observe(canvas);
 
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
+        if (isVisible) start();
+        else stop();
       },
       { rootMargin: "160px" }
     );
     visibilityObserver.observe(canvas);
 
+    const onVisibilityChange = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     const unsubscribeScroll = scrollProgress.on("change", (value) => {
       scroll = value;
     });
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    if (!prefersReducedMotion) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+    }
     resize();
     draw();
-    animationFrame = requestAnimationFrame(frame);
+    setReady(true);
+    start();
 
     return () => {
-      cancelAnimationFrame(animationFrame);
+      stop();
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
       unsubscribeScroll();
@@ -451,10 +503,13 @@ export default function HeroField({ scrollProgress }: HeroFieldProps) {
   }, [scrollProgress]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full"
-    />
+    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div className="absolute inset-0" style={{ background: FALLBACK_BACKGROUND }} />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 h-full w-full transition-opacity duration-700"
+        style={{ opacity: ready ? 1 : 0 }}
+      />
+    </div>
   );
 }
