@@ -13,11 +13,14 @@ export interface ProjectData {
   solution: string;
   services: string[];
   gallery: string[];
+  /** İletişim formunda önceden seçilecek ihtiyaç (BRIEF_NEEDS değerlerinden) */
+  briefNeed: string;
 }
 
 export const projects: ProjectData[] = [
   {
     slug: "milo-restaurant",
+    briefNeed: "Fotoğraf & Video",
     name: "Milo Restaurant",
     client: "Milo Restaurant",
     year: "2024",
@@ -42,6 +45,7 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "babi-restaurant",
+    briefNeed: "Fotoğraf & Video",
     name: "Babi Restaurant",
     client: "Babi Restaurant",
     year: "2024",
@@ -60,6 +64,7 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "ritim-jewellery",
+    briefNeed: "Fotoğraf & Video",
     name: "Ritim Jewellery",
     client: "Ritim Jewellery",
     year: "2024",
@@ -71,7 +76,7 @@ export const projects: ProjectData[] = [
       "Ritim Jewellery, lüks takı koleksiyonunu tanıtmak için bütçe dostu ama yüksek prodüksiyon değerine sahip bir reklam filmi ihtiyacı duyuyordu. Geleneksel prodüksiyon maliyetleri markanın bütçesini aşıyordu.",
     solution:
       "Yapay zeka destekli görsel üretim teknolojilerini kullanarak koleksiyonun özünü yansıtan sinematik bir reklam filmi ürettik. AI araçları sayesinde lüks markalara yakışır bir estetik, geleneksel prodüksiyonun çok altında bir maliyetle elde edildi.",
-    services: ["AI Video Prodüksiyon", "Senaryo", "Ses Tasarımı", "Renk Gradıng"],
+    services: ["AI Video Prodüksiyon", "Senaryo", "Ses Tasarımı", "Renk Düzenleme"],
     gallery: [
       "/videos/ritim-anneler-gunu-web.mp4",
       "/videos/ritim-bitti-web.mp4",
@@ -80,6 +85,7 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "pam-akademi",
+    briefNeed: "Marka & Tasarım",
     name: "Pam Akademi",
     client: "Pam Akademi",
     year: "2024",
@@ -104,6 +110,7 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "foton-saglik-cozumleri",
+    briefNeed: "Web Sitesi",
     name: "Foton Sağlık Çözümleri",
     client: "Foton Sağlık Çözümleri",
     year: "2024",

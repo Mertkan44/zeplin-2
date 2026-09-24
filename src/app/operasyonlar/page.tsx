@@ -175,12 +175,6 @@ function ExpandingCard({
 }
 
 /* ── Data ─────────────────────────────────────────────────────────── */
-const operationMetrics = [
-  { value: 360, suffix: "°", label: "Dijital Operasyon" },
-  { value: 7, suffix: "", label: "Operasyon Alanı" },
-  { value: 24, suffix: "/7", label: "Kesintisiz İzleme" },
-  { value: 38, suffix: "+", label: "Aktif Marka" },
-];
 
 const operations = [
   {
@@ -261,6 +255,15 @@ const operations = [
       </svg>
     ),
   },
+];
+
+const OPERATION_COUNT = operations.length;
+
+const operationMetrics = [
+  { value: 360, suffix: "°", label: "Dijital Operasyon" },
+  { value: OPERATION_COUNT, suffix: "", label: "Operasyon Alanı" },
+  { value: 24, suffix: "/7", label: "Kesintisiz İzleme" },
+  { value: 38, suffix: "+", label: "Aktif Marka" },
 ];
 
 const workflowSteps = [
@@ -469,6 +472,7 @@ export default function OperasyonlarPage() {
 
                 {/* Subtitle */}
                 <span
+                  lang="en"
                   className="block text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400"
                   style={FONT}
                 >

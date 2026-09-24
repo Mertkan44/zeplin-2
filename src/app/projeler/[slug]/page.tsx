@@ -8,8 +8,8 @@ import { motion } from "framer-motion";
 import { projects, getProjectBySlug } from "@/data/projects";
 import { EASE, revealVariants, revealViewport } from "@/lib/motion";
 import MediaLightbox, { isVideo, posterFor } from "@/components/MediaLightbox";
+import { whatsappUrl } from "@/lib/contact";
 
-const WHATSAPP_URL = "https://wa.me/905459407690";
 
 export default function ProjectCaseStudyPage({
   params,
@@ -360,32 +360,31 @@ export default function ProjectCaseStudyPage({
           custom={0}
           className="relative z-10 mx-auto max-w-xl"
         >
-          <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400">
-            Sizin için de çalışalım
+          <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.2em] text-pink-300">
+            {project.name} gibi
           </p>
-          <h2 className="mb-6 text-3xl font-bold leading-snug text-white md:text-4xl">
-            Markanız için bir sonraki adımı birlikte atalım.
+          <h2 className="text-3xl font-bold leading-snug text-white md:text-4xl">
+            Benzer bir proje mi düşünüyorsun?
           </h2>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-8 py-3.5 text-sm font-semibold text-white shadow-[0_0_40px_rgba(219,39,119,0.35)] transition-all duration-200 hover:bg-pink-700 hover:shadow-[0_0_56px_rgba(219,39,119,0.5)] active:scale-95"
-          >
-            Teklif Al
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <p className="mx-auto mt-4 max-w-md text-base leading-7 text-white/75">
+            Ne yapmak istediğini birkaç cümleyle anlat; kapsamı ve bir sonraki adımı birlikte netleştirelim.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href={`/iletisim?ihtiyac=${encodeURIComponent(project.briefNeed)}`}
+              className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-8 py-3.5 text-[15px] font-semibold text-white shadow-[0_0_40px_rgba(219,39,119,0.35)] transition-all duration-200 hover:bg-pink-700 active:scale-95"
             >
-              <path d="M6 4L10 8L6 12" />
-            </svg>
-          </a>
+              Projeni Anlat <span aria-hidden="true">→</span>
+            </Link>
+            <a
+              href={whatsappUrl(`Merhaba Zeplin Media, sitenizde ${project.name} projesini gördüm. Benzer bir iş için konuşmak istiyorum.`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/40 px-8 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              WhatsApp <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </motion.div>
       </section>
       <MediaLightbox

@@ -241,7 +241,8 @@ export function projectJsonLd(project: ProjectData) {
     description: toPlainText(`${project.challenge} ${project.solution}`, 300),
     image: absoluteUrl(project.image),
     url: absoluteUrl(`/projeler/${project.slug}`),
-    datePublished: `${project.year}-01-01`,
+    // Yalnızca yıl biliniyor; sahte gün/ay hassasiyeti vermemek için yıl.
+    dateCreated: project.year,
     creator: {
       "@id": `${siteConfig.url}/#organization`,
     },

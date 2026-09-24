@@ -156,7 +156,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
             <span className="block h-[14px] w-[26px] shrink-0">
               <Zeppelin tone="muted" />
             </span>
-            <span className="text-[12px] text-white/50" style={monoStyle}>
+            <span lang="en" className="text-[12px] text-white/50" style={monoStyle}>
               ZPL Air · Boarding · 2026
             </span>
           </div>
@@ -199,6 +199,7 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                   style={{ background: "#EC4899" }}
                 >
                   <span
+                    lang="en"
                     className="text-[12px] font-semibold text-white"
                     style={{ ...monoStyle, letterSpacing: "0.3em", writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                   >
@@ -223,12 +224,12 @@ export default function SocialBoardingPass({ socials }: SocialBoardingPassProps)
                   >
                     <span className="text-[12px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.12em" }}>Yanıt</span>
                     <span className="text-[12px] font-semibold" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.08em" }}>{t.stamp}</span>
-                    <span className="text-[7px]" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.2em" }}>ZPL Air</span>
+                    <span lang="en" className="text-[7px]" style={{ ...monoStyle, color: "#EC4899", letterSpacing: "0.2em" }}>ZPL Air</span>
                   </span>
                 )}
 
                 <span className="flex justify-between text-[12px] font-semibold" style={{ ...monoStyle, color: "rgba(26,18,22,0.55)", letterSpacing: "0.18em" }}>
-                  <span>Zeplin Air</span>
+                  <span lang="en">Zeplin Air</span>
                   <span>{t.gate}</span>
                 </span>
 

@@ -106,50 +106,6 @@ export default function ProjelerPage() {
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────────────── */}
-      <section
-        data-footer-under="dark"
-        className="relative overflow-hidden px-5 py-16 text-center md:px-12 md:py-24"
-        style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 30%, #1C0619 0%, #0D0A0C 65%)",
-        }}
-      >
-        <motion.div
-          variants={revealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={revealViewport}
-          custom={0}
-          className="mx-auto max-w-xl"
-        >
-          <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400">
-            Siz de listede yerinizi alın
-          </p>
-          <h2 className="mb-6 text-3xl font-bold leading-snug text-white md:text-4xl">
-            Sizin için de bir hikaye yazalım.
-          </h2>
-          <a
-            href="https://wa.me/905459407690"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-8 py-3.5 text-sm font-semibold text-white shadow-[0_0_40px_rgba(219,39,119,0.35)] transition-all duration-200 hover:bg-pink-700 hover:shadow-[0_0_56px_rgba(219,39,119,0.5)] active:scale-95"
-          >
-            Teklif Al
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 4L10 8L6 12" />
-            </svg>
-          </a>
-        </motion.div>
-      </section>
     </main>
   );
 }

@@ -14,26 +14,25 @@ const staticRoutes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  /* lastModified bilerek verilmiyor: her yayında "bugün" yazmak arama
+     motorlarına yanlış bir güncellik sinyali veriyordu. Gerçek içerik
+     değişiklik tarihleri veri modeline eklenince buraya bağlanabilir. */
   const uniqueServices = Array.from(new Map(services.map((service) => [service.slug, service])).values());
 
   return [
     ...staticRoutes.map((route) => ({
       url: absoluteUrl(route.path),
-      lastModified,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),
     ...uniqueServices.map((service) => ({
       url: absoluteUrl(`/hizmetler/${service.slug}`),
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: service.customPage ? 0.86 : 0.78,
       images: [absoluteUrl(service.heroImage)],
     })),
     ...projects.map((project) => ({
       url: absoluteUrl(`/projeler/${project.slug}`),
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.76,
       images: [absoluteUrl(project.image)],
