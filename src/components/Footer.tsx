@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { useTheme } from "./ThemeProvider";
 import { whatsappUrl } from "@/lib/contact";
 import { siteConfig } from "@/lib/seo";
+import { localizePath } from "@/i18n/config";
+import { useLocale, useT } from "@/i18n/LocaleProvider";
 
 const LIGHT_FOOTER_GRADIENT =
   "radial-gradient(circle at 9% 8%, rgba(255,205,233,0.34), transparent 30%), radial-gradient(circle at 78% 10%, rgba(248,169,213,0.22), transparent 32%), radial-gradient(circle at 48% 94%, rgba(91,5,35,0.28), transparent 42%), linear-gradient(135deg, #e45b9a 0%, #dc2f78 47%, #bd175b 72%, #8f103d 100%)";
@@ -12,23 +14,15 @@ const LIGHT_FOOTER_GRADIENT =
 const DARK_FOOTER_GRADIENT =
   "radial-gradient(circle at 12% 7%, rgba(232,82,148,0.22), transparent 31%), radial-gradient(circle at 76% 10%, rgba(205,43,108,0.18), transparent 32%), radial-gradient(circle at 50% 96%, rgba(44,2,18,0.46), transparent 44%), linear-gradient(135deg, #8f174b 0%, #a91652 46%, #85103f 73%, #570822 100%)";
 
-const WHATSAPP = whatsappUrl("Merhaba Zeplin Media, web sitenizden ulaşıyorum. Projem hakkında konuşmak istiyorum.");
-
 const pageLinks = [
-  { href: "/", label: "Ana sayfa" },
-  { href: "/hizmetler", label: "Hizmetler" },
-  { href: "/projeler", label: "Projeler" },
-  { href: "/galeri", label: "Galeri" },
-  { href: "/operasyonlar", label: "Operasyonlar" },
-  { href: "/hakkimizda", label: "Hakkımızda" },
-  { href: "/iletisim", label: "İletişim" },
-];
-
-const socialLinks = [
-  { href: siteConfig.social.instagram, label: "Instagram" },
-  { href: siteConfig.social.linkedin, label: "LinkedIn" },
-  { href: WHATSAPP, label: "WhatsApp" },
-];
+  { href: "/", key: "home" },
+  { href: "/hizmetler", key: "services" },
+  { href: "/projeler", key: "projects" },
+  { href: "/galeri", key: "gallery" },
+  { href: "/operasyonlar", key: "operations" },
+  { href: "/hakkimizda", key: "about" },
+  { href: "/iletisim", key: "contact" },
+] as const;
 
 const linkCls =
   "rounded-sm transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
@@ -44,6 +38,15 @@ function Column({ title, children }: { title: string; children: ReactNode }) {
 
 export default function Footer() {
   const { theme } = useTheme();
+  const t = useT();
+  const locale = useLocale();
+  const hrefFor = (href: string) => localizePath(href, locale);
+  const WHATSAPP = whatsappUrl(t.whatsapp.general);
+  const socialLinks = [
+    { href: siteConfig.social.instagram, label: "Instagram" },
+    { href: siteConfig.social.linkedin, label: "LinkedIn" },
+    { href: WHATSAPP, label: "WhatsApp" },
+  ];
 
   return (
     /* Yuvarlak üst köşelerin arkasında sayfanın bittiği renk görünmeli.
@@ -64,19 +67,19 @@ export default function Footer() {
               className="max-w-[12ch] text-[clamp(40px,4.4vw,64px)] leading-[0.95] tracking-[-0.02em] text-[#fffaf7]"
               style={{ fontFamily: "var(--font-instrument), serif" }}
             >
-              Burası daha <em>başlangıç.</em>
+              {t.footer.headline} <em>{t.footer.headlineEm}</em>
             </h2>
 
             <div className="md:max-w-[400px] md:pb-1">
               <p className="text-[16px] leading-[1.6] text-white/85">
-                Yeni projen için bize yaz; ihtiyacını okuyup bir iş günü içinde dönelim.
+                {t.footer.lead}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/iletisim"
+                  href={hrefFor("/iletisim")}
                   className="inline-flex items-center gap-2 rounded-full bg-[#fffaf7] px-6 py-3.5 text-[15px] font-semibold text-[#9D174D] transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                 >
-                  Projeni Anlat <span aria-hidden="true">→</span>
+                  {t.footer.briefCta} <span aria-hidden="true">→</span>
                 </Link>
                 <a
                   href={WHATSAPP}
@@ -92,13 +95,13 @@ export default function Footer() {
 
           {/* ── Bilgi ızgarası ────────────────────────────────── */}
           <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-white/20 pt-10 text-[15px] text-white/90 md:mt-14 md:grid-cols-12">
-            <nav aria-label="Alt menü" className="col-span-2 md:col-span-5">
-              <Column title="Sayfalar">
+            <nav aria-label={t.footer.footerMenu} className="col-span-2 md:col-span-5">
+              <Column title={t.footer.pages}>
                 <ul className="grid grid-flow-col grid-cols-2 grid-rows-4 gap-x-8 gap-y-2.5">
                   {pageLinks.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href} className={linkCls}>
-                        {link.label}
+                      <Link href={hrefFor(link.href)} className={linkCls}>
+                        {t.footer.links[link.key]}
                       </Link>
                     </li>
                   ))}
@@ -107,7 +110,7 @@ export default function Footer() {
             </nav>
 
             <div className="col-span-2 sm:col-span-1 md:col-span-3">
-              <Column title="İletişim">
+              <Column title={t.footer.contact}>
                 <ul className="space-y-2.5">
                   <li>
                     <a href={`mailto:${siteConfig.email}`} className={linkCls}>
@@ -119,13 +122,13 @@ export default function Footer() {
                       {siteConfig.phone}
                     </a>
                   </li>
-                  <li className="text-white/70">İstanbul, Türkiye</li>
+                  <li className="text-white/70">{t.footer.location}</li>
                 </ul>
               </Column>
             </div>
 
             <div className="col-span-2 sm:col-span-1 md:col-span-2 md:col-start-11">
-              <Column title="Sosyal">
+              <Column title={t.footer.social}>
                 <ul className="space-y-2.5">
                   {socialLinks.map((link) => (
                     <li key={link.label}>
@@ -145,11 +148,11 @@ export default function Footer() {
               © 2026 <span lang="en">Zeplin Media</span>
             </span>
             <div className="flex gap-6">
-              <Link href="/cerez" className={linkCls}>
-                Çerez Politikası
+              <Link href={hrefFor("/cerez")} className={linkCls}>
+                {t.footer.cookies}
               </Link>
-              <Link href="/gizlilik" className={linkCls}>
-                Gizlilik Politikası
+              <Link href={hrefFor("/gizlilik")} className={linkCls}>
+                {t.footer.privacy}
               </Link>
             </div>
           </div>

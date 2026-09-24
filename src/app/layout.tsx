@@ -3,6 +3,7 @@ import { Jost, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
 import ThemeProvider from "@/components/ThemeProvider";
 import ScrollRevealRescue from "@/components/ScrollRevealRescue";
 import {
@@ -131,6 +132,7 @@ export default function RootLayout({
       </head>
       <body className={`${jost.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         <ThemeProvider>
+          <LocaleProvider>
           <a
             href="#icerik"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-[#9D174D] focus:shadow-lg"
@@ -144,6 +146,7 @@ export default function RootLayout({
             </div>
             <Footer />
           </ScrollRevealRescue>
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>

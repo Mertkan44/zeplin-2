@@ -4,9 +4,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FONT, revealVariants } from "@/lib/motion";
 import { briefHref, type ServiceData } from "@/data/services";
-import { whatsappForService } from "@/lib/contact";
+import { whatsappUrl } from "@/lib/contact";
+import { useT } from "@/i18n/LocaleProvider";
 
 export function CTABanner({ service }: { service: ServiceData }) {
+  const t = useT();
   return (
     <section className="px-6 pb-24 pt-6 md:pb-32 md:pt-10">
       <motion.div
@@ -28,19 +30,19 @@ export function CTABanner({ service }: { service: ServiceData }) {
                 className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
                 style={FONT}
               >
-                iletişim
+                {t.cta.eyebrow}
               </span>
               <h2
                 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[38px]"
                 style={FONT}
               >
-                Projenizi konuşalım.
+                {t.cta.title}
               </h2>
               <p
                 className="mt-3 max-w-[38ch] text-[15px] leading-[1.7] text-white/70"
                 style={FONT}
               >
-                İhtiyaçlarınıza özel çözüm önerisi için bizimle iletişime geçin.
+                {t.cta.lead}
               </p>
             </div>
 
@@ -50,17 +52,17 @@ export function CTABanner({ service }: { service: ServiceData }) {
                 className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_100%)] px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-300 hover:gap-3.5 hover:shadow-[0_8px_32px_rgba(219,39,119,0.3)]"
                 style={FONT}
               >
-                Projeni Anlat
+                {t.cta.brief}
                 <span aria-hidden="true">→</span>
               </Link>
               <a
-                href={whatsappForService(service.title)}
+                href={whatsappUrl(t.whatsapp.service(service.title))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
                 style={FONT}
               >
-                WhatsApp <span aria-hidden="true">↗</span>
+                {t.cta.whatsapp} <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>

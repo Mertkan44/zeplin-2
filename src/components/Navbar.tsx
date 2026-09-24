@@ -5,17 +5,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect, useCallback, useLayoutEffect } from "react";
 import { whatsappUrl } from "@/lib/contact";
+import { localizePath } from "@/i18n/config";
+import { useLocale, useT } from "@/i18n/LocaleProvider";
+import LanguageSwitcher from "@/i18n/LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
 
-const leftLinks = [
-  { href: "/", label: "ana sayfa" },
-  { href: "/hizmetler", label: "hizmetler" },
+type NavKey = "home" | "services" | "projects" | "about";
+
+const leftLinks: { href: string; key: NavKey }[] = [
+  { href: "/", key: "home" },
+  { href: "/hizmetler", key: "services" },
 ];
 
-const rightLinks = [
-  { href: "/projeler", label: "projeler" },
-  { href: "/hakkimizda", label: "hakkımızda" },
+const rightLinks: { href: string; key: NavKey }[] = [
+  { href: "/projeler", key: "projects" },
+  { href: "/hakkimizda", key: "about" },
 ];
 
 const mobileLinks = [...leftLinks, ...rightLinks];
@@ -141,7 +146,8 @@ function useSpringBlob() {
 }
 
 /** Alt sayfalarda üst menü öğesini aktif say: /hizmetler/x → /hizmetler */
-function activeHrefFor(pathname: string) {
+function activeHrefFor(localizedPathname: string) {
+  const pathname = localizePath(localizedPathname, "tr");
   if (pathname === "/") return "/";
   return mobileLinks.find((l) => l.href !== "/" && pathname.startsWith(l.href))?.href ?? null;
 }
@@ -163,12 +169,15 @@ function useNavVisibility(pathname: string) {
     io.observe(sentinel);
     return () => io.disconnect();
   }, [pathname]);
-  return pathname !== "/" || pastHero;
+  return localizePath(pathname, "tr") !== "/" || pastHero;
 }
 
 export default function Navbar() {
   const pathname = usePathname();
   const navVisible = useNavVisibility(pathname);
+  const t = useT();
+  const locale = useLocale();
+  const hrefFor = (href: string) => localizePath(href, locale);
   const activeHref = activeHrefFor(pathname);
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -333,7 +342,7 @@ export default function Navbar() {
               pointerEvents: mobileOpen ? "none" : "auto",
             }}
           >
-            <Link href="/">
+            <Link href={hrefFor("/")}>
               <Image
                 src="/zeplin-logo.png"
                 alt="Zeplin Media"
@@ -349,7 +358,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={toggleMenu}
-            aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-label={mobileOpen ? t.nav.closeMenu : t.nav.openMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu-overlay"
             className="relative z-10 grid h-10 w-10 place-items-center rounded-full transition-all duration-300"
@@ -390,7 +399,7 @@ export default function Navbar() {
         }`}
         role="dialog"
         aria-modal="true"
-        aria-label="Ana menü"
+        aria-label={t.nav.mainMenu}
         aria-hidden={!mobileOpen}
         inert={!mobileOpen}
       >
@@ -420,7 +429,7 @@ export default function Navbar() {
 
           {/* ── TOP: Logo — navbar bar logosuyla birebir aynı konumda ── */}
           <div className="relative z-10 mt-4 mx-auto flex w-[92%] items-center justify-center rounded-full px-3 py-2.5">
-            <Link href="/" onClick={() => setMobileOpen(false)} className="-my-5">
+            <Link href={hrefFor("/")} onClick={() => setMobileOpen(false)} className="-my-5">
               <Image
                 src="/zeplin-logo.png"
                 alt="Zeplin Media"
@@ -432,7 +441,7 @@ export default function Navbar() {
           </div>
 
           {/* ── MIDDLE: Navigasyon linkleri ── */}
-          <nav className="relative z-10 flex flex-1 flex-col justify-center px-6" aria-label="Mobil navigasyon">
+          <nav className="relative z-10 flex flex-1 flex-col justify-center px-6" aria-label={t.nav.mobileNav}>
             <ul className="space-y-0">
               {mobileLinks.map((link, index) => {
                 const active = activeHref === link.href;
@@ -447,7 +456,7 @@ export default function Navbar() {
                       />
                     )}
                     <Link
-                      href={link.href}
+                      href={hrefFor(link.href)}
                       onClick={() => setMobileOpen(false)}
                       className={`group flex items-center justify-between py-4 ${
                         mobileOpen ? "menu-link-enter" : "opacity-0"
@@ -462,7 +471,7 @@ export default function Navbar() {
                             : "text-white/70 group-hover:text-white"
                         }`}
                       >
-                        {link.label}
+                        {t.nav[link.key]}
                       </span>
                       <span className="flex items-center gap-3">
                         {active && (
@@ -495,16 +504,17 @@ export default function Navbar() {
             }`}
             style={{ "--stagger-delay": `${150 + mobileLinks.length * 80 + 100}ms` } as React.CSSProperties}
           >
-            {/* Dil seçici: İngilizce çeviri tamamlanınca TR/EN olarak geri eklenecek */}
+            {/* Dil seçici: yalnızca birden fazla dil yayındayken görünür */}
+            <LanguageSwitcher className="mb-5" />
 
             <a
-              href={whatsappUrl("Merhaba Zeplin Media, projem hakkında konuşmak istiyorum.")}
+              href={whatsappUrl(t.whatsapp.general)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               className="block w-full rounded-2xl bg-white py-4 text-center text-lg font-semibold text-[#DB2777] shadow-[0_8px_20px_rgba(0,0,0,0.1)] transition-transform active:scale-[0.98]"
             >
-              WhatsApp&apos;tan Yaz
+              {t.nav.whatsappCta}
             </a>
 
           </div>
@@ -516,7 +526,7 @@ export default function Navbar() {
         className={`fixed top-5 left-1/2 z-50 hidden w-auto -translate-x-1/2 transition-[opacity,transform] duration-[var(--dur-3)] md:block ${
           navVisible ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-4 opacity-0"
         }`}
-        aria-label="Ana menü"
+        aria-label={t.nav.mainMenu}
         inert={!navVisible}
       >
       {/* SVG filters removed for performance */}
@@ -591,7 +601,7 @@ export default function Navbar() {
           {leftLinks.map((link) => (
             <li key={link.href}>
               <Link
-                href={link.href}
+                href={hrefFor(link.href)}
                 ref={(el) => setLinkRef(link.href, el)}
                 onMouseEnter={() => handleMouseEnter(link.href)}
                 onFocus={() => handleMouseEnter(link.href)}
@@ -599,7 +609,7 @@ export default function Navbar() {
                 aria-current={activeHref === link.href ? "page" : undefined}
                 className={`block whitespace-nowrap rounded-full px-4 py-2.5 text-base font-medium lowercase transition-colors duration-300 lg:px-6 ${getLinkClass(link.href)}`}
               >
-                {link.label}
+                {t.nav[link.key]}
               </Link>
             </li>
           ))}
@@ -607,7 +617,7 @@ export default function Navbar() {
 
         {/* Ortadaki Zeplin Logo */}
         <div className="relative -my-5 z-10">
-          <Link href="/">
+          <Link href={hrefFor("/")}>
             <Image
               src="/zeplin-logo.png"
               alt="Zeplin Media"
@@ -624,7 +634,7 @@ export default function Navbar() {
           {rightLinks.map((link) => (
             <li key={link.href}>
               <Link
-                href={link.href}
+                href={hrefFor(link.href)}
                 ref={(el) => setLinkRef(link.href, el)}
                 onMouseEnter={() => handleMouseEnter(link.href)}
                 onFocus={() => handleMouseEnter(link.href)}
@@ -632,7 +642,7 @@ export default function Navbar() {
                 aria-current={activeHref === link.href ? "page" : undefined}
                 className={`block whitespace-nowrap rounded-full px-4 py-2.5 text-base font-medium lowercase transition-colors duration-300 lg:px-6 ${getLinkClass(link.href)}`}
               >
-                {link.label}
+                {t.nav[link.key]}
               </Link>
             </li>
           ))}

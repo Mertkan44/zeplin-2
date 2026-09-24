@@ -37,8 +37,9 @@ Documentary-style editorial photograph for a creative agency website. Shot on a 
 | 12 | `yapay-zeka-bant.jpg` | Hizmetler sayfasındaki büyük AI bandı |
 
 ### 1 — reklam-yonetimi.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-A performance marketer sitting at a wide desk reviewing an ad campaign on a large monitor, the screen shows blurred abstract bar charts and a grid of small ad thumbnails; she points at the screen with a pen while a colleague leans in to look. A phone standing next to the keyboard shows a vertical ad preview. Magenta accent: a sticky note on the monitor bezel.
+Photograph, 3:2 landscape, bright office, daylight. A large monitor is the hero, upper half of the frame, perfectly sharp: an ad campaign dashboard — a row of three vertical ad creatives (food photo, product photo, person photo), a results bar chart rising to the right and a budget slider with a magenta (#DB2777) handle. Grey placeholder lines instead of words — no readable text, no logos, no platform names. A marketer points at the chart with a pen, hand and sleeve only. Lower third calm desk. Realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 2 — sosyal-medya-metni.jpg
@@ -57,8 +58,9 @@ A writer working on a long-form article at a laptop in a quiet corner by the win
 ```
 
 ### 5 — e-posta-pazarlama.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-A marketer reviewing an email newsletter design on a laptop while checking how it looks on a phone held next to the screen, both screens show the same blurred newsletter layout with an image block and a button shape. A printed checklist on the desk. Magenta accent: the button shape on the screens.
+Photograph, 3:2 landscape, bright daylight at a light wooden desk. A laptop and a phone side by side; the SCREENS are the hero — large in the upper half, perfectly sharp: the same email newsletter shown on both (a hero image block, a bold headline bar, two content cards and a magenta (#DB2777) button), desktop layout on the laptop and mobile layout on the phone. Use grey placeholder lines instead of real words — no readable text, no logos. A hand holds the phone slightly toward the camera. Lower third calm desk surface. Realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 6 — kartvizit.jpg
@@ -75,18 +77,21 @@ Top-down studio flat lay, 3:2 landscape, on a solid saturated magenta (#DB2777) 
 ```
 
 ### 7 — ozel-yazilim.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-Two software developers at a shared desk with two monitors, one showing blurred code blocks and the other a blurred admin dashboard with tables; one developer explains something on a whiteboard behind them covered with a simple hand-drawn system diagram of boxes and arrows (no readable words). Magenta accent: a whiteboard marker.
+Photograph, 3:2 landscape, bright modern office, daylight. A large monitor is the hero, upper half of the frame, perfectly sharp: a clean custom admin dashboard — left sidebar with icons, a row of KPI cards, a line chart, and a data table; one magenta (#DB2777) accent (active menu item). Grey placeholder lines instead of words — no readable text, no logos. A developer's shoulder and hand on the mouse in the foreground, slightly blurred. Lower third calm desk. Realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 8 — ai-chatbot.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-A small business owner at the counter of a bright café holding a phone that shows a blurred chat conversation with message bubbles, a laptop on the counter shows the same chat panel on a website layout. Customers blurred in the background. Magenta accent: the send button on the phone screen.
+Photograph, 3:2 landscape. Late evening at home, warm lamp light. Over-the-shoulder close-up of a young woman on a sofa holding a smartphone; the PHONE SCREEN is the hero — large in the upper half of the frame, perfectly sharp and legible as a messaging interface: a small round bot avatar with a magenta (#DB2777) accent at the top, alternating chat bubbles (customer bubbles on the right in light grey, instant reply bubbles on the left in magenta), a quick-reply button row and a typing indicator with three dots. Use simple grey placeholder lines instead of real words inside the bubbles — no readable text, no logos, no app names. Background softly blurred: a clock showing late night on the wall. Lower third calm (sofa cushion, soft shadow). Natural skin texture, realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 9 — ai-callbot.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-A customer-service team member in a bright office wearing a light headset, looking at a laptop that shows a blurred call log list and a simple audio waveform, a desk phone beside it; calm, professional, candid. Magenta accent: the small cushion on the headset.
+Photograph, 3:2 landscape, bright small business counter (a bakery or clinic reception), daylight. A smartphone lying face-up on the counter is the hero, upper half of the frame, perfectly sharp: an incoming-call screen being answered automatically — a round assistant avatar with a magenta (#DB2777) ring, a live audio waveform, a call timer shape and a short transcript list below made of grey placeholder lines. No readable text, no logos. The owner is busy serving a customer in the softly blurred background. Lower third calm counter surface. Realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 10 — is-akisi.jpg
@@ -95,8 +100,9 @@ A team member standing at a glass wall arranging sticky notes into a clear proce
 ```
 
 ### 11 — crm.jpg
+Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
-A sales manager and a colleague at a meeting table looking at a tablet showing a blurred customer list with contact rows and a small pipeline board with columns; a laptop and a printed customer brief on the table. Magenta accent: a pen.
+Photograph, 3:2 landscape, bright meeting room, daylight. A tablet held in two hands is the hero, upper half of the frame, perfectly sharp: a CRM pipeline board with four columns of small customer cards (avatar circle + grey placeholder lines), one card being dragged with a magenta (#DB2777) outline. No readable text, no logos. A laptop and a coffee cup softly blurred behind. Lower third calm table. Realistic, true-to-life colors, no neon, no holograms, no watermark.
 ```
 
 ### 12 — yapay-zeka-bant.jpg
