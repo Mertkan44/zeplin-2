@@ -1,40 +1,15 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { use, useRef } from "react";
+import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { projects, getProjectBySlug } from "@/data/projects";
-import { EASE, revealVariants, revealViewport, useReliableInView } from "@/lib/motion";
+import { EASE, revealVariants, revealViewport } from "@/lib/motion";
+import MediaLightbox, { isVideo, posterFor } from "@/components/MediaLightbox";
 
 const WHATSAPP_URL = "https://wa.me/905459407690";
-
-/** Only starts loading/playing once scrolled into view, so heavy gallery videos never block page load. */
-function LazyGalleryVideo({
-  src,
-  style,
-}: {
-  src: string;
-  style: React.CSSProperties;
-}) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const inView = useReliableInView(ref);
-
-  return (
-    <video
-      ref={ref}
-      src={inView ? src : undefined}
-      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-      style={style}
-      autoPlay={inView}
-      loop
-      muted
-      playsInline
-      preload="none"
-    />
-  );
-}
 
 export default function ProjectCaseStudyPage({
   params,
@@ -45,6 +20,13 @@ export default function ProjectCaseStudyPage({
   const project = getProjectBySlug(slug);
 
   if (!project) notFound();
+
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxItems = project.gallery.map((src, i) => ({
+    src,
+    alt: `${project.name} ${isVideo(src) ? "film" : "görsel"} ${i + 1}`,
+    poster: isVideo(src) ? posterFor(src) : undefined,
+  }));
 
   const currentIndex = projects.findIndex((p) => p.slug === slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
@@ -281,35 +263,43 @@ export default function ProjectCaseStudyPage({
               </div>
             </motion.a>
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-5">
-              {project.gallery.length > 0
-                ? project.gallery.map((src, i) => (
-                    <motion.div
-                      key={i}
-                      variants={revealVariants}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={revealViewport}
-                      custom={i * 0.06}
-                      className="group relative aspect-[4/3] overflow-hidden rounded-2xl"
-                    >
-                      {src.endsWith(".mp4") ? (
-                        <LazyGalleryVideo
-                          src={src}
-                          style={{ objectPosition: project.imagePosition ?? "center" }}
-                        />
-                      ) : (
-                        <Image
-                          src={src}
-                          alt={`${project.name} görsel ${i + 1}`}
-                          fill
-                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                          style={{ objectPosition: project.imagePosition ?? "center" }}
-                        />
-                      )}
-                    </motion.div>
-                  ))
-                : null}
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+              {lightboxItems.map((item, i) => (
+                <motion.div
+                  key={item.src}
+                  variants={revealVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={revealViewport}
+                  custom={i * 0.06}
+                  className={isVideo(item.src) ? "aspect-[9/16]" : "aspect-[4/5]"}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={isVideo(item.src) ? `${item.alt} — izle` : `${item.alt} — büyüt`}
+                    className="group relative block h-full w-full overflow-hidden rounded-2xl bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+                  >
+                    <Image
+                      src={item.poster ?? item.src}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 33vw, 50vw"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      style={{ objectPosition: isVideo(item.src) ? "center" : project.imagePosition ?? "center" }}
+                    />
+                    {isVideo(item.src) && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">
+                        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-pink-600 shadow-lg transition-transform group-hover:scale-110 md:h-16 md:w-16">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M8 5.5v13l11-6.5z" />
+                          </svg>
+                        </span>
+                      </span>
+                    )}
+                  </button>
+                </motion.div>
+              ))}
             </div>
           )}
         </div>
@@ -397,6 +387,12 @@ export default function ProjectCaseStudyPage({
           </a>
         </motion.div>
       </section>
+      <MediaLightbox
+        items={lightboxItems}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onIndexChange={setLightboxIndex}
+      />
     </main>
   );
 }

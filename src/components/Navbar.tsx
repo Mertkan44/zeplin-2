@@ -481,35 +481,24 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          {/* ── BOTTOM: Dil seçici, CTA, Theme toggle ── */}
+          {/* ── BOTTOM: CTA ── */}
           <div
             className={`relative z-10 px-6 pb-8 ${
               mobileOpen ? "menu-bottom-enter" : "opacity-0"
             }`}
             style={{ "--stagger-delay": `${150 + mobileLinks.length * 80 + 100}ms` } as React.CSSProperties}
           >
-            <div className="flex gap-2">
-              {["TR", "EN", "DE", "RU"].map((lang, i) => (
-                <button
-                  key={lang}
-                  type="button"
-                  className={`rounded-xl px-4 py-2 text-sm font-semibold tracking-wide transition-colors ${
-                    i === 0
-                      ? "bg-white text-[#DB2777] shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
-                      : "border border-white/25 text-white/70 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  {lang}
-                </button>
-              ))}
-            </div>
+            {/* Dil seçici: İngilizce çeviri tamamlanınca TR/EN olarak geri eklenecek */}
 
-            <button
-              type="button"
-              className="mt-5 w-full rounded-2xl bg-white py-4 text-lg font-semibold text-[#DB2777] shadow-[0_8px_20px_rgba(0,0,0,0.1)] transition-transform active:scale-[0.98]"
+            <a
+              href="https://wa.me/905459407690"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="block w-full rounded-2xl bg-white py-4 text-center text-lg font-semibold text-[#DB2777] shadow-[0_8px_20px_rgba(0,0,0,0.1)] transition-transform active:scale-[0.98]"
             >
-              İletişime Geç
-            </button>
+              WhatsApp&apos;tan Yaz
+            </a>
 
           </div>
         </div>

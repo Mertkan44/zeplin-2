@@ -31,8 +31,8 @@ export const projects: ProjectData[] = [
       "Restoranın atmosferini ve mutfağını en iyi şekilde yansıtan stüdyo kalitesinde menü fotoğrafları çektik. Sosyal medya için dinamik Reels içerikleri ürettik ve tüm görsel dili markanın kimliğiyle uyumlu hale getirdik.",
     services: ["Menü Fotoğrafçılığı", "Reels Prodüksiyon", "Ürün Çekimi", "Sosyal Medya İçeriği"],
     gallery: [
-      "/videos/milo-kokteyl.mp4",
-      "/videos/milo-smash.mp4",
+      "/videos/milo-kokteyl-web.mp4",
+      "/videos/milo-smash-web.mp4",
       "/images/projects-milo-gallery-1.jpg",
       "/images/projects-milo-gallery-2.jpg",
       "/images/projects-milo-gallery-3.jpg",
@@ -73,9 +73,9 @@ export const projects: ProjectData[] = [
       "Yapay zeka destekli görsel üretim teknolojilerini kullanarak koleksiyonun özünü yansıtan sinematik bir reklam filmi ürettik. AI araçları sayesinde lüks markalara yakışır bir estetik, geleneksel prodüksiyonun çok altında bir maliyetle elde edildi.",
     services: ["AI Video Prodüksiyon", "Senaryo", "Ses Tasarımı", "Renk Gradıng"],
     gallery: [
-      "/videos/ritim-anneler-gunu.mp4",
-      "/videos/ritim-bitti.mp4",
-      "/videos/ritim-kisa1.mp4",
+      "/videos/ritim-anneler-gunu-web.mp4",
+      "/videos/ritim-bitti-web.mp4",
+      "/videos/ritim-kisa1-web.mp4",
     ],
   },
   {

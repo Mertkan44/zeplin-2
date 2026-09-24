@@ -117,12 +117,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
-        <link
-          rel="preload"
-          as="image"
-          href="/images/hero-crt-forest-optimized.webp"
-          fetchPriority="high"
-        />
         <link rel="stylesheet" href="https://use.typekit.net/ryi5mzw.css" />
         <link rel="stylesheet" href="https://use.typekit.net/fad1vyk.css" />
         <link rel="stylesheet" href="https://use.typekit.net/psq5rwo.css" />

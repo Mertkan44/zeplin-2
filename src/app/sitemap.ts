@@ -10,6 +10,7 @@ const staticRoutes = [
   { path: "/operasyonlar", priority: 0.85, changeFrequency: "monthly" as const },
   { path: "/hakkimizda", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/galeri", priority: 0.75, changeFrequency: "monthly" as const },
+  { path: "/iletisim", priority: 0.8, changeFrequency: "yearly" as const },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -63,6 +63,25 @@ const testimonials = [
 export default function HizmetlerPage() {
   const [activeTab, setActiveTab] = useState(0);
 
+  // Aktif sekmeyi ?tab= parametresiyle eşitle (breadcrumb, yenileme, geri/ileri)
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const id = new URLSearchParams(window.location.search).get("tab");
+      const index = serviceTabs.findIndex((t) => t.id === id);
+      setActiveTab(index === -1 ? 0 : index);
+    };
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
+
+  const selectTab = (i: number) => {
+    setActiveTab(i);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", serviceTabs[i].id);
+    window.history.pushState(null, "", url);
+  };
+
   return (
     <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
       <FirstScrollSnap targetId="services-first-section" />
@@ -185,7 +204,7 @@ export default function HizmetlerPage() {
             {serviceTabs.map((tab, i) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(i)}
+                onClick={() => selectTab(i)}
                 className={`relative z-10 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all duration-300 md:px-7 md:py-3 md:text-[15px] ${
                   activeTab === i
                     ? "text-white"

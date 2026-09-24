@@ -414,10 +414,10 @@ export const categoryRedirects: Record<string, string> = {
   "reels-shorts": "video-produksiyon",
   "reklam-spotu": "video-produksiyon",
   "motion-graphics": "video-produksiyon",
-  "ai-chatbot": "yapay-zeka",
-  "ai-callbot": "yapay-zeka",
-  "is-akisi": "yapay-zeka",
-  "crm-entegrasyonu": "yapay-zeka",
+  "ai-chatbot": "akilli-chatbot",
+  "ai-callbot": "sesli-asistan",
+  "is-akisi": "ozel-yazilim",
+  "crm-entegrasyonu": "ozel-yazilim",
 };
 
 /* ── Tab structure for /hizmetler listing ─────────────────────────── */
@@ -457,10 +457,10 @@ export const serviceTabs: ServiceTab[] = [
     id: "otomasyon",
     label: "Otomasyon",
     cards: [
-      { slug: "yapay-zeka", title: "AI Chatbot", desc: "7/24 akıllı müşteri destek sistemi", img: serviceImages.ai, dark: true },
-      { slug: "yapay-zeka", title: "AI Callbot", desc: "Sesli yanıt ve yönlendirme otomasyonu", img: serviceImages.aiCallbot, dark: false },
-      { slug: "yapay-zeka", title: "İş Akışı", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
-      { slug: "yapay-zeka", title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle temiz veri akışı", img: serviceImages.crmIntegration, dark: false },
+      { slug: "akilli-chatbot", title: "AI Chatbot", desc: "7/24 akıllı müşteri destek sistemi", img: serviceImages.ai, dark: true },
+      { slug: "sesli-asistan", title: "AI Callbot", desc: "Sesli yanıt ve yönlendirme otomasyonu", img: serviceImages.aiCallbot, dark: false },
+      { slug: "ozel-yazilim", title: "İş Akışı", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
+      { slug: "ozel-yazilim", title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle temiz veri akışı", img: serviceImages.crmIntegration, dark: false },
     ],
   },
 ];

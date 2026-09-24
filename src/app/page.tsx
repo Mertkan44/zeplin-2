@@ -19,16 +19,16 @@ const BrandMarquee = dynamic(() => import("@/components/BrandMarquee"));
 const videoTestimonials = [
   {
     id: "emma",
-    videoSrc: "/videos/emma.mp4",
-    posterSrc: "/videos/posters/emma-poster.png",
+    videoSrc: "/videos/emma-web.mp4",
+    posterSrc: "/videos/posters/emma-poster.jpg",
     brandName: "Emma Hanım",
     personName: "Referans Video",
     personRole: "Eren Kozan Premium Cut",
   },
   {
     id: "oguz-abi",
-    videoSrc: "/videos/oguz-abi.mp4",
-    posterSrc: "/videos/posters/oguz-abi-poster.png",
+    videoSrc: "/videos/oguz-abi-web.mp4",
+    posterSrc: "/videos/posters/oguz-abi-poster.jpg",
     brandName: "Oğuz Bey",
     personName: "Referans Video",
     personRole: "Cherry Plus",
