@@ -136,8 +136,16 @@ export default function RootLayout({
       </head>
       <body className={`${jost.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         <ThemeProvider>
+          <a
+            href="#icerik"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-[#9D174D] focus:shadow-lg"
+          >
+            İçeriğe geç
+          </a>
           <Navbar />
-          {children}
+          <div id="icerik" tabIndex={-1} className="outline-none">
+            {children}
+          </div>
           <Footer />
           <ScrollRevealRescue />
         </ThemeProvider>

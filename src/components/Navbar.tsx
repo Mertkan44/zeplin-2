@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect, useCallback, useLayoutEffect } from "react";
+import { whatsappUrl } from "@/lib/contact";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "./ThemeProvider";
 
@@ -139,36 +140,36 @@ function useSpringBlob() {
   return { blob, blobElRef, setTarget, setImmediate };
 }
 
-function useNavVisibility() {
-  /* Menü açılışta tamamen gizli. Sabit bir piksel eşiğiyle değil, hero'nun
-     BİTTİĞİ noktayla — page.tsx'teki #hero-nav-sentinel ile — tetikleniyor.
-     Sentinel, hero'nun sticky pinlemesi bitip bir sonraki bölüm başladığı
-     tam sınırda duruyor. IntersectionObserver ile: sentinel viewport'ta
-     görünüyorsa tam sınırdayız → görünür; görünmüyorsa üstteyse (top < 0)
-     geçmişiz → görünür kalır, alttaysa (henüz ulaşılmamış) → gizli.
-     Hero'suz sayfalarda (sentinel yok) menü baştan görünür olur. */
-  const [visible, setVisible] = useState(false);
+/** Alt sayfalarda üst menü öğesini aktif say: /hizmetler/x → /hizmetler */
+function activeHrefFor(pathname: string) {
+  if (pathname === "/") return "/";
+  return mobileLinks.find((l) => l.href !== "/" && pathname.startsWith(l.href))?.href ?? null;
+}
+
+function useNavVisibility(pathname: string) {
+  /* Menü yalnızca ana sayfada, hero bitene kadar gizli. Sınır page.tsx'teki
+     #hero-nav-sentinel: görünüyorsa ya da geçildiyse (top < 0) menü görünür.
+     Diğer sayfalarda her zaman görünür. Rota değiştikçe gözlem yeniden
+     kurulur; böylece doğrudan giriş, iç bağlantı ve geri/ileri aynı kuralı
+     üretir. IO ilk gözlemde hemen tetiklendiği için eski değer kalmaz. */
+  const [pastHero, setPastHero] = useState(false);
   useLayoutEffect(() => {
     const sentinel = document.getElementById("hero-nav-sentinel");
-    if (!sentinel) {
-      setVisible(true);
-      return;
-    }
+    if (!sentinel) return;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        setVisible(entry.isIntersecting || entry.boundingClientRect.top < 0);
-      },
+      ([entry]) => setPastHero(entry.isIntersecting || entry.boundingClientRect.top < 0),
       { threshold: 0 }
     );
     io.observe(sentinel);
     return () => io.disconnect();
-  }, []);
-  return visible;
+  }, [pathname]);
+  return pathname !== "/" || pastHero;
 }
 
 export default function Navbar() {
   const pathname = usePathname();
-  const navVisible = useNavVisibility();
+  const navVisible = useNavVisibility(pathname);
+  const activeHref = activeHrefFor(pathname);
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const navRef = useRef<HTMLDivElement>(null);
@@ -191,16 +192,21 @@ export default function Navbar() {
     []
   );
 
+  /* Aktif göstergeyi her rota değişiminde aktif bağlantıya taşı; ilk
+     konumlandırma animasyonsuz, sonrakiler yayla. */
   useEffect(() => {
-    const activeEl = linkRefs.current.get(pathname);
-    if (activeEl && !initializedRef.current) {
-      const pos = getPosition(activeEl);
-      if (pos) {
-        setImmediate(pos.left, pos.width, 1);
-        initializedRef.current = true;
-      }
+    const activeEl = activeHref ? linkRefs.current.get(activeHref) : undefined;
+    const pos = activeEl ? getPosition(activeEl) : null;
+    if (!initializedRef.current) {
+      if (pos) setImmediate(pos.left, pos.width, 1);
+      initializedRef.current = true;
+      return;
     }
-  }, [pathname, getPosition, setImmediate]);
+    if (pos) setTarget(pos.left, pos.width, 1);
+    else setTarget(blob.left, blob.width, 0);
+    // blob yalnızca gizlerken mevcut konumu korumak için okunuyor
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeHref, getPosition, setImmediate, setTarget]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setMobileOpen(false), 0);
@@ -272,7 +278,7 @@ export default function Navbar() {
 
   const handleMouseLeave = () => {
     setHoveredHref(null);
-    const activeEl = linkRefs.current.get(pathname);
+    const activeEl = activeHref ? linkRefs.current.get(activeHref) : undefined;
     if (activeEl) {
       const pos = getPosition(activeEl);
       if (pos) setTarget(pos.left, pos.width, 1);
@@ -286,7 +292,7 @@ export default function Navbar() {
   };
 
   const getLinkClass = (href: string) => {
-    const isActive = pathname === href;
+    const isActive = activeHref === href;
     const isHovered = hoveredHref === href;
     if (isActive || isHovered) {
       return isDark ? "text-white" : "text-[#A01550]";
@@ -386,6 +392,7 @@ export default function Navbar() {
         aria-modal="true"
         aria-label="Ana menü"
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
       >
         <div
           className={`absolute inset-0 flex min-h-dvh flex-col ${
@@ -428,7 +435,7 @@ export default function Navbar() {
           <nav className="relative z-10 flex flex-1 flex-col justify-center px-6" aria-label="Mobil navigasyon">
             <ul className="space-y-0">
               {mobileLinks.map((link, index) => {
-                const active = pathname === link.href;
+                const active = activeHref === link.href;
                 const delay = 150 + index * 80;
                 return (
                   <li key={`overlay-${link.href}`}>
@@ -491,7 +498,7 @@ export default function Navbar() {
             {/* Dil seçici: İngilizce çeviri tamamlanınca TR/EN olarak geri eklenecek */}
 
             <a
-              href="https://wa.me/905459407690"
+              href={whatsappUrl("Merhaba Zeplin Media, projem hakkında konuşmak istiyorum.")}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
@@ -509,6 +516,8 @@ export default function Navbar() {
         className={`fixed top-5 left-1/2 z-50 hidden w-auto -translate-x-1/2 transition-[opacity,transform] duration-[var(--dur-3)] md:block ${
           navVisible ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-4 opacity-0"
         }`}
+        aria-label="Ana menü"
+        inert={!navVisible}
       >
       {/* SVG filters removed for performance */}
 
@@ -585,7 +594,10 @@ export default function Navbar() {
                 href={link.href}
                 ref={(el) => setLinkRef(link.href, el)}
                 onMouseEnter={() => handleMouseEnter(link.href)}
-                className={`block rounded-full px-6 py-2.5 text-base font-medium lowercase transition-colors duration-300 ${getLinkClass(link.href)}`}
+                onFocus={() => handleMouseEnter(link.href)}
+                onBlur={handleMouseLeave}
+                aria-current={activeHref === link.href ? "page" : undefined}
+                className={`block whitespace-nowrap rounded-full px-4 py-2.5 text-base font-medium lowercase transition-colors duration-300 lg:px-6 ${getLinkClass(link.href)}`}
               >
                 {link.label}
               </Link>
@@ -615,7 +627,10 @@ export default function Navbar() {
                 href={link.href}
                 ref={(el) => setLinkRef(link.href, el)}
                 onMouseEnter={() => handleMouseEnter(link.href)}
-                className={`block rounded-full px-6 py-2.5 text-base font-medium lowercase transition-colors duration-300 ${getLinkClass(link.href)}`}
+                onFocus={() => handleMouseEnter(link.href)}
+                onBlur={handleMouseLeave}
+                aria-current={activeHref === link.href ? "page" : undefined}
+                className={`block whitespace-nowrap rounded-full px-4 py-2.5 text-base font-medium lowercase transition-colors duration-300 lg:px-6 ${getLinkClass(link.href)}`}
               >
                 {link.label}
               </Link>
