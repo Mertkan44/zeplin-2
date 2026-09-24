@@ -30,11 +30,14 @@ export default function MediaLightbox({
   index,
   onClose,
   onIndexChange,
+  footer,
 }: {
   items: LightboxItem[];
   index: number | null;
   onClose: () => void;
   onIndexChange: (i: number) => void;
+  /** Medyanın altında gösterilecek ek içerik (ör. proje bağlantısı) */
+  footer?: React.ReactNode;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -100,7 +103,7 @@ export default function MediaLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={item.alt}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm md:p-10"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-4 pb-24 pt-16 backdrop-blur-sm md:px-10"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -150,7 +153,7 @@ export default function MediaLightbox({
           controls
           autoPlay
           playsInline
-          className="h-full max-h-[88svh] w-auto max-w-full rounded-xl bg-black object-contain"
+          className="h-full w-auto max-w-full rounded-xl bg-black object-contain"
           style={{ aspectRatio: "9 / 16" }}
         />
       ) : (
@@ -163,11 +166,14 @@ export default function MediaLightbox({
         />
       )}
 
-      {many && (
-        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm tabular-nums text-white/70" aria-live="polite">
-          {index! + 1} / {items.length}
-        </p>
-      )}
+      <div className="absolute inset-x-0 bottom-5 flex flex-col items-center gap-3">
+        {footer}
+        {many && (
+          <p className="text-sm tabular-nums text-white/70" aria-live="polite">
+            {index! + 1} / {items.length}
+          </p>
+        )}
+      </div>
     </div>,
     document.body,
   );
