@@ -6,6 +6,7 @@ Bu görseller, gerçek işle gösteremediğimiz hizmet kartları için. Post, lo
 - **Boyut:** Yatay **3:2** (ChatGPT'de 1536×1024). Kartlar yatay, detay sayfalarında tam genişlik kullanılıyor.
 - **Stil bloğu:** Her promptun başına aşağıdaki **ortak stil bloğunu** ekle, sonra sahneyi yapıştır.
 - **Kaydetme:** Masaüstünde `zeplin-gorseller` klasörüne, **tablodaki dosya adıyla** kaydet. Adlar eşleşirse siteye tek seferde yerleştiririm.
+- **Yerleşim:** Kartların alt kısmında başlık ve koyu geçiş var. Ana konu üst yarıda kalmalı, alt üçte bir sakin olmalı (stil bloğunda yazıyor).
 - **Seçim:** Her görselden 2 varyasyon üretip beğendiğini seçebilirsin. Ekranında okunabilir yazı ya da logo çıkarsa yeniden üret.
 
 ---
@@ -13,7 +14,7 @@ Bu görseller, gerçek işle gösteremediğimiz hizmet kartları için. Post, lo
 ## Ortak stil bloğu (her promptun başına)
 
 ```
-Documentary-style editorial photograph for a creative agency website. Shot on a 35mm lens, natural daylight from a large window, soft realistic shadows, true-to-life colors, light and airy modern Istanbul studio interior with warm wood, white walls and plants. Real, candid people in their late 20s–30s, natural expressions, not posing for the camera. Shallow depth of field. Only one small magenta (#DB2777) accent object in the scene, nothing else pink. Any screens show soft, blurred, abstract interface shapes with no readable text, no logos, no brand names. No neon, no holograms, no glowing lines, no dark moody desk, no floating UI, no watermark.
+Documentary-style editorial photograph for a creative agency website. Shot on a 35mm lens, natural daylight from a large window, soft realistic shadows, true-to-life colors, light and airy modern Istanbul studio interior with warm wood, white walls and plants. Real, candid people in their late 20s–30s, natural expressions, not posing for the camera. Shallow depth of field. Only one small magenta (#DB2777) accent object in the scene, nothing else pink. Any screens show soft, blurred, abstract interface shapes with no readable text, no logos, no brand names. No neon, no holograms, no glowing lines, no dark moody desk, no floating UI, no watermark. Place the main subject in the upper half of the frame and keep the lower third calm and uncluttered, because a title will sit on top of it.
 ```
 
 ---
@@ -61,8 +62,15 @@ A marketer reviewing an email newsletter design on a laptop while checking how i
 ```
 
 ### 6 — kartvizit.jpg
+Bu prompt ortak stil bloğunu kendi içinde barındırıyor; tek başına yapıştır.
 ```
-Close-up of a designer's hands on a light wooden table comparing premium business card samples: textured white cards, a few dark cards, a paper swatch fan and a metal ruler. Crisp daylight showing paper texture and letterpress edges. Cards are blank or show only abstract geometric marks, no readable text. Magenta accent: one card with a magenta painted edge.
+Editorial product photograph for a creative agency website, 3:2 landscape. Soft natural daylight from a window on the left, gentle realistic shadows, true-to-life colors, shot on a 50mm lens from a 45-degree angle above a light oak table.
+
+Subject in the UPPER HALF of the frame: a finished premium business card set neatly arranged — a small fanned stack of thick textured off-white cards and a second stack of deep charcoal cards. The top card of each stack shows a simple minimal geometric monogram mark (abstract shapes only, no letters, no words, no numbers). The white cards have a thin magenta (#DB2777) painted edge visible along the stack; the charcoal cards have a subtle blind-debossed mark. One designer's hand enters from the right, placing a single card on top of the white stack, fingertips visible, no watch or jewelry.
+
+Minimal props only: one graphite pencil and a small paper swatch fan partly out of focus at the top edge. The LOWER THIRD of the frame is calm, empty wooden table surface with soft light — no objects there.
+
+Crisp detail on paper texture and card edges, shallow depth of field. Clean, calm, premium, uncluttered. No readable text anywhere, no logos, no brand names, no moodboard photos, no screens, no laptop, no neon, no dark moody desk, no watermark.
 ```
 
 ### 7 — ozel-yazilim.jpg
