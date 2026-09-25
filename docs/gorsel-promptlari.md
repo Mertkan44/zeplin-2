@@ -89,9 +89,16 @@ Photograph, 3:2 landscape. Late evening at home, warm lamp light. Over-the-shoul
 ```
 
 ### 9 — ai-callbot.jpg
-Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
+Stil bloğunu KULLANMA; tek başına yapıştır. Önerilen: **A** (mesai sonrası, kimse yokken cevaplanan çağrı).
+
+**A — Mesai sonrası resepsiyon**
 ```
-Photograph, 3:2 landscape, bright small business counter (a bakery or clinic reception), daylight. A smartphone lying face-up on the counter is the hero, upper half of the frame, perfectly sharp: an incoming-call screen being answered automatically — a round assistant avatar with a magenta (#DB2777) ring, a live audio waveform, a call timer shape and a short transcript list below made of grey placeholder lines. No readable text, no logos. The owner is busy serving a customer in the softly blurred background. Lower third calm counter surface. Realistic, true-to-life colors, no neon, no holograms, no watermark.
+Photograph, 3:2 landscape. A tidy, empty reception desk of a small clinic or beauty salon just after closing time, dusk light through the window, main lights off, one warm desk lamp on. Nobody is in the room. A modern desk phone sits on the counter in the UPPER HALF of the frame, large and perfectly sharp: its handset is still resting in the cradle, yet its small display is lit and clearly shows an active call — a live audio waveform, a small round assistant icon with a magenta (#DB2777) ring and a running call-timer shape. No readable text, no numbers, no logos. An empty chair pushed in, a closed appointment book and a small plant, softly blurred. Lower third calm, clean counter surface. Quiet, calm, realistic, true-to-life colors, no neon, no holograms, no floating UI, no watermark.
+```
+
+**B — Müşterinin tarafı**
+```
+Photograph, 3:2 landscape, natural daylight on a busy Istanbul street. Medium close-up of a woman in her 30s walking, holding a phone to her ear, relaxed and smiling as if a quick booking is being confirmed; her face and the phone are in the UPPER HALF of the frame and sharp, the street, trams and pedestrians softly blurred behind. A small magenta (#DB2777) detail on her bag strap. Lower third calm (soft blurred pavement). Candid, not posed, realistic skin texture, true-to-life colors. No readable text, no logos, no neon, no watermark.
 ```
 
 ### 10 — is-akisi.jpg
