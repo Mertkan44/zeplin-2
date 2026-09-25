@@ -9,6 +9,7 @@ import { getRelatedServices, briefHref } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { ServiceProof } from "./ServiceProof";
 
 /* ══════════════════════════════════════════════════════════════════════
    ORTAK HİZMET DETAY TEMPLATE — 7 BÖLÜM
@@ -16,13 +17,6 @@ import { CTABanner } from "./CTABanner";
 
 export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
   const related = getRelatedServices(service.relatedSlugs);
-  const portfolioItems = [
-    { img: service.heroImage, label: `${service.title} / Ana konsept` },
-    { img: "/images/generated/service-design-system.webp", label: "Görsel sistem" },
-    { img: "/images/generated/service-content-studio.webp", label: "İçerik ritmi" },
-    { img: "/images/generated/gallery-production-wall.webp", label: "Teslim paketi" },
-  ];
-
   return (
     <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
       {/* ── Bölüm 1: Hero ──────────────────────────────────────────── */}
@@ -173,58 +167,8 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
         </div>
       </section>
 
-      {/* ── Bölüm 4: Portfolyo / Örnek İşler ──────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-        <motion.div
-          variants={revealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-          custom={0}
-          className="mb-10 md:mb-14"
-        >
-          <span
-            className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400"
-            style={FONT}
-          >
-            uygulama alanları
-          </span>
-          <h2
-            className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[38px]"
-            style={FONT}
-          >
-            Bu hizmet nerede görünür?
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {portfolioItems.map((item, i) => (
-            <motion.div
-              key={item.label}
-              variants={revealVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              custom={i * 0.08}
-              className="group relative aspect-[4/3] overflow-hidden rounded-[24px]"
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                style={{ backgroundImage: `url('${item.img}')` }}
-              />
-              <div className="absolute inset-0 bg-black/20 transition-all duration-500 group-hover:bg-black/40" />
-              <div className="absolute inset-x-0 bottom-0 flex items-end p-6">
-                <span
-                  className="text-[14px] font-semibold text-white opacity-100 transition-all duration-400 md:opacity-0 md:group-hover:opacity-100"
-                  style={FONT}
-                >
-                  {item.label}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* ── Bölüm 4: Gerçek proje + başlangıç listesi ─────────────── */}
+      <ServiceProof service={service} />
 
       {/* ── Bölüm 5: CTA Mid-page ─────────────────────────────────── */}
       <section className="mx-auto max-w-[1200px] px-6 pb-6 pt-2 md:pb-8 md:pt-4">

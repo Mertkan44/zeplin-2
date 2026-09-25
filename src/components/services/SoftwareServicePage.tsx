@@ -7,6 +7,7 @@ import { getRelatedServices } from "@/data/services";
 import type { ServiceData } from "@/data/services";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { ServiceProof } from "./ServiceProof";
 import { DemoFigure } from "./DemoCaption";
 
 /* ── Hub nodes ────────────────────────────────────────────────────── */
@@ -468,6 +469,8 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
           ))}
         </div>
       </section>
+
+      <ServiceProof service={service} />
 
       <RelatedServices services={related} />
       <CTABanner service={service} />

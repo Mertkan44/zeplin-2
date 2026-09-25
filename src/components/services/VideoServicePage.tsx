@@ -8,6 +8,7 @@ import { getRelatedServices } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { ServiceProof } from "./ServiceProof";
 
 /* ── Showreel Videos (vertical/portrait) ──────────────────────────── */
 const showreelVideos = [
@@ -386,6 +387,8 @@ export function VideoServicePage({ service }: { service: ServiceData }) {
       </section>
 
       {/* ── Bölüm 6: İlgili Hizmetler ─────────────────────────────── */}
+      <ServiceProof service={service} />
+
       <RelatedServices services={related} />
 
       {/* ── Bölüm 7: CTA Banner ───────────────────────────────────── */}
