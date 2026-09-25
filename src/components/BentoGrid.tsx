@@ -77,7 +77,7 @@ export default function BentoGrid({ blocks, sectionId }: BentoGridProps) {
               </motion.div>
             )}
 
-            <SocialBoardingPass socials={blocks[1]?.socials ?? []} />
+            {blocks[1]?.socials && <SocialBoardingPass socials={blocks[1].socials} />}
           </div>
         </div>
       </section>

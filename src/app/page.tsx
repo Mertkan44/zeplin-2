@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import HeroStage from "@/components/HeroStage";
 import BentoGrid from "@/components/BentoGrid";
 import HomeScrollReset from "@/components/HomeScrollReset";
+import HomeServices from "@/components/HomeServices";
+import HomeProcess from "@/components/HomeProcess";
 import dynamic from "next/dynamic";
 import { projects } from "@/data/projects";
 import { createPageMetadata, siteConfig } from "@/lib/seo";
@@ -16,6 +18,7 @@ export const metadata: Metadata = createPageMetadata({
 const ServiceCircleDiagram = dynamic(() => import("@/components/ServiceCircleDiagram"));
 const VideoTestimonials = dynamic(() => import("@/components/VideoTestimonials"));
 const BrandMarquee = dynamic(() => import("@/components/BrandMarquee"));
+const SocialBoardingPass = dynamic(() => import("@/components/SocialBoardingPass"));
 
 const videoTestimonials = [
   {
@@ -81,12 +84,9 @@ export default function Home() {
           bittiği, bir sonraki bölümün başladığı tam sınır. Bkz. Navbar.tsx */}
       <div id="hero-nav-sentinel" aria-hidden="true" />
 
-      <BentoGrid blocks={blocks} sectionId="home-first-section" />
-
-      <ServiceCircleDiagram />
-
-      <VideoTestimonials testimonials={videoTestimonials} />
-
+      {/* Ziyaretçinin sırasıyla sorduğu sorular: kim güveniyor → işler iyi mi →
+          ihtiyacımı karşılıyor mu → başlayınca ne olacak → deneyim nasıl →
+          başka neler var → diğer kanallar. Bkz. docs inceleme, madde 14. */}
       <BrandMarquee
         brands={[
           { name: "Gentleman", logo: "/brand-logos/gentleman-logo.webp" },
@@ -100,6 +100,22 @@ export default function Home() {
           { name: "Foton Sağlık Çözümleri", logo: "/brand-logos/foton-logo.svg" },
         ]}
       />
+
+      <BentoGrid blocks={[blocks[0]]} sectionId="home-first-section" />
+
+      <HomeServices />
+
+      <HomeProcess />
+
+      <VideoTestimonials testimonials={videoTestimonials} />
+
+      <ServiceCircleDiagram />
+
+      <section className="px-5 pb-16 md:px-12 md:pb-24">
+        <div className="mx-auto max-w-6xl">
+          <SocialBoardingPass socials={blocks[1].socials ?? []} />
+        </div>
+      </section>
     </main>
   );
 }
