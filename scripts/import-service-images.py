@@ -31,7 +31,6 @@ MAPPING = {
     "ai-callbot": "aiCallbot",
     "is-akisi": "workflowAutomation",
     "crm": "crmIntegration",
-    "yapay-zeka-bant": "aiBand",
 }
 
 TARGET_W, TARGET_H = 1600, 1000
@@ -63,6 +62,22 @@ def main() -> None:
         else:
             data = data.replace("} as const;", f'  {key}: "{path}",\n}} as const;', 1)
         print(f"✓ {src.name} → {path} ({out.stat().st_size // 1024} KB)")
+    # AI bandı: chatbot + callbot + özel yazılım görsellerinden yan yana kolaj
+    parts = [OUT / f"{n}.webp" for n in ("ai-chatbot", "ai-callbot", "ozel-yazilim")]
+    if all(p.exists() for p in parts):
+        slice_w = TARGET_W // 3
+        band = Image.new("RGB", (TARGET_W, TARGET_H), (22, 8, 18))
+        for i, part in enumerate(parts):
+            im = Image.open(part).convert("RGB")
+            scale = TARGET_H / im.height
+            im = im.resize((round(im.width * scale), TARGET_H), Image.LANCZOS)
+            left = (im.width - slice_w) // 2
+            band.paste(im.crop((left, 0, left + slice_w, TARGET_H)), (i * slice_w + (4 if i else 0), 0))
+        band_path = OUT / "ai-bant.webp"
+        band.save(band_path, "WEBP", quality=82)
+        data = re.sub(r'(\n  aiBand: )"[^"]*"', r'\1"/images/services/ai-bant.webp"', data)
+        print(f"✓ AI bandı kolajı → /images/services/ai-bant.webp")
+
     DATA.write_text(data)
     if missing:
         print("Bulunamadı:", ", ".join(missing))

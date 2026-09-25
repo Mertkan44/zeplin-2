@@ -1,6 +1,6 @@
 # Zeplin — hizmet görselleri için promptlar
 
-Bu görseller, gerçek işle gösteremediğimiz hizmet kartları için. Post, logo, afiş, reels, reklam filmi, fotoğraf ve web kartları senin gerçek projelerinle dolduruluyor.
+Bu görseller, gerçek işle gösteremediğimiz hizmet kartları için. Hizmetler sayfasındaki büyük AI bandı için ayrıca görsel üretilmiyor; chatbot, callbot ve özel yazılım görsellerinden kolaj yapılacak. Post, logo, afiş, reels, reklam filmi, fotoğraf ve web kartları senin gerçek projelerinle dolduruluyor.
 
 ## Nasıl kullanılır
 - **Boyut:** Yatay **3:2** (ChatGPT'de 1536×1024). Kartlar yatay, detay sayfalarında tam genişlik kullanılıyor.
@@ -34,7 +34,6 @@ Documentary-style editorial photograph for a creative agency website. Shot on a 
 | 9 | `ai-callbot.jpg` | AI Callbot |
 | 10 | `is-akisi.jpg` | İş Akışı Otomasyonu |
 | 11 | `crm.jpg` | CRM Entegrasyonu |
-| 12 | `yapay-zeka-bant.jpg` | Hizmetler sayfasındaki büyük AI bandı |
 
 ### 1 — reklam-yonetimi.jpg
 Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
@@ -110,9 +109,4 @@ A team member standing at a glass wall arranging sticky notes into a clear proce
 Stil bloğunu KULLANMA; bu prompt tek başına. Ekran bu görselin kahramanı: net, büyük, üst yarıda; yazı yerine gri yer tutucu çizgiler.
 ```
 Photograph, 3:2 landscape, bright meeting room, daylight. A tablet held in two hands is the hero, upper half of the frame, perfectly sharp: a CRM pipeline board with four columns of small customer cards (avatar circle + grey placeholder lines), one card being dragged with a magenta (#DB2777) outline. No readable text, no logos. A laptop and a coffee cup softly blurred behind. Lower third calm table. Realistic, true-to-life colors, no neon, no holograms, no watermark.
-```
-
-### 12 — yapay-zeka-bant.jpg
-```
-Wide cinematic shot of a modern bright studio where a small team works around a large table: one person talks to a laptop with a blurred chat interface, another checks a phone, a third looks at a wall monitor with a blurred dashboard. Warm daylight, plants, depth. Leave the left third of the frame calmer and less detailed so text can sit on top of it. Magenta accent: a single chair.
 ```

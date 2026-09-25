@@ -255,6 +255,11 @@ export default function HizmetlerPage() {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
           custom={0.08}
         >
+          <Link
+            href="/hizmetler/yapay-zeka"
+            aria-label="Yapay Zeka hizmetlerini incele"
+            className="group block overflow-hidden rounded-[34px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DB2777]"
+          >
           <div className="overflow-hidden rounded-[34px] border border-[#F9A8D4]/50 bg-[linear-gradient(180deg,#FBCFE8_0%,#F9A8D4_100%)] shadow-[0_24px_70px_rgba(219,39,119,0.14)] dark:border-[#9D174D]/30 dark:bg-[linear-gradient(180deg,#9D174D_0%,#831843_100%)] dark:shadow-[0_24px_70px_rgba(157,23,77,0.25)]">
             <div className="grid md:min-h-[460px] md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               {/* Left — dark text panel */}
@@ -270,6 +275,9 @@ export default function HizmetlerPage() {
                 <p className="mt-8 max-w-[28ch] text-[15px] leading-[1.72] text-white/62 md:text-[17px]">
                   Chatbot, callbot ve otomasyon akışlarını; sosyal medya, web ve içerik operasyonunuzla aynı ritimde çalışacak şekilde kurguluyoruz.
                 </p>
+                <span className="mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#F9A8D4]">
+                  İncele <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </span>
               </div>
 
               {/* Right — visual */}
@@ -283,6 +291,7 @@ export default function HizmetlerPage() {
               </div>
             </div>
           </div>
+          </Link>
         </motion.div>
       </section>
 
