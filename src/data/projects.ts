@@ -15,11 +15,22 @@ export interface ProjectData {
   gallery: string[];
   /** İletişim formunda önceden seçilecek ihtiyaç (BRIEF_NEEDS değerlerinden) */
   briefNeed: string;
+  /** Liste kartındaki tek satırlık iş tanımı (etiketleri tekrar etmez) */
+  cardSummary: string;
+  /** Liste kapağı; yoksa `image`. İşin türünü gösteren kare seçilmeli. */
+  cover?: string;
+  /** Kapak gerçek iş değil de sektör/temsili görselse true (geçici). */
+  coverIsPlaceholder?: boolean;
+  /** Liste sırası; küçük olan önce. İlk sıradaki "öne çıkan" olarak büyük gösterilir. */
+  listOrder: number;
 }
 
 export const projects: ProjectData[] = [
   {
     slug: "milo-restaurant",
+    cardSummary: "Menü fotoğrafçılığı ve Reels",
+    listOrder: 1,
+    cover: "/images/projects-milo-gallery-1.jpg",
     briefNeed: "Fotoğraf & Video",
     name: "Milo Restaurant",
     client: "Milo Restaurant",
@@ -45,6 +56,8 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "babi-restaurant",
+    cardSummary: "Fotoğraf ve video prodüksiyon",
+    listOrder: 5,
     briefNeed: "Fotoğraf & Video",
     name: "Babi Restaurant",
     client: "Babi Restaurant",
@@ -64,6 +77,9 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "ritim-jewellery",
+    cardSummary: "Yapay zekâ destekli reklam filmi",
+    listOrder: 2,
+    cover: "/images/projects-ritim-cover-films.webp",
     briefNeed: "Fotoğraf & Video",
     name: "Ritim Jewellery",
     client: "Ritim Jewellery",
@@ -85,6 +101,9 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "pam-akademi",
+    cardSummary: "Marka kimliği ve dijital tasarım",
+    listOrder: 4,
+    cover: "/images/services/banner-afis.webp",
     briefNeed: "Marka & Tasarım",
     name: "Pam Akademi",
     client: "Pam Akademi",
@@ -110,6 +129,9 @@ export const projects: ProjectData[] = [
   },
   {
     slug: "foton-saglik-cozumleri",
+    cardSummary: "Web tasarımı ve geliştirme",
+    listOrder: 3,
+    coverIsPlaceholder: true,
     briefNeed: "Web Sitesi",
     name: "Foton Sağlık Çözümleri",
     client: "Foton Sağlık Çözümleri",
@@ -130,6 +152,9 @@ export const projects: ProjectData[] = [
     ],
   },
 ];
+
+/** Liste sırasına göre projeler (ilk eleman öne çıkan iş). */
+export const projectsInListOrder = [...projects].sort((a, b) => a.listOrder - b.listOrder);
 
 export function getProjectBySlug(slug: string): ProjectData | undefined {
   return projects.find((p) => p.slug === slug);

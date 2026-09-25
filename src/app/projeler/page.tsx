@@ -1,112 +1,111 @@
-"use client";
-
-import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { projects } from "@/data/projects";
-import { EASE, revealVariants, revealViewport } from "@/lib/motion";
+import Link from "next/link";
+import { projectsInListOrder, type ProjectData } from "@/data/projects";
+
+/*
+ * Projeler — tasarım çalışması bölüm 12.
+ * Kısa açılış → öne çıkan iş (tam genişlik) → iki sütunlu devam alanı → sade kapanış.
+ * Metin görselin dışında, altta; kapaklar karartılmıyor.
+ */
+
+const CONTAINER = "mx-auto w-full max-w-[1240px] px-5 md:px-10";
+
+function ProjectCard({ project, featured = false }: { project: ProjectData; featured?: boolean }) {
+  return (
+    <Link
+      href={`/projeler/${project.slug}`}
+      className="group block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DB2777]"
+    >
+      <div
+        className={`relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-white/5 ${
+          featured ? "aspect-[4/3] md:aspect-[16/9]" : "aspect-[4/3]"
+        }`}
+      >
+        <Image
+          src={project.cover ?? project.image}
+          alt=""
+          fill
+          priority={featured}
+          sizes={featured ? "(min-width: 1280px) 1160px, 100vw" : "(min-width: 768px) 580px, 100vw"}
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          style={{ objectPosition: project.cover ? "center" : project.imagePosition ?? "center" }}
+        />
+      </div>
+      <div className={`flex items-start justify-between gap-6 ${featured ? "mt-5" : "mt-4"}`}>
+        <div>
+          <h2
+            className={`font-semibold tracking-[-0.02em] text-zinc-900 dark:text-white ${
+              featured ? "text-[26px] md:text-[32px]" : "text-[22px] md:text-[26px]"
+            }`}
+          >
+            {project.name}
+          </h2>
+          <p className="mt-1 text-[16px] text-zinc-600 dark:text-zinc-400 md:text-[17px]">{project.cardSummary}</p>
+          {project.coverIsPlaceholder && (
+            <p className="mt-1 text-[13px] text-zinc-500 dark:text-zinc-400">Kapak geçici; ekran görüntüleri hazırlanıyor.</p>
+          )}
+        </div>
+        <span className="mt-2 shrink-0 text-[15px] font-semibold text-[#BE185D] dark:text-[#F472B6]">
+          Projeyi incele <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span>
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 export default function ProjelerPage() {
+  const [featured, ...rest] = projectsInListOrder;
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      {/* ── Hero başlık ─────────────────────────────────────────── */}
-      <section className="px-5 pb-12 pt-24 md:px-12 md:pb-16 md:pt-32">
-        <div className="mx-auto max-w-5xl">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: EASE }}
-            className="mb-3 text-[12px] font-semibold uppercase tracking-[0.22em] text-pink-400"
-          >
-            Portföy
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: EASE, delay: 0.06 }}
-            className="text-[2.4rem] font-bold leading-tight text-foreground md:text-[3.6rem]"
-          >
-            projelerimiz
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.12 }}
-            className="mt-4 max-w-lg text-base text-foreground/60 md:text-lg"
-          >
-            Markaların dijital dönüşüm hikayelerini birlikte yazıyoruz.
-          </motion.p>
+    <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
+      {/* ── A: Kısa açılış ─────────────────────────────────────── */}
+      <header className={`${CONTAINER} pb-10 pt-32 md:pb-14 md:pt-44`}>
+        <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[#BE185D] dark:text-[#F472B6]">
+          Projelerimiz
+        </p>
+        <div className="mt-4 grid gap-6 md:grid-cols-[1.1fr_1fr] md:items-end md:gap-16">
+          <h1 className="text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] md:text-[76px]">
+            İşimiz{" "}
+            <em className="font-normal" style={{ fontFamily: "var(--font-instrument), serif" }}>
+              konuşsun.
+            </em>
+          </h1>
+          <p className="max-w-[44ch] text-[17px] leading-[1.65] text-zinc-700 dark:text-zinc-300 md:text-[18px]">
+            Fotoğraftan filme, marka kimliğinden web deneyimine seçili çalışmalarımız.
+          </p>
         </div>
+      </header>
+
+      {/* ── B: Öne çıkan proje ─────────────────────────────────── */}
+      <section aria-label="Öne çıkan proje" className={CONTAINER}>
+        <ProjectCard project={featured} featured />
       </section>
 
-      {/* ── Proje grid ──────────────────────────────────────────── */}
-      <section className="px-5 pb-24 md:px-12">
-        <div className="mx-auto max-w-5xl">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, i) => (
-              <motion.div
-                key={project.slug}
-                variants={revealVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={revealViewport}
-                custom={i * 0.06}
-              >
-                <Link
-                  href={`/projeler/${project.slug}`}
-                  className="group relative block aspect-[4/3] overflow-hidden rounded-2xl"
-                >
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    fill
-                    sizes="(min-width: 1024px) 330px, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    style={{ objectPosition: project.imagePosition ?? "center" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
-
-                  {/* Hover overlay ok */}
-                  <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-white"
-                    >
-                      <line x1="4" y1="12" x2="12" y2="4" />
-                      <polyline points="5 4 12 4 12 11" />
-                    </svg>
-                  </div>
-
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    {project.tags.length > 0 && (
-                      <div className="mb-2.5 flex flex-wrap gap-1.5">
-                        {project.tags.slice(0, 2).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-white/78 backdrop-blur-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <p className="text-lg font-bold text-white">{project.name}</p>
-                    <p className="mt-0.5 text-sm text-white/65">{project.shortDesc}</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* ── C: İki sütunlu devam ───────────────────────────────── */}
+      <section aria-label="Diğer projeler" className={`${CONTAINER} mt-16 md:mt-20`}>
+        <ul className="grid gap-x-8 gap-y-12 md:grid-cols-2 md:gap-y-14">
+          {rest.map((project) => (
+            <li key={project.slug}>
+              <ProjectCard project={project} />
+            </li>
+          ))}
+        </ul>
       </section>
 
+      {/* ── D: Kısa kapanış (ana iletişim vurgusu footer'da) ──────── */}
+      <section className={`${CONTAINER} py-20 md:py-24`}>
+        <div className="flex flex-col gap-4 border-t border-zinc-200 pt-8 dark:border-white/10 md:flex-row md:items-center md:justify-between">
+          <p className="text-[20px] font-medium text-zinc-800 dark:text-zinc-200 md:text-[22px]">
+            Benzer bir üretim mi düşünüyorsunuz?
+          </p>
+          <Link
+            href="/iletisim"
+            className="w-fit text-[16px] font-semibold text-[#BE185D] underline underline-offset-4 dark:text-[#F472B6]"
+          >
+            Projeni anlat →
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
