@@ -12,14 +12,10 @@ import { AI_BAND_IMAGE, LEGACY_TAB_IDS, serviceTabs } from "@/data/services";
 import FirstScrollSnap from "@/components/FirstScrollSnap";
 import ProjectNotes from "@/components/ProjectNotes";
 import { whatsappUrl } from "@/lib/contact";
+import { SERVICES_PAGE_METRICS } from "@/data/metrics";
 
 /* ── Metrics ──────────────────────────────────────────────────────── */
-const metrics = [
-  { value: 38, suffix: "+", label: "Aktif Marka Operasyonu" },
-  { value: 92, suffix: "%", label: "Zamanında Teslim" },
-  { value: 4, suffix: ".7x", label: "Ortalama Etkileşim Artışı" },
-  { value: 360, suffix: "°", label: "Üretim ve Operasyon" },
-];
+const metrics = SERVICES_PAGE_METRICS;
 
 function CountUp({ value, suffix, delay }: { value: number; suffix: string; delay: number }) {
   const ref = useRef<HTMLSpanElement>(null);

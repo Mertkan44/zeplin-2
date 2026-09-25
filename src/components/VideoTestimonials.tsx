@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
+import { HOME_IMPACT_METRICS } from "@/data/metrics";
 
 /* ── Types ────────────────────────────────────────────────────────── */
 interface VideoTestimonial {
@@ -30,36 +31,7 @@ interface VideoTestimonialsProps {
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
 
-const zeplinMetrics = [
-  {
-    to: 38,
-    decimals: 0,
-    suffix: "+",
-    label: "aktif marka",
-    desc: "tek ekip içinde strateji, içerik ve yayın akışı",
-  },
-  {
-    to: 1.8,
-    decimals: 1,
-    suffix: "M+",
-    label: "aylık erişim",
-    desc: "organik ve reklamlı kampanyalarda birleşik görünürlük",
-  },
-  {
-    to: 92,
-    decimals: 0,
-    suffix: "%",
-    label: "teslim ritmi",
-    desc: "revizyon, prodüksiyon ve yayın takvimlerinde disiplin",
-  },
-  {
-    to: 4.7,
-    decimals: 1,
-    suffix: "x",
-    label: "etkileşim artışı",
-    desc: "markaya özel format testleri ve içerik ritmiyle",
-  },
-];
+const zeplinMetrics = HOME_IMPACT_METRICS;
 
 const [primaryMetric, ...supportingMetrics] = zeplinMetrics;
 

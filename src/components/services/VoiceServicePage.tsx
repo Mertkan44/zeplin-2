@@ -8,6 +8,8 @@ import type { ServiceData } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { DemoFigure } from "./DemoCaption";
+import { VOICE_PAGE_METRICS } from "@/data/metrics";
 
 /* ── Waveform bar data ────────────────────────────────────────────── */
 const BARS = [
@@ -73,12 +75,7 @@ const useCases = [
 ];
 
 /* ── Voice metrics ────────────────────────────────────────────────── */
-const voiceMetrics = [
-  { value: "%97", label: "Ses Tanıma Doğruluğu" },
-  { value: "< 1sn", label: "Yanıt Gecikmesi" },
-  { value: "7/24", label: "Kesintisiz Hizmet" },
-  { value: "%70", label: "Çağrı Yük Azalması" },
-];
+const voiceMetrics = VOICE_PAGE_METRICS;
 
 /* ── WaveformVisual ───────────────────────────────────────────────── */
 function WaveformVisual({ isActive }: { isActive: boolean }) {
@@ -218,7 +215,7 @@ export function VoiceServicePage({ service }: { service: ServiceData }) {
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
               className="order-2 md:order-1"
             >
-              <PhoneCallMockup />
+              <DemoFigure><PhoneCallMockup /></DemoFigure>
             </motion.div>
 
             {/* Stats + description */}

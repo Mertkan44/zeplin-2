@@ -11,6 +11,7 @@ import FirstScrollSnap from "@/components/FirstScrollSnap";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
 import ProjectNotes from "@/components/ProjectNotes";
 import { whatsappUrl } from "@/lib/contact";
+import { OPERATIONS_CARD_METRICS, OPERATIONS_SUMMARY } from "@/data/metrics";
 
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
@@ -183,7 +184,7 @@ const operations = [
     subtitle: "Social Media Management",
     desc: "İçerik takvimi, marka tonu, yayın ritmi ve topluluk iletişimini tek plan üzerinden yönetiyoruz.",
     features: ["İçerik Takvimi", "Yayın Planı", "Topluluk Yönetimi", "Raporlama"],
-    metric: { value: 1, suffix: ".8M+", label: "Aylık Erişim" },
+    metric: OPERATIONS_CARD_METRICS["Sosyal Medya Yönetimi"],
     color: "#EC4899",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -196,7 +197,7 @@ const operations = [
     subtitle: "Content Production",
     desc: "Fotoğraf, video, grafik ve metni aynı kampanya fikrinin parçaları olarak üretiyoruz.",
     features: ["Video", "Fotoğraf", "Grafik Tasarım", "Copywriting"],
-    metric: { value: 500, suffix: "+", label: "Aylık İçerik" },
+    metric: OPERATIONS_CARD_METRICS["İçerik Üretimi"],
     color: "#F472B6",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -209,7 +210,7 @@ const operations = [
     subtitle: "Performance Marketing",
     desc: "Meta, Google, TikTok ve LinkedIn kampanyalarını kreatif üretimle birlikte optimize ediyoruz.",
     features: ["Google Ads", "Meta Ads", "TikTok Ads", "Programmatic"],
-    metric: { value: 4, suffix: "x", label: "Ort. ROAS" },
+    metric: OPERATIONS_CARD_METRICS["Dijital Reklam & Performans"],
     color: "#DB2777",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -222,7 +223,7 @@ const operations = [
     subtitle: "Search & Analytics",
     desc: "Organik görünürlük, teknik sağlık ve içerik performansını okunabilir raporlara çeviriyoruz.",
     features: ["Teknik SEO", "İçerik SEO", "Backlink", "GA4 & GTM"],
-    metric: { value: 180, suffix: "%", label: "Ort. Trafik Artışı" },
+    metric: OPERATIONS_CARD_METRICS["SEO & Analitik"],
     color: "#9D174D",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -235,7 +236,7 @@ const operations = [
     subtitle: "AI Integration",
     desc: "Chatbot, callbot ve otomasyon akışlarını günlük operasyonun yükünü azaltacak şekilde kuruyoruz.",
     features: ["AI Chatbot", "AI Callbot", "Otomasyon", "AI İçerik"],
-    metric: { value: 7, suffix: "/24", label: "Kesintisiz Hizmet" },
+    metric: OPERATIONS_CARD_METRICS["Yapay Zeka Entegrasyonu"],
     color: "#BE185D",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -248,7 +249,7 @@ const operations = [
     subtitle: "Reporting & Analytics",
     desc: "Haftalık ve aylık raporlarda sadece sayı değil, bir sonraki aksiyonu da görünür kılıyoruz.",
     features: ["Haftalık Rapor", "Dashboard", "Rakip Analizi", "Aksiyon"],
-    metric: { value: 100, suffix: "%", label: "Şeffaf Veri" },
+    metric: OPERATIONS_CARD_METRICS["Raporlama & Analiz"],
     color: "#FBCFE8",
     icon: (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -261,10 +262,10 @@ const operations = [
 const OPERATION_COUNT = operations.length;
 
 const operationMetrics = [
-  { value: 360, suffix: "°", label: "Dijital Operasyon" },
+  OPERATIONS_SUMMARY.degrees,
   { value: OPERATION_COUNT, suffix: "", label: "Operasyon Alanı" },
-  { value: 24, suffix: "/7", label: "Kesintisiz İzleme" },
-  { value: 38, suffix: "+", label: "Aktif Marka" },
+  OPERATIONS_SUMMARY.monitoring,
+  OPERATIONS_SUMMARY.activeBrands,
 ];
 
 const workflowSteps = [

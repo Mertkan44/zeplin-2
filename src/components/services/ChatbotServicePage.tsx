@@ -8,6 +8,8 @@ import type { ServiceData } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { DemoFigure } from "./DemoCaption";
+import { CHATBOT_PAGE_METRICS } from "@/data/metrics";
 
 /* ── Channel data ─────────────────────────────────────────────────── */
 const channels = [
@@ -69,12 +71,7 @@ const chatMessages = [
 ];
 
 /* ── Metrics ──────────────────────────────────────────────────────── */
-const metrics = [
-  { value: "< 3sn", label: "Ort. Yanıt Süresi" },
-  { value: "7/24", label: "Kesintisiz Hizmet" },
-  { value: "%95", label: "Çözüm Oranı" },
-  { value: "%60", label: "Ekip Yük Azalması" },
-];
+const metrics = CHATBOT_PAGE_METRICS;
 
 /* ── Typing Dots ──────────────────────────────────────────────────── */
 function TypingDots() {
@@ -302,7 +299,7 @@ export function ChatbotServicePage({ service }: { service: ServiceData }) {
               variants={revealVariants} initial="hidden" whileInView="visible"
               viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.15}
             >
-              <ChatMockup />
+              <DemoFigure><ChatMockup /></DemoFigure>
             </motion.div>
           </div>
         </div>

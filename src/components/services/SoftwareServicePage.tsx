@@ -7,6 +7,7 @@ import { getRelatedServices } from "@/data/services";
 import type { ServiceData } from "@/data/services";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { DemoFigure } from "./DemoCaption";
 
 /* ── Hub nodes ────────────────────────────────────────────────────── */
 // Icons are drawn in a 16×16 coordinate space, centered via translate(nx-8, ny-8)
@@ -387,7 +388,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
           variants={revealVariants} initial="hidden" whileInView="visible"
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.08}
         >
-          <DashboardMockup isActive={dashInView} />
+          <DemoFigure><DashboardMockup isActive={dashInView} /></DemoFigure>
         </motion.div>
       </section>
 

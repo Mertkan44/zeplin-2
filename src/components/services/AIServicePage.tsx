@@ -10,6 +10,8 @@ import { getRelatedServices } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
+import { DemoFigure } from "./DemoCaption";
+import { AI_PAGE_METRICS } from "@/data/metrics";
 
 /* ── Chat Demo Data ───────────────────────────────────────────────── */
 const chatMessages = [
@@ -19,12 +21,7 @@ const chatMessages = [
   { role: "bot" as const, text: "Siparişiniz şu an kargoda! Tahmini teslimat: Yarın 14:00-18:00 arası. Takip linkini SMS olarak gönderdim." },
 ];
 
-const aiMetrics = [
-  { value: 95, suffix: "%", label: "Müşteri Memnuniyeti" },
-  { value: 24, suffix: "/7", label: "Kesintisiz Hizmet" },
-  { value: 60, suffix: "%", label: "Maliyet Tasarrufu" },
-  { value: 3, suffix: "sn", label: "Ort. Yanıt Süresi" },
-];
+const aiMetrics = AI_PAGE_METRICS;
 
 /* ── AI Capabilities ──────────────────────────────────────────────── */
 const capabilities = [
@@ -231,7 +228,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
           viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
           custom={0.1}
         >
-          <ChatDemo />
+          <DemoFigure><ChatDemo /></DemoFigure>
         </motion.div>
       </section>
 

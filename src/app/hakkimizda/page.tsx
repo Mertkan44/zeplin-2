@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
 import { whatsappUrl } from "@/lib/contact";
+import { ABOUT_PAGE_METRICS } from "@/data/metrics";
 
 /* ── Constants ────────────────────────────────────────────────────── */
 const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
@@ -102,12 +103,7 @@ function CountUp({
 }
 
 /* ── Data ─────────────────────────────────────────────────────────── */
-const metrics = [
-  { value: 38, suffix: "+", label: "Aktif Marka Operasyonu" },
-  { value: 4, suffix: "", label: "Üretim Disiplini" },
-  { value: 92, suffix: "%", label: "Zamanında Teslim Ritmi" },
-  { value: 360, suffix: "°", label: "Dijital Bakış" },
-];
+const metrics = ABOUT_PAGE_METRICS;
 
 const processSteps = [
   {
