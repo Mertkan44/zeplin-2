@@ -26,7 +26,7 @@ export function Breadcrumb({
       </Link>
       <span className="text-white/55">/</span>
       <Link
-        href={`/hizmetler?tab=${categorySlug}`}
+        href={`/hizmetler#${categorySlug}`}
         className="text-white/70 transition-colors duration-200 hover:text-white/70"
       >
         {category}

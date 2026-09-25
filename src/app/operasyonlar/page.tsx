@@ -7,7 +7,6 @@ import {
   useSpring,
   AnimatePresence,
 } from "framer-motion";
-import FirstScrollSnap from "@/components/FirstScrollSnap";
 import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
 import ProjectNotes from "@/components/ProjectNotes";
 import { whatsappUrl } from "@/lib/contact";
@@ -330,7 +329,6 @@ export default function OperasyonlarPage() {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
-      <FirstScrollSnap targetId="operations-first-section" />
 
       {/* ── SECTION 1: Hero ───────────────────────────────────────── */}
       <section

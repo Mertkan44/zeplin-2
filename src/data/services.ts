@@ -11,7 +11,7 @@ export interface ServiceProcess {
   desc: string;
 }
 
-/** Hizmetler müşterinin satın aldığı biçimde gruplanır; id'ler /hizmetler?tab= değeridir. */
+/** Hizmetler müşterinin satın aldığı biçimde gruplanır; id'ler /hizmetler#<id> bölüm kimliğidir. */
 export type ServiceCategory = "foto-video" | "sosyal-icerik" | "marka-tasarim" | "web" | "ai-otomasyon";
 
 export const CATEGORY_LABELS: Record<ServiceCategory, string> = {
@@ -566,6 +566,16 @@ export const serviceTabs: ServiceTab[] = [
     ],
   },
   {
+    id: "marka-tasarim",
+    label: CATEGORY_LABELS["marka-tasarim"],
+    cards: [
+      { slug: "logo-tasarimi", title: "Logo & Kimlik", desc: "Markanızı taşıyacak ölçeklenebilir görsel kimlik", img: serviceImages.logoDesign, dark: false },
+      { slug: "post-tasarimi", title: "Post Tasarımı", desc: "Sosyal medya için sistemli ve dikkat çeken görseller", img: serviceImages.postDesign, dark: true },
+      { slug: "banner-afis", title: "Banner & Afiş", desc: "Dijital ve basılı kampanyalar için güçlü görseller", img: serviceImages.bannerPoster, dark: true },
+      { slug: "kartvizit-tasarimi", title: "Kartvizit Tasarımı", desc: "İlk temas için rafine ve baskıya hazır kimlik parçaları", img: serviceImages.businessCard, dark: false },
+    ],
+  },
+  {
     id: "sosyal-icerik",
     label: CATEGORY_LABELS["sosyal-icerik"],
     cards: [
@@ -575,16 +585,6 @@ export const serviceTabs: ServiceTab[] = [
       { slug: "senaryo-script", title: "Senaryo & Script", desc: "Video ve reklam fikirlerini prodüksiyona hazır metne çevirme", img: serviceImages.scriptWriting, dark: false },
       { slug: "blog-yazilari", title: "Blog Yazıları", desc: "Arama niyetiyle uyumlu, değer katan içerikler", img: serviceImages.blogWriting, dark: true },
       { slug: "e-posta-pazarlama", title: "E-posta Pazarlama", desc: "Segmentli ve ölçülebilir e-posta akışları", img: serviceImages.emailMarketing, dark: true },
-    ],
-  },
-  {
-    id: "marka-tasarim",
-    label: CATEGORY_LABELS["marka-tasarim"],
-    cards: [
-      { slug: "logo-tasarimi", title: "Logo & Kimlik", desc: "Markanızı taşıyacak ölçeklenebilir görsel kimlik", img: serviceImages.logoDesign, dark: false },
-      { slug: "post-tasarimi", title: "Post Tasarımı", desc: "Sosyal medya için sistemli ve dikkat çeken görseller", img: serviceImages.postDesign, dark: true },
-      { slug: "banner-afis", title: "Banner & Afiş", desc: "Dijital ve basılı kampanyalar için güçlü görseller", img: serviceImages.bannerPoster, dark: true },
-      { slug: "kartvizit-tasarimi", title: "Kartvizit Tasarımı", desc: "İlk temas için rafine ve baskıya hazır kimlik parçaları", img: serviceImages.businessCard, dark: false },
     ],
   },
   {
@@ -604,5 +604,69 @@ export const serviceTabs: ServiceTab[] = [
       { slug: "yapay-zeka", title: "İş Akışı Otomasyonu", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
       { slug: "ozel-yazilim", title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle temiz veri akışı", img: serviceImages.crmIntegration, dark: false },
     ],
+  },
+];
+
+/* ── Hizmetler sayfası: beş ana grup ─────────────────────────────── */
+
+export interface ServiceGroup {
+  id: ServiceCategory;
+  label: string;
+  summary: string;
+  image: string;
+  imageAlt: string;
+  /** Görsel gerçek müşteri işi değilse true: sayfada "temsili" etiketi çıkar. */
+  imageIsIllustrative?: boolean;
+  /** Yalnızca projenin kendi hizmet listesiyle doğrulanan eşleşmeler (en fazla 2). */
+  relatedProjects: string[];
+}
+
+export const SERVICE_GROUPS: ServiceGroup[] = [
+  {
+    id: "foto-video",
+    label: CATEGORY_LABELS["foto-video"],
+    summary:
+      "Ürünlerinizi, mekânınızı ve hikâyenizi; yayınlanacağı mecraya uygun fotoğraf ve filmlerle anlatıyoruz. Çekim öncesi planlamadan kurgu, renk ve sese kadar üretimin tamamını üstleniyoruz.",
+    image: "/images/projects-milo-gallery-3.jpg",
+    imageAlt: "Milo Restaurant için yapılan yemek çekiminden bir kare",
+    relatedProjects: ["milo-restaurant", "ritim-jewellery"],
+  },
+  {
+    id: "marka-tasarim",
+    label: CATEGORY_LABELS["marka-tasarim"],
+    summary:
+      "Logodan farklı mecralardaki uygulamalara kadar tutarlı bir görsel dil kuruyoruz. Kimlik, sosyal medya şablonları, afiş ve basılı işler aynı sistemden çıkar.",
+    image: "/images/services/post-tasarimi.webp",
+    imageAlt: "Pam Akademi için tasarlanan sosyal medya görselleri",
+    relatedProjects: ["pam-akademi"],
+  },
+  {
+    id: "sosyal-icerik",
+    label: CATEGORY_LABELS["sosyal-icerik"],
+    summary:
+      "Markanızın anlatımını düzenli içerik üretimi ve platforma uygun formatlarla sürdürüyoruz. Tek seferlik içerik de üretiyoruz, aylık plan ve yayınla hesabınızı birlikte de yönetebiliyoruz.",
+    image: "/images/projects-milo-gallery-5.jpg",
+    imageAlt: "Milo Restaurant sosyal medya içerik çekiminden bir kare",
+    relatedProjects: ["milo-restaurant", "pam-akademi"],
+  },
+  {
+    id: "web",
+    label: CATEGORY_LABELS.web,
+    summary:
+      "İçeriği anlaşılır, kullanımı kolay ve markanızla uyumlu web deneyimleri tasarlayıp geliştiriyoruz. Tasarım, geliştirme ve yayından sonraki destek ayrı kalemler olarak konuşulur.",
+    image: serviceImages.website,
+    imageAlt: "Web arayüzlerini temsil eden görsel",
+    imageIsIllustrative: true,
+    relatedProjects: ["foton-saglik-cozumleri", "pam-akademi"],
+  },
+  {
+    id: "ai-otomasyon",
+    label: CATEGORY_LABELS["ai-otomasyon"],
+    summary:
+      "Tekrarlayan işleri ve müşteri iletişimini, ihtiyacınıza uygun otomasyon akışlarıyla düzenliyoruz. Önce süreci birlikte çıkarıyor, sonra hangi adımın otomatikleşeceğine ve nerede insan kontrolü kalacağına karar veriyoruz.",
+    image: serviceImages.aiBand,
+    imageAlt: "Otomasyon arayüzlerini temsil eden görsel",
+    imageIsIllustrative: true,
+    relatedProjects: [],
   },
 ];

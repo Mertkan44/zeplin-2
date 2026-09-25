@@ -59,7 +59,7 @@ export default function HomeServices() {
               className={i === 0 ? "lg:row-span-2" : undefined}
             >
               <Link
-                href={`/hizmetler?tab=${group.id}`}
+                href={`/hizmetler#${group.id}`}
                 className="group relative flex h-full min-h-[220px] flex-col overflow-hidden rounded-[24px] border border-zinc-200 bg-white p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_rgba(219,39,119,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777] dark:border-white/[0.08] dark:bg-white/[0.03] md:p-7"
               >
                 {i === 0 && (
