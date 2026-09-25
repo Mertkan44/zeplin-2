@@ -37,3 +37,38 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 Tamamlandı: 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 16, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30
 Kısmen (içerik bekliyor): 02 (EN altyapısı), 15, 17, 18, 20
 Karar bekliyor: 29
+
+---
+
+# Bekleyenler — Hizmetler ve Projeler Detaylı Tasarım Çalışması (25.09.2026)
+
+Kod tarafı uygulandı: Hizmetler (açılış + indeks + 5 bölüm + süreç + kapanış), Projeler (1 öne çıkan + 2 sütun, metin görselin dışında), proje detayında medya türüne göre düzen, kapak/odak/alan adı/sonraki proje düzeltmeleri, FirstScrollSnap kaldırıldı.
+
+## İçerik (rapor bölüm 21)
+
+| Ne | Nerede | Rapor |
+|---|---|---|
+| Beş hizmetin **fiili kapsamı**: gerçekten sunulan / sunulmayan alt hizmetler (ör. hesap yönetimi, reklam, bakım, barındırma) | `SERVICE_GROUPS` + `serviceTabs` (`src/data/services.ts`) | 9, 21 |
+| Hizmet bazında **SSS** cevapları (tek seferlik/aylık çalışma, çekim yeri, revizyon, teklif için gerekenler) — cevaplar gerçek kurallara dayanmalı | Hizmetler sayfası Bölüm E + detaylar | 10-E, 11.2 |
+| Proje başına **rol ve teslim kapsamı** (tasarım / çekim / kurgu / geliştirme / yönetim) | `projects.ts` → yeni `role`, `deliverables` | 14.1, 19.1 |
+| **Foton** masaüstü + mobil ekran görüntüleri → kapak, "Canlı site" alanı, Web hizmeti görseli (şu an "geçici" etiketli) | `projects.ts`, `SERVICE_GROUPS.web` | 13.5 |
+| **Pam** gerçek logo dosyası + renk/tipografi bilgisi (kimlik sunumu için) | Pam detay sayfası | 13.4 |
+| **Babi** ek fotoğraf/video (yoksa kısa kayıt olarak kalır — şu an öyle) | `projects.ts` | 13.2 |
+| **Milo** video posterleri için daha iyi kare seçimi (şu an 1. saniyeden) | `public/videos/posters/` | 13.1 |
+| Ritim açıklamasındaki "geleneksel prodüksiyonun çok altında maliyet" iddiasının dayanağı ya da yeniden yazımı | `projects.ts` → ritim `solution` | 13.3 |
+| Dönüş süresi vaadi ("bir iş günü içinde") gerçek mi? | Footer, form başarı metni | 21 |
+
+## Karar (rapor bölüm 25)
+
+- [ ] Ana ticari öncelik ve hizmet sırası (şu an: Fotoğraf & Video → Marka → Sosyal → Web → AI)
+- [ ] AI & Otomasyon ana teklif mi, tamamlayıcı mı?
+- [ ] Öne çıkan proje (şu an Milo; Ritim aday)
+- [ ] Koyu tema korunacak mı? (iki sayfa açık tema için tasarlandı, koyu da çalışıyor)
+- [ ] Birincil iletişim kanalı: form mu WhatsApp mı?
+
+## Sonra (içerik gelince)
+
+- [ ] Medya verisini nesneye çevirmek (`type`, `poster`, `focalPoint`, `alt`, oran) — bölüm 19.1
+- [ ] Hizmet ↔ proje ilişkisini kimliklerle (`serviceIds`) tek kaynaktan yönetmek
+- [ ] Proje detayında "ilgili işler" (en fazla 2, editoryal)
+- [ ] 5 kişilik görev testi (bölüm 24.1)
