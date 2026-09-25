@@ -179,43 +179,6 @@ export default function ProjectCaseStudyPage({
         </div>
       </motion.section>
 
-      {/* ── Brief & Çözüm ──────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-5 py-14 md:px-12 md:py-20">
-        <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-          <motion.div
-            variants={revealVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={revealViewport}
-            custom={0}
-          >
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
-              Brief
-            </p>
-            <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
-              Zorluk
-            </h2>
-            <p className="leading-relaxed text-foreground/65">{project.challenge}</p>
-          </motion.div>
-
-          <motion.div
-            variants={revealVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={revealViewport}
-            custom={0.08}
-          >
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
-              Çözüm
-            </p>
-            <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
-              Ne Yaptık
-            </h2>
-            <p className="leading-relaxed text-foreground/65">{project.solution}</p>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── Çalışmalar: medya türüne göre (film / fotoğraf / web) ── */}
       {hasWork && (
       <section className="bg-foreground/[0.02] px-5 py-14 md:px-12 md:py-20">
@@ -319,6 +282,43 @@ export default function ProjectCaseStudyPage({
         </div>
       </section>
       )}
+
+      {/* ── Brief & Çözüm ──────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-5 py-14 md:px-12 md:py-20">
+        <div className="grid gap-10 md:grid-cols-2 md:gap-16">
+          <motion.div
+            variants={revealVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={revealViewport}
+            custom={0}
+          >
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
+              Brief
+            </p>
+            <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
+              Zorluk
+            </h2>
+            <p className="leading-relaxed text-foreground/65">{project.challenge}</p>
+          </motion.div>
+
+          <motion.div
+            variants={revealVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={revealViewport}
+            custom={0.08}
+          >
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-pink-400">
+              Çözüm
+            </p>
+            <h2 className="mb-4 text-2xl font-bold text-foreground md:text-3xl">
+              Ne Yaptık
+            </h2>
+            <p className="leading-relaxed text-foreground/65">{project.solution}</p>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ── Sonraki Proje ──────────────────────────────────────── */}
       <section className="border-t border-foreground/8 px-5 py-12 md:px-12 md:py-16">

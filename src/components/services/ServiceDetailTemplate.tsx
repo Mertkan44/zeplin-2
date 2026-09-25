@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
 import { motion } from "framer-motion";
 import { FONT, revealVariants } from "@/lib/motion";
 import type { ServiceData } from "@/data/services";
-import { getRelatedServices, briefHref } from "@/data/services";
+import { getRelatedServices } from "@/data/services";
 import { ServiceHero } from "./ServiceHero";
 import { RelatedServices } from "./RelatedServices";
 import { CTABanner } from "./CTABanner";
@@ -169,80 +167,6 @@ export function ServiceDetailTemplate({ service }: { service: ServiceData }) {
 
       {/* ── Bölüm 4: Gerçek proje + başlangıç listesi ─────────────── */}
       <ServiceProof service={service} />
-
-      {/* ── Bölüm 5: CTA Mid-page ─────────────────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 pb-6 pt-2 md:pb-8 md:pt-4">
-        <motion.div
-          variants={revealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-          custom={0}
-        >
-          <div className="overflow-hidden rounded-[28px] border border-[#F9A8D4]/50 bg-[linear-gradient(180deg,#FBCFE8_0%,#F9A8D4_100%)] shadow-[0_24px_70px_rgba(219,39,119,0.14)] dark:border-[#9D174D]/30 dark:bg-[linear-gradient(180deg,#9D174D_0%,#831843_100%)] dark:shadow-[0_24px_70px_rgba(157,23,77,0.25)]">
-            <div className="grid md:min-h-[380px] md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-              {/* Left panel */}
-              <div className="bg-[linear-gradient(180deg,#2a1525_0%,#1f0c18_100%)] px-7 py-8 text-white dark:bg-[linear-gradient(180deg,#1a0e17_0%,#120a10_100%)] md:px-14 md:py-14">
-                <span
-                  className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
-                  style={FONT}
-                >
-                  {service.categoryLabel}
-                </span>
-                <h2
-                  className="mt-6 text-[2rem] font-semibold leading-[1] tracking-[-0.04em] text-white md:text-[3.2rem]"
-                  style={FONT}
-                >
-                  Bu hizmetten
-                  <br />
-                  <span className="text-[#EC4899] dark:text-[#F472B6]">
-                    faydalanın.
-                  </span>
-                </h2>
-                <p
-                  className="mt-6 max-w-[30ch] text-[15px] leading-[1.7] text-white/50 md:text-[16px]"
-                  style={FONT}
-                >
-                  {service.shortDesc} — markanızı bir adım öne taşıyalım.
-                </p>
-
-                <Link
-                  href={briefHref(service)}
-                  className="group mt-8 inline-flex items-center gap-2 text-[15px] font-semibold text-[#F472B6] transition-all duration-300 hover:gap-3"
-                  style={FONT}
-                >
-                  Teklif al
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    <path
-                      d="M3 8h10M10 5l3 3-3 3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
-              </div>
-
-              {/* Right visual */}
-              <div className="relative min-h-[240px] overflow-hidden border-t border-white/8 md:min-h-full md:border-l md:border-t-0 md:border-white/8">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url('${service.heroImage}')` }}
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(31,12,24,0.72)_0%,rgba(31,12,24,0.12)_55%,rgba(31,12,24,0)_100%)]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.22),transparent_34%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_34%)]" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
 
       {/* ── Bölüm 6: İlgili Hizmetler ─────────────────────────────── */}
       <RelatedServices services={related} />
