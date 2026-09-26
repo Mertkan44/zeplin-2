@@ -1,740 +1,240 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useSpring,
-  AnimatePresence,
-} from "framer-motion";
-import { EASE, revealVariants, useReliableInView } from "@/lib/motion";
+import { ABOUT, ABOUT_RELATED_WORK, APPROACH_FALLBACK, PRINCIPLES } from "@/data/about";
+import { getProjectBySlug } from "@/data/projects";
 import { whatsappUrl } from "@/lib/contact";
-import { ABOUT_PAGE_METRICS } from "@/data/metrics";
+import { siteConfig } from "@/lib/seo";
 
-/* ── Constants ────────────────────────────────────────────────────── */
-const FONT = { fontFamily: "var(--font-jost), sans-serif" } as const;
+/*
+ * Hakkımızda — "insan ve üretim odaklı stüdyo" yönü (tasarım çalışması, bölüm 9-10).
+ * Kimlik → hikâye/model → insanlar → üretimin içinden → ilkeler → ilgili işler → tanışma.
+ * Hikâye, kişi ve üretim bölümleri src/data/about.ts dolunca görünür; boşken hiç çıkmaz.
+ * Kaldırılanlar: kayan sayaçlar, kelime kelime manifesto, tarihsiz zaman çizgisi,
+ * isimsiz unvan alıntıları ve otomatik dönen karusel, tekrarlanan temsili stüdyo görseli.
+ */
 
-/* ── Word-by-word reveal ──────────────────────────────────────────── */
-function WordReveal({
-  text,
-  className = "",
-  delay = 0,
-}: {
-  text: string;
-  className?: string;
-  delay?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "15% 0px 15% 0px" });
-  const [shouldReveal, setShouldReveal] = useState(false);
-  const words = text.split(" ");
+const CONTAINER = "mx-auto w-full max-w-[1240px] px-5 md:px-10";
+const EYEBROW = "text-[13px] font-semibold uppercase tracking-[0.18em] text-[#BE185D] dark:text-[#F472B6]";
+const H2 = "text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] md:text-[40px]";
+const BODY = "text-[17px] leading-[1.7] text-zinc-700 dark:text-zinc-300";
 
-  useEffect(() => {
-    if (!isInView) return;
-    const frame = window.requestAnimationFrame(() => setShouldReveal(true));
-    return () => window.cancelAnimationFrame(frame);
-  }, [isInView]);
-
-  useEffect(() => {
-    const fallback = window.setTimeout(() => setShouldReveal(true), 900);
-    return () => window.clearTimeout(fallback);
-  }, []);
-
-  return (
-    <span ref={ref} className={className}>
-      {words.map((word, i) => (
-        <motion.span
-          key={`${word}-${i}`}
-          initial={{ opacity: 0.12, y: 22 }}
-          animate={shouldReveal ? { opacity: 1, y: 0 } : { opacity: 0.12, y: 22 }}
-          transition={{
-            duration: 0.34,
-            ease: EASE,
-            delay: shouldReveal ? delay + i * 0.035 : 0,
-          }}
-          className="inline-block"
-        >
-          {word}&nbsp;
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
-/* ── Animated Counter ─────────────────────────────────────────────── */
-function CountUp({
-  value,
-  suffix,
-  delay,
-}: {
-  value: number;
-  suffix: string;
-  delay: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useReliableInView(ref);
-  const motionVal = useMotionValue(0);
-  const spring = useSpring(motionVal, { stiffness: 50, damping: 20, mass: 1 });
-  const [display, setDisplay] = useState("0");
-
-  useEffect(() => {
-    if (isInView) {
-      const timer = setTimeout(() => motionVal.set(value), delay * 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [isInView, value, delay, motionVal]);
-
-  useEffect(() => {
-    const unsub = spring.on("change", (v: number) => {
-      setDisplay(Math.round(v).toString());
-    });
-    return unsub;
-  }, [spring]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {display}
-      {suffix}
-    </span>
-  );
-}
-
-/* ── Data ─────────────────────────────────────────────────────────── */
-const metrics = ABOUT_PAGE_METRICS;
-
-const processSteps = [
-  {
-    num: "01",
-    title: "Dinleme",
-    desc: "Markanın mevcut sesini, hedefini ve ekip içi ritmini anlamakla başlarız.",
-  },
-  {
-    num: "02",
-    title: "Yön Bulma",
-    desc: "Tasarım, içerik ve operasyon tarafında tek bir ana yön belirleriz.",
-  },
-  {
-    num: "03",
-    title: "Strateji",
-    desc: "Kanal, format, takvim ve ölçüm mantığını uygulanabilir bir plana çeviririz.",
-  },
-  {
-    num: "04",
-    title: "Üretim",
-    desc: "Görsel, video, metin ve web parçalarını aynı marka diliyle üretiriz.",
-  },
-  {
-    num: "05",
-    title: "Yayın & Takip",
-    desc: "İşi yayına alır, metrikleri okur ve sonraki hamleyi veriye göre netleştiririz.",
-  },
-];
-
-const milestones = [
-  {
-    year: "01",
-    label: "Strateji Masası",
-    desc: "Her işte önce problemi sadeleştiririz. Hedef netleşmeden tasarım ya da içerik üretmeyiz.",
-  },
-  {
-    year: "02",
-    label: "Üretim Hattı",
-    desc: "Fotoğraf, video, sosyal medya, web ve yapay zeka işlerini birbirinden koparmadan planlarız.",
-  },
-  {
-    year: "03",
-    label: "Operasyon Takibi",
-    desc: "Takvim, revizyon, yayın ve rapor akışını görünür tutarız. İşin kaybolmasına izin vermeyiz.",
-  },
-  {
-    year: "04",
-    label: "Ölçülebilir Sonuç",
-    desc: "Beğeni kadar teslim ritmine, erişim kadar iş akışına da bakarız. Büyüme ölçülebilir olmalı.",
-  },
-];
-
-const quotes = [
-  {
-    name: "Kurucu Ortak",
-    role: "Zeplin Media",
-    text: "Bir markayı büyütmek sadece güzel görünen içerik üretmek değil; doğru ritmi, doğru kanalı ve doğru operasyon disiplinini kurmak.",
-  },
-  {
-    name: "Kreatif Direktör",
-    role: "Zeplin Media",
-    text: "Tasarımda gösterişten çok karakter arıyoruz. Markanın sesini boğmayan, ama ona sahne açan işler üretmek önemli.",
-  },
-  {
-    name: "Teknoloji Lideri",
-    role: "Zeplin Media",
-    text: "Yapay zeka bizim için vitrin efekti değil; tekrar eden işleri hafifleten, ekibin daha iyi karar almasını sağlayan bir katman.",
-  },
-];
-
-/* ══════════════════════════════════════════════════════════════════════
-   PAGE
-   ══════════════════════════════════════════════════════════════════════ */
 export default function HakkimizdaPage() {
-  /* Quote carousel */
-  const [activeQuote, setActiveQuote] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveQuote((prev) => (prev + 1) % quotes.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const hasStory = ABOUT.story.length > 0;
+  const founder = ABOUT.people[0];
+  const related = ABOUT_RELATED_WORK.map((r) => ({ ...r, project: getProjectBySlug(r.slug) })).filter((r) => r.project);
 
   return (
-    <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100 overflow-x-hidden">
-      {/* ── Hero — hizmetler ile aynı stil ───────────────────────── */}
-      <section
-        className="relative overflow-hidden px-6 pb-12 pt-[46svh] md:pb-24 md:pt-56 bg-center bg-no-repeat bg-[length:auto_100%] md:bg-cover"
-        style={{ backgroundImage: "url('/images/generated/about-agency-studio.webp')" }}
-      >
-        <div className="absolute inset-0 bg-linear-to-b from-white/30 via-white/70 to-white dark:from-[#0a0a0a]/20 dark:via-[#0a0a0a]/70 dark:to-[#0a0a0a]" />
-
-        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center text-center">
-          <motion.h1
-            variants={revealVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0}
-            className="text-[40px] font-bold leading-[1.1] tracking-tight text-[#DB2777] dark:text-white sm:text-[56px] md:text-[68px]"
-            style={FONT}
-          >
-            Hakkımızda
-          </motion.h1>
-          <motion.p
-            variants={revealVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0.1}
-            className="mt-2 max-w-[600px] text-base font-light text-zinc-600 dark:text-zinc-400 sm:text-lg"
-            style={FONT}
-          >
-            Strateji, üretim ve operasyonu aynı masada buluşturan yaratıcı ekip.
-          </motion.p>
+    <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
+      {/* ── 1. Kimlik açılışı ─────────────────────────────────── */}
+      <header className={`${CONTAINER} pb-16 pt-32 md:pb-24 md:pt-44`}>
+        <div className={`grid gap-10 ${ABOUT.heroPhoto ? "md:grid-cols-[5fr_7fr] md:items-end md:gap-14" : ""}`}>
+          <div>
+            <p className={EYEBROW}>Hakkımızda</p>
+            <h1 className="mt-4 text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] md:text-[72px]">
+              Zeplin&apos;in{" "}
+              <em className="font-normal" style={{ fontFamily: "var(--font-instrument), serif" }}>
+                arkasında.
+              </em>
+            </h1>
+            <p className={`mt-6 max-w-[52ch] ${BODY} md:text-[18px]`}>
+              Fotoğraf, film, tasarım ve web projeleri üreten bir yaratıcı stüdyoyuz. Burada{" "}
+              {hasStory ? "nasıl başladığımızı, " : ""}
+              {ABOUT.people.length > 0 ? "üretimi kimlerin üstlendiğini " : "nasıl çalıştığımızı "}
+              ve birlikte çalışırken neye önem verdiğimizi anlatıyoruz.
+            </p>
+            <Link
+              href="/projeler"
+              className="mt-8 inline-flex text-[16px] font-semibold text-[#BE185D] underline underline-offset-4 dark:text-[#F472B6]"
+            >
+              Seçili işlerimizi gör →
+            </Link>
+          </div>
+          {ABOUT.heroPhoto && (
+            <figure>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-white/5">
+                <Image src={ABOUT.heroPhoto.src} alt={ABOUT.heroPhoto.alt} fill priority sizes="(min-width: 768px) 700px, 100vw" className="object-cover" />
+              </div>
+              <figcaption className="mt-2 text-[14px] text-zinc-600 dark:text-zinc-400">{ABOUT.heroPhoto.caption}</figcaption>
+            </figure>
+          )}
         </div>
+      </header>
 
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[40vw] w-[40vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#EC4899]/10 blur-[80px] dark:bg-[#BE185D]/10" />
-      </section>
-
-      {/* ── Manifesto — Large Word-by-Word Reveal ──────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-20 md:py-32">
-        <h2
-          className="text-[22px] font-semibold leading-[1.35] tracking-[-0.02em] text-zinc-800 dark:text-zinc-200 sm:text-[26px] md:text-[34px] md:leading-[1.35]"
-          style={FONT}
-        >
-          <WordReveal
-            text="Markanızın dijitalde yalnızca görünmesini değil, düzenli ve ölçülebilir bir ritim yakalamasını sağlıyoruz."
-            delay={0}
-          />
-          <br />
-          <span className="text-[#DB2777] dark:text-[#F472B6]">
-            <WordReveal
-              text="Strateji, tasarım ve teknoloji — hepsi tek çatı altında."
-              delay={0.5}
-            />
-          </span>
-        </h2>
-      </section>
-
-      {/* ── Metrics — Marquee Strip ────────────────────────────────── */}
-      <section className="relative overflow-hidden border-y border-zinc-200/60 py-6 dark:border-white/[0.06] md:py-10">
-        <div className="flex animate-[marquee_20s_linear_infinite] gap-12 md:gap-20" style={{ willChange: "transform" }}>
-          {[...metrics, ...metrics].map((m, i) => (
-            <div
-              key={`metric-${i}`}
-              className="flex shrink-0 items-baseline gap-3"
-            >
-              <span
-                className="text-[30px] font-bold leading-none tracking-[-0.04em] text-zinc-900 dark:text-white md:text-[42px]"
-                style={FONT}
-              >
-                {i < metrics.length ? (
-                  <CountUp value={m.value} suffix={m.suffix} delay={i * 0.2} />
-                ) : (
-                  `${m.value}${m.suffix}`
-                )}
-              </span>
-              <span
-                className="whitespace-nowrap text-[12px] font-medium uppercase tracking-[0.18em] text-zinc-600 dark:text-zinc-400 md:text-[12px]"
-                style={FONT}
-              >
-                {m.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Hikayemiz — Staggered Image + Text ────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:py-28">
-        <div className="grid items-center gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
-          {/* Left — Image with clip-path reveal */}
-          <motion.div
-            initial={{ opacity: 0.12, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.56, ease: EASE }}
-            className="relative hidden aspect-[4/5] overflow-hidden rounded-[28px] md:block"
-          >
-            <Image
-              src="/images/generated/about-agency-studio.webp"
-              alt="Zeplin Media Hikayemiz"
-              fill
-              sizes="(min-width: 768px) 45vw, 0px"
-              className="object-cover"
-            />
-            {/* Pink tint overlay */}
-            <div className="absolute inset-0 bg-[#DB2777]/10 mix-blend-multiply" />
-          </motion.div>
-
-          {/* Right — Text */}
-          <div className="text-center md:text-left">
-            <motion.span
-              initial={{ opacity: 0.12, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 0.54, ease: EASE }}
-              className="text-[12px] font-medium uppercase tracking-[0.26em] text-[#DB2777] dark:text-[#F472B6]"
-              style={FONT}
-            >
-              Hikayemiz
-            </motion.span>
-
-            <motion.h2
-              initial={{ opacity: 0.12, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 0.56, ease: EASE, delay: 0.1 }}
-              className="mt-4 text-[26px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[34px]"
-              style={FONT}
-            >
-              Zeplin
-              <span className="text-[#EC4899] dark:text-[#F472B6]">
-                {" "}
-                Media.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0.12, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 0.54, ease: EASE, delay: 0.2 }}
-              className="mt-6 text-[16px] leading-[1.8] text-zinc-500 dark:text-zinc-400 md:text-[17px]"
-              style={FONT}
-            >
-              Zeplin Media; markaların dijital dünyadaki görünürlüğünü,
-              üretim temposunu ve operasyon akışını aynı çatı altında yöneten
-              yaratıcı bir ekip. Bir işi sadece güzel göstermekle yetinmeyip,
-              onun nasıl yayınlanacağını, nasıl ölçüleceğini ve nasıl
-              sürdürüleceğini de düşünürüz.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0.12, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 0.54, ease: EASE, delay: 0.3 }}
-              className="mt-4 text-[16px] leading-[1.8] text-zinc-500 dark:text-zinc-400 md:text-[17px]"
-              style={FONT}
-            >
-              Fotoğraf ve video çekiminden sosyal medya tasarımına, kurumsal
-              web sitelerinden yapay zeka destekli akışlara kadar her parçada
-              aynı soruya bakarız: Bu marka daha net, daha tutarlı ve daha
-              güçlü nasıl görünür?
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0.12, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 0.54, ease: EASE, delay: 0.4 }}
-              className="mt-8 flex justify-center gap-3 md:justify-start"
-            >
-              <Link
-                href="/iletisim"
-                className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#DB2777,#9D174D)] px-6 py-3 text-[14px] font-semibold text-white shadow-[0_8px_24px_rgba(219,39,119,0.3)] transition-all duration-300 hover:shadow-[0_12px_32px_rgba(219,39,119,0.4)] hover:scale-[1.02] active:scale-[0.98]"
-                style={FONT}
-              >
-                Projeni Anlat
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                >
-                  <path
-                    d="M3 8h10M10 5l3 3-3 3"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </motion.div>
+      {/* ── 2. Hikâye / yaklaşım ve çalışma modeli ────────────── */}
+      <section aria-labelledby="story-title" className="border-t border-zinc-200 dark:border-white/10">
+        <div className={`${CONTAINER} grid gap-8 py-16 md:grid-cols-[5fr_7fr] md:gap-14 md:py-24`}>
+          <h2 id="story-title" className={H2}>
+            {hasStory ? "Hikâyemiz" : "Neye bakıyoruz?"}
+          </h2>
+          <div className="max-w-[62ch] space-y-5">
+            {(hasStory ? ABOUT.story : APPROACH_FALLBACK).map((p) => (
+              <p key={p.slice(0, 24)} className={BODY}>
+                {p}
+              </p>
+            ))}
+            {ABOUT.workModel && <p className={`${BODY} border-l-2 border-[#DB2777] pl-5`}>{ABOUT.workModel}</p>}
+            {ABOUT.founderNote && founder && (
+              <figure className="mt-10 rounded-xl bg-zinc-50 p-7 dark:bg-white/[0.04]">
+                <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">Kurucudan</p>
+                <blockquote className={`mt-3 ${BODY}`}>{ABOUT.founderNote}</blockquote>
+                <figcaption className="mt-4 text-[15px] font-semibold">
+                  {founder.name} <span className="font-normal text-zinc-600 dark:text-zinc-400">· {founder.role}</span>
+                </figcaption>
+              </figure>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── Sürecimiz — Animated Process Flow ──────────────────────── */}
-      <section className="relative overflow-hidden py-16 md:py-24">
-        {/* Dark background */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a0e17_0%,#140c12_100%)] dark:bg-[linear-gradient(180deg,#0f0a0d_0%,#0a0a0a_100%)]" />
-        <div className="pointer-events-none absolute left-1/3 top-0 h-[280px] w-[280px] rounded-full bg-[#DB2777]/5 blur-[80px]" />
-        <div className="pointer-events-none absolute bottom-0 right-1/4 h-[220px] w-[220px] rounded-full bg-[#9D174D]/6 blur-[80px]" />
-
-        <div className="relative mx-auto max-w-[1200px] px-6">
-          <motion.span
-            initial={{ opacity: 0.12, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
-            style={FONT}
-          >
-            Sürecimiz
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0.12, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE, delay: 0.08 }}
-            className="mt-3 text-[24px] font-semibold leading-[1.1] tracking-[-0.02em] text-white md:text-[30px]"
-            style={FONT}
-          >
-            Fikirden sonuca, adım adım.
-          </motion.h2>
-
-          {/* Process flow */}
-          <div className="relative mt-12 md:mt-16">
-            {/* Desktop connecting line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 1.5, ease: EASE, delay: 0.4 }}
-              className="absolute left-[24px] right-[24px] top-[24px] hidden h-px origin-left md:block"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(244,114,182,0.5) 0%, rgba(219,39,119,0.25) 50%, rgba(244,114,182,0.5) 100%)",
-              }}
-            />
-
-            {/* Mobile connecting line */}
-            <motion.div
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-              transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
-              className="absolute bottom-[24px] left-[23px] top-[48px] w-px origin-top md:hidden"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(244,114,182,0.5) 0%, rgba(219,39,119,0.25) 50%, rgba(244,114,182,0.5) 100%)",
-              }}
-            />
-
-            <div className="grid grid-cols-1 gap-10 md:grid-cols-5 md:gap-5">
-              {processSteps.map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  initial={{ opacity: 0.12, y: 22 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                  transition={{ duration: 0.54, ease: EASE, delay: i * 0.1 }}
-                  className="group relative flex gap-5 md:flex-col md:items-center md:gap-0 md:text-center"
-                >
-                  {/* Step circle */}
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 20,
-                      delay: 0.3 + i * 0.1,
-                    }}
-                    className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.06]"
-                  >
-                    <span
-                      className="text-[13px] font-bold tabular-nums text-[#F472B6]"
-                      style={FONT}
-                    >
-                      {step.num}
-                    </span>
-                    {/* Hover glow */}
-                    <div className="pointer-events-none absolute inset-[-4px] rounded-full opacity-0 bg-[#DB2777]/20 blur-[10px] transition-opacity duration-500 group-hover:opacity-100" />
-                  </motion.div>
-
-                  <div className="md:mt-5">
-                    <h3
-                      className="text-[17px] font-semibold tracking-[-0.01em] text-white"
-                      style={FONT}
-                    >
-                      {step.title}
-                    </h3>
-                    <p
-                      className="mt-1.5 text-[13px] leading-[1.65] text-white/70"
-                      style={FONT}
-                    >
-                      {step.desc}
-                    </p>
+      {/* ── 3. İnsanlar (yalnızca gerçek kişiler girildiğinde) ─── */}
+      {ABOUT.people.length > 0 && (
+        <section aria-labelledby="people-title" className="border-t border-zinc-200 dark:border-white/10">
+          <div className={`${CONTAINER} py-16 md:py-24`}>
+            <h2 id="people-title" className={H2}>
+              İşi kim yapıyor?
+            </h2>
+            <ul className={`mt-10 grid gap-10 ${ABOUT.people.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "md:max-w-[720px]"}`}>
+              {ABOUT.people.map((person) => (
+                <li key={person.name} className={ABOUT.people.length === 1 ? "grid gap-6 sm:grid-cols-[220px_1fr]" : undefined}>
+                  {person.photo && (
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-zinc-100 dark:bg-white/5">
+                      <Image src={person.photo} alt={person.name} fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
+                    </div>
+                  )}
+                  <div className={person.photo && ABOUT.people.length > 1 ? "mt-4" : undefined}>
+                    <h3 className="text-[20px] font-semibold">{person.name}</h3>
+                    <p className="text-[15px] text-[#BE185D] dark:text-[#F472B6]">{person.role}</p>
+                    <p className="mt-3 text-[16px] leading-[1.65] text-zinc-700 dark:text-zinc-300">{person.responsibility}</p>
+                    {person.profileUrl && (
+                      <a href={person.profileUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-[15px] font-semibold underline underline-offset-4">
+                        Profil ↗
+                      </a>
+                    )}
                   </div>
-                </motion.div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* ── Yolculuğumuz — Vertical Timeline ──────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-        <div className="mb-12 md:mb-16">
-          <motion.span
-            initial={{ opacity: 0.12, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-[#DB2777] dark:text-[#F472B6]"
-            style={FONT}
-          >
-            Yolculuğumuz
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0.12, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.54, ease: EASE, delay: 0.08 }}
-            className="mt-3 text-[24px] font-semibold leading-[1.1] tracking-[-0.02em] text-zinc-900 dark:text-white md:text-[30px]"
-            style={FONT}
-          >
-            Nasıl buraya geldik?
-          </motion.h2>
-        </div>
+      {/* ── 4. Üretimin içinden (yalnızca gerçek kareler girildiğinde) ── */}
+      {ABOUT.productionPhotos.length > 0 && (
+        <section aria-labelledby="inside-title" className="border-t border-zinc-200 dark:border-white/10">
+          <div className={`${CONTAINER} py-16 md:py-24`}>
+            <h2 id="inside-title" className={H2}>
+              Üretimin içinden
+            </h2>
+            <ul className="mt-10 grid gap-6 md:grid-cols-3">
+              {ABOUT.productionPhotos.map((photo, i) => (
+                <li key={photo.src} className={i === 0 ? "md:col-span-2 md:row-span-2" : undefined}>
+                  <figure>
+                    <div className={`relative overflow-hidden rounded-xl bg-zinc-100 dark:bg-white/5 ${i === 0 ? "aspect-[4/3]" : "aspect-[3/2]"}`}>
+                      <Image src={photo.src} alt={photo.alt} fill sizes={i === 0 ? "(min-width: 768px) 800px, 100vw" : "(min-width: 768px) 400px, 100vw"} className="object-cover" />
+                    </div>
+                    <figcaption className="mt-2 text-[14px] text-zinc-600 dark:text-zinc-400">{photo.caption}</figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
-        <div className="relative">
-          {/* Animated vertical line */}
-          <motion.div
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 1.2, ease: EASE }}
-            className="absolute left-[19px] top-0 h-full w-px origin-top bg-linear-to-b from-[#DB2777] via-[#EC4899] to-[#F9A8D4] dark:from-[#9D174D] dark:via-[#DB2777] dark:to-[#F472B6] md:left-1/2 md:-translate-x-px"
-          />
-
-          <div className="space-y-12 md:space-y-0">
-            {milestones.map((m, i) => {
-              const isEven = i % 2 === 0;
+      {/* ── 5. Çalışma ilkeleri ──────────────────────────────────── */}
+      <section aria-labelledby="principles-title" className="bg-zinc-50 dark:bg-white/[0.03]">
+        <div className={`${CONTAINER} py-16 md:py-24`}>
+          <h2 id="principles-title" className={H2}>
+            Birlikte çalışırken
+          </h2>
+          <ol className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+            {PRINCIPLES.map((p, i) => {
+              const proof = p.projectSlug ? getProjectBySlug(p.projectSlug) : undefined;
               return (
-                <motion.div
-                  key={m.year}
-                  initial={{ opacity: 0.12, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                  transition={{
-                    duration: 0.56,
-                    ease: EASE,
-                    delay: 0.1,
-                  }}
-                  className={`relative flex gap-6 md:gap-0 ${
-                    isEven
-                      ? "md:flex-row"
-                      : "md:flex-row-reverse"
-                  }`}
-                >
-                  {/* Dot */}
-                  <div className="relative z-10 flex shrink-0 items-start pt-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:pt-0">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 15,
-                        delay: 0.2,
-                      }}
-                      className="h-10 w-10 rounded-full border-4 border-white bg-[linear-gradient(135deg,#F472B6,#DB2777)] shadow-[0_0_24px_rgba(219,39,119,0.35)] dark:border-[#0a0a0a] dark:bg-[linear-gradient(135deg,#DB2777,#9D174D)] dark:shadow-[0_0_24px_rgba(157,23,77,0.5)]"
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div
-                    className={`flex-1 rounded-[20px] border border-zinc-100 bg-white p-6 dark:border-white/[0.06] dark:bg-white/[0.03] md:w-[calc(50%-40px)] md:flex-initial ${
-                      isEven
-                        ? "md:mr-auto md:pr-12"
-                        : "md:ml-auto md:pl-12"
-                    }`}
-                  >
-                    <span
-                      className="text-[13px] font-bold tabular-nums tracking-[0.1em] text-[#DB2777] dark:text-[#F472B6]"
-                      style={FONT}
-                    >
-                      {m.year}
-                    </span>
-                    <h3
-                      className="mt-1 text-[20px] font-semibold tracking-[-0.01em] text-zinc-900 dark:text-white md:text-[22px]"
-                      style={FONT}
-                    >
-                      {m.label}
-                    </h3>
-                    <p className="mt-2 text-[14px] leading-[1.7] text-zinc-500 dark:text-zinc-400">
-                      {m.desc}
-                    </p>
-                  </div>
-                </motion.div>
+                <li key={p.title} className="border-t border-zinc-300 pt-5 dark:border-white/15">
+                  <span className="text-[14px] font-semibold tabular-nums text-[#BE185D] dark:text-[#F472B6]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-2 text-[20px] font-semibold leading-snug">{p.title}</h3>
+                  <p className="mt-3 text-[16px] leading-[1.65] text-zinc-700 dark:text-zinc-300">{p.body}</p>
+                  {proof && (
+                    <Link href={`/projeler/${proof.slug}`} className="mt-3 inline-block text-[15px] font-semibold text-[#BE185D] underline-offset-4 hover:underline dark:text-[#F472B6]">
+                      Örnek: {proof.name} →
+                    </Link>
+                  )}
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* ── Felsefemiz — Rotating Quote Carousel ──────────────────── */}
-      <section className="relative overflow-hidden py-20 md:py-32">
-        {/* Full-width dark background */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a0e17_0%,#120a10_100%)] dark:bg-[linear-gradient(180deg,#0f0a0d_0%,#0a0a0a_100%)]" />
-        <div className="pointer-events-none absolute -left-32 top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full bg-[#DB2777]/6 blur-[80px]" />
-
-        <div className="relative mx-auto max-w-[1200px] px-6">
-          <motion.span
-            initial={{ opacity: 0.12, y: 22 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="text-[12px] font-medium uppercase tracking-[0.26em] text-white/60"
-            style={FONT}
-          >
-            Felsefemiz
-          </motion.span>
-
-          {/* Quote carousel */}
-          <div className="relative mt-10 min-h-[200px] md:min-h-[240px]">
-            <AnimatePresence mode="wait">
-              <motion.blockquote
-                key={activeQuote}
-                initial={{ opacity: 0.12, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.54, ease: EASE }}
-              >
-                {/* Large decorative quote */}
-                <span
-                  className="absolute -top-6 left-0 select-none text-[80px] font-bold leading-none text-white/[0.04] md:text-[120px]"
-                  aria-hidden="true"
-                >
-                  &ldquo;
-                </span>
-
-                <p
-                  className="relative max-w-[700px] text-[18px] leading-[1.6] text-white/80 sm:text-[22px] md:text-[26px] md:leading-[1.5]"
-                  style={FONT}
-                >
-                  {quotes[activeQuote].text}
-                </p>
-
-                <div className="mt-8 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#F472B6,#DB2777)] text-[14px] font-bold text-white">
-                    {quotes[activeQuote].name.charAt(0)}
-                  </div>
-                  <div>
-                    <span
-                      className="block text-[14px] font-semibold text-white"
-                      style={FONT}
-                    >
-                      {quotes[activeQuote].name}
-                    </span>
-                    <span className="text-[12px] text-white/70">
-                      {quotes[activeQuote].role}
-                    </span>
-                  </div>
-                </div>
-              </motion.blockquote>
-            </AnimatePresence>
-          </div>
-
-          {/* Dot indicators */}
-          <div className="mt-8 flex gap-2">
-            {quotes.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveQuote(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === activeQuote
-                    ? "w-8 bg-[#F472B6]"
-                    : "w-1.5 bg-white/20 hover:bg-white/40"
-                }`}
-                aria-label={`Alıntı ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA — Full-width Banner ───────────────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
-        <motion.div
-          initial={{ opacity: 0.12, y: 22, scale: 0.99 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }}
-          transition={{ duration: 0.56, ease: EASE }}
-          className="relative overflow-hidden rounded-[34px] bg-[linear-gradient(135deg,#DB2777_0%,#9D174D_50%,#831843_100%)] p-10 md:p-16"
-        >
-          {/* Decorative elements */}
-          <div className="pointer-events-none absolute -right-20 -top-20 h-[200px] w-[200px] rounded-full bg-white/10 blur-[60px]" />
-          <div className="pointer-events-none absolute -bottom-10 -left-10 h-[200px] w-[200px] rounded-full bg-[#F472B6]/20 blur-[80px]" />
-
-          <div className="relative flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+      {/* ── 6. İlgili işler ──────────────────────────────────────── */}
+      <section aria-labelledby="work-title">
+        <div className={`${CONTAINER} py-16 md:py-24`}>
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2
-                className="text-[26px] font-bold leading-[1.1] tracking-[-0.03em] text-white md:text-[34px]"
-                style={FONT}
-              >
-                Projenizi
-                <br />
-                konuşalım.
+              <h2 id="work-title" className={H2}>
+                Bu yaklaşım işlere nasıl yansıyor?
               </h2>
-              <p
-                className="mt-4 max-w-[360px] text-[15px] leading-[1.7] text-white/60"
-                style={FONT}
-              >
-                Bir kahve eşliğinde markanızın dijital geleceğini birlikte
-                planlayalım.
-              </p>
+              <p className={`mt-3 ${BODY}`}>Üretim biçimimizi seçili çalışmalarımız üzerinden inceleyin.</p>
             </div>
+            <Link href="/projeler" className="w-fit text-[15px] font-semibold text-[#BE185D] underline underline-offset-4 dark:text-[#F472B6]">
+              Tüm projeler →
+            </Link>
+          </div>
+          <ul className="mt-10 grid gap-10 md:grid-cols-2 md:gap-8">
+            {related.map(({ project, why }) => (
+              <li key={project!.slug}>
+                <Link href={`/projeler/${project!.slug}`} className="group block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#DB2777]">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-white/5">
+                    <Image
+                      src={project!.cover ?? project!.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 580px, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
+                    />
+                  </div>
+                  <h3 className="mt-4 text-[22px] font-semibold">{project!.name}</h3>
+                  <p className="mt-1 text-[16px] text-zinc-600 dark:text-zinc-400">{why}</p>
+                  <span className="mt-2 inline-block text-[15px] font-semibold text-[#BE185D] dark:text-[#F472B6]">Projeyi incele →</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
+      {/* ── 7. Tanışma (sade; ana vurgu footer'da) ─────────────── */}
+      <section aria-labelledby="meet-title" className={`${CONTAINER} pb-20 md:pb-24`}>
+        <div className="flex flex-col gap-6 border-t border-zinc-200 pt-10 dark:border-white/10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 id="meet-title" className="text-[28px] font-semibold tracking-[-0.02em] md:text-[36px]">
+              Tanışalım, projenizi konuşalım.
+            </h2>
+            <p className={`mt-3 max-w-[52ch] ${BODY}`}>
+              Markanızı, düşündüğünüz işi ve zaman planınızı kısaca paylaşın. İlk görüşmede ihtiyacı ve uygun çalışma
+              kapsamını birlikte netleştirelim.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-5">
             <a
-              href={whatsappUrl("Merhaba Zeplin Media, Hakkımızda sayfanızı okudum; projemi konuşmak için bir görüşme ayarlamak istiyorum.")}
+              href={whatsappUrl("Merhaba Zeplin Media, Hakkımızda sayfanızı okudum; tanışıp projemi konuşmak istiyorum.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-[15px] font-semibold text-[#9D174D] shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] active:scale-[0.98]"
-              style={FONT}
+              className="inline-flex items-center gap-2 rounded-full bg-[#DB2777] px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#BE185D]"
             >
-              WhatsApp ile Yazın
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              >
-                <path
-                  d="M3 8h10M10 5l3 3-3 3"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              WhatsApp ile yazın <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="text-[15px] font-semibold text-zinc-800 underline underline-offset-4 hover:text-[#BE185D] dark:text-zinc-200"
+            >
+              E-posta gönder
             </a>
           </div>
-        </motion.div>
+        </div>
       </section>
     </main>
   );
