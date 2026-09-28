@@ -54,17 +54,17 @@ export const APPROACH_FALLBACK = [
  */
 export const PRINCIPLES = [
   {
-    title: "Önce ne yapacağımızı netleştiririz.",
-    body: "Amaç, kapsam ve teslim beklentisi belli olduğunda üretim daha anlamlı ilerler. Çalışmaya başlarken hangi problemi çözeceğimizi ve hangi çıktılara ihtiyaç olduğunu birlikte tanımlarız.",
+    title: "Önce doğru soruyu sorarız.",
+    body: "Markanın ihtiyacını, işin kapsamını ve ortaya çıkacak çıktıyı birlikte netleştiririz.",
   },
   {
-    title: "Parçaların birlikte çalışmasına bakarız.",
-    body: "Fotoğrafın, tasarımın ve dijital uygulamanın aynı markayı anlatmasını önemseriz. Bir görseli değerlendirirken nerede kullanılacağını ve diğer içeriklerle nasıl yan yana geleceğini de düşünürüz.",
+    title: "Parçaları birlikte düşünürüz.",
+    body: "Fotoğrafın, tasarımın ve dijital deneyimin aynı görsel dili konuşmasını önemseriz.",
     projectSlug: "pam-akademi",
   },
   {
-    title: "Kararları ve sorumlulukları açık tutarız.",
-    body: "Geri bildirimin kimden geleceğini, hangi aşamada karar verileceğini ve neyin teslim edileceğini anlaşılır kılmayı amaçlarız. Her projeye aynı hazır kapsamı dayatmak yerine ihtiyacı baştan konuşuruz.",
+    title: "Süreci açık tutarız.",
+    body: "Kararları, sorumlulukları ve teslim beklentisini anlaşılır kılmayı amaçlarız.",
   },
 ];
 

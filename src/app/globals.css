@@ -570,3 +570,6 @@ body:where(.dark *) {
 body:has([data-footer-under="dark"]) .site-footer {
   background: #0d0a0c;
 }
+body:has([data-footer-under="pink"]) .site-footer {
+  background: #db2777;
+}
