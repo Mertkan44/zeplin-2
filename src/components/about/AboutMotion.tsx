@@ -6,8 +6,6 @@ import Link from "next/link";
 import s from "@/app/hakkimizda/about.module.css";
 import { getProjectBySlug } from "@/data/projects";
 import { ABOUT, PRINCIPLES } from "@/data/about";
-import { whatsappUrl } from "@/lib/contact";
-import { siteConfig } from "@/lib/seo";
 
 /*
  * Hakkımızda hareket sahnesi — prototipteki (index.html) update / choreograph / choose / mode
@@ -456,26 +454,6 @@ export default function AboutMotion() {
         </div>
       </section>
 
-      {/* ── Kapanış ────────────────────────────────────── */}
-      <section className={`${s.closing} ${s.wrap}`} id="tanisalim" aria-labelledby="closing-title" data-footer-under="pink">
-        <p className={s.label}>Sıradaki hikâyeyi birlikte üretelim.</p>
-        <h2 id="closing-title">
-          <span>AKLINIZDA</span>
-          <span>NE VAR?</span>
-        </h2>
-        <div className={s.closingLinks}>
-          <a
-            href={whatsappUrl("Merhaba Zeplin, Hakkımızda sayfanızı okudum; projemi konuşmak istiyorum.")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Projenizi konuşalım <span className={s.arr} aria-hidden="true">↗</span>
-          </a>
-          <a href={`mailto:${siteConfig.email}`}>
-            E-posta gönder <span className={s.arr} aria-hidden="true">→</span>
-          </a>
-        </div>
-      </section>
     </div>
   );
 }
