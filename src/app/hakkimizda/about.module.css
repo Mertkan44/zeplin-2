@@ -90,8 +90,16 @@
 .reel { height: 235vh; position: relative; background: var(--paper); }
 .reelSticky { position: sticky; top: 0; height: 100svh; min-height: 550px; overflow: hidden; display: grid; place-items: center; }
 .reelImg { position: absolute; inset: 0; clip-path: inset(var(--reel-inset, 17%) var(--reel-side, 25%)); will-change: clip-path; }
-.reelImg img { object-position: center 55%; transform: scale(var(--reel-zoom, 1.08)); will-change: transform; }
-.reelImg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #000b, transparent 65%); }
+.reelImg { background: #111; }
+.reelImg img,
+.reelVideo { object-position: center; transform: scale(var(--reel-zoom, 1.08)); will-change: transform; }
+.reelVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.posterTall { display: none; }
+@media (orientation: portrait) {
+  .posterWide { display: none; }
+  .posterTall { display: block; }
+}
+.reelImg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #000c, #0003 55%, #0000 80%); }
 .reelKicker { position: absolute; top: 96px; left: var(--gutter); color: var(--ink); z-index: 2; }
 .reelTitle {
   position: relative;
@@ -115,6 +123,18 @@
   color: white;
   opacity: var(--reel-opacity, 0);
 }
+
+.reelFoot > div { display: flex; align-items: end; gap: 18px; }
+.reelToggle {
+  border: 1px solid #fff8;
+  background: #0004;
+  backdrop-filter: blur(8px);
+  color: white !important;
+  border-radius: 40px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.reelToggle:hover { background: #fff2; }
 
 /* ── Yaklaşım ───────────────────────────────────────── */
 .approach { padding-block: 140px; background: var(--paper); }
@@ -210,6 +230,26 @@
 .step b { font: 400 12px var(--font-space-grotesk); display: block; margin-bottom: 8px; }
 .step > span { display: flex; justify-content: space-between; }
 
+/* ── Bir filmin akışı: kareler farklı hızlarda kayar (--shift) ── */
+.journey { padding-block: 140px 170px; }
+.journeyHead { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12vw; align-items: end; margin-bottom: 90px; }
+.journeyHead h2 { font-size: clamp(48px, 6.4vw, 104px); font-weight: 600; }
+.journeyHead h2 span { display: block; }
+.journeyHead p { font-size: clamp(17px, 1.4vw, 21px); line-height: 1.55; max-width: 460px; margin-bottom: 26px; }
+.journeyLink { font-size: 14px; border-bottom: 1px solid currentColor; padding-bottom: 4px; }
+.journeyFrames { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 2.2vw, 36px); }
+.journeyFrame { transform: translate3d(0, var(--shift, 0px), 0); will-change: transform; }
+.journeyFrame:nth-child(2) { margin-top: 90px; }
+.journeyFrame:nth-child(3) { margin-top: 30px; }
+.journeyFrame:nth-child(4) { margin-top: 120px; }
+.journeyImg { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: #1a1714; }
+.journeyImg img { transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.journeyFrame:hover .journeyImg img { transform: scale(1.04); }
+.journeyFrame figcaption { display: grid; grid-template-columns: 34px 1fr; gap: 4px 0; border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
+.journeyFrame figcaption .num { padding-top: 2px; font-size: 12px; }
+.journeyFrame figcaption b { font: 600 18px var(--font-manrope); letter-spacing: -0.02em; }
+.journeyFrame figcaption span:last-child { grid-column: 2; font-size: 14px; color: var(--muted); line-height: 1.5; }
+
 /* ── İlkeler ────────────────────────────────────────── */
 .principles { padding-block: 130px; }
 .principles > .label { margin-bottom: 55px; }
@@ -217,6 +257,46 @@
 .num { font-size: 14px; color: var(--pink); padding-top: 8px; }
 .principle h3 { font-size: clamp(30px, 3.5vw, 50px); font-weight: 500; letter-spacing: -0.05em; line-height: 1.08; }
 .principle > p:last-child { max-width: 350px; font-size: 16px; color: var(--muted); justify-self: end; }
+
+/* ── Birlikte çalıştıklarımız ──────────────────────────── */
+.voices { padding-block: 120px 110px; background: var(--ink); color: var(--paper); }
+.voices .sectionTop { border-color: #ffffff26; color: #ccc; }
+.voicesGrid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 8vw; align-items: center; }
+.voicesCopy h2 { font-size: clamp(46px, 5.6vw, 92px); font-weight: 600; margin-bottom: 30px; }
+.voicesCopy h2 span { display: block; }
+.voicesCopy p { color: #bdbdb8; max-width: 360px; }
+.voiceList { display: grid; grid-template-columns: repeat(2, minmax(0, 290px)); gap: clamp(16px, 2.4vw, 36px); justify-content: end; }
+.voice:nth-child(2) { margin-top: 70px; }
+.voiceMedia { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: #000; border: 1px solid #ffffff20; }
+.voiceMedia video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.voicePlay {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 40px;
+  background: #f4f3efee;
+  color: var(--ink) !important;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.25s;
+}
+.voicePlay span:first-child { color: var(--pink); font-size: 11px; }
+.voicePlayShort { display: none; }
+.voicePlay:hover { background: white; }
+.voice figcaption { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #ffffff26; margin-top: 14px; padding-top: 12px; font-size: 13px; }
+.voice figcaption span { color: #93938e; text-align: right; }
+.brands { margin-top: 110px; border-top: 1px solid #ffffff26; padding-top: 18px; }
+.brands > .label { color: #ccc; margin-bottom: 36px; }
+.brands ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(9, 1fr); gap: 20px; align-items: center; }
+.brands li { display: grid; place-items: center; height: 64px; }
+.brandLogo { width: auto; height: 100%; max-width: 100%; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.62; transition: opacity 0.25s; }
+.brands li:hover .brandLogo { opacity: 1; }
 
 /* ── Gerçek içerik (src/data/about.ts dolunca) ─────────── */
 .story { padding-block: 0 130px; }
@@ -270,6 +350,7 @@
 .motionOff .processLeft h2 { transform: none; }
 .motionOff .word { color: var(--ink); }
 .motionOff .word:last-child { color: var(--pink); }
+.motionOff .journeyFrame { transform: none; }
 .motionOff * { transition: none !important; }
 
 @media (min-width: 1600px) {
@@ -317,6 +398,31 @@
   .principle h3 { font-size: 32px; }
   .principle > p:last-child { grid-column: 2; font-size: 15px; justify-self: start; max-width: 440px; }
   .story { padding-block: 0 85px; }
+  .journey { padding-block: 85px 100px; }
+  .journeyHead { grid-template-columns: 1fr; gap: 26px; margin-bottom: 50px; }
+  .journeyHead h2 { font-size: clamp(46px, 11vw, 76px); }
+  .journeyFrames { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+  .journeyFrame:nth-child(2), .journeyFrame:nth-child(4) { margin-top: 50px; }
+  .journeyFrame:nth-child(3) { margin-top: 0; }
+  .journeyFrame figcaption { grid-template-columns: 1fr; }
+  .journeyFrame figcaption span:last-child { grid-column: 1; font-size: 13px; }
+  .voices { padding-block: 85px; }
+  .voicesGrid { grid-template-columns: 1fr; gap: 45px; }
+  .voicesCopy h2 { font-size: clamp(44px, 11vw, 72px); margin-bottom: 20px; }
+  .voiceList { grid-template-columns: 1fr 1fr; justify-content: stretch; gap: 14px; }
+  .voice:nth-child(2) { margin-top: 40px; }
+  .voicePlay { left: 8px; right: 8px; bottom: 8px; padding: 9px 11px; font-size: 11px; gap: 6px; }
+  .voice figcaption { flex-direction: column; gap: 2px; font-size: 12px; }
+  .voice figcaption span { text-align: left; }
+  .brands { margin-top: 70px; }
+  .brands ul { grid-template-columns: repeat(3, 1fr); gap: 26px 20px; }
+  .brands li { height: 52px; }
+  .reelToggle { padding: 5px 10px; font-size: 11px; }
+  .reelFoot { bottom: 72px; }
+  .reelFoot > div { flex-direction: column; align-items: start; gap: 12px; }
+  .reelFoot .label { display: none; }
+  .voicePlayLong { display: none; }
+  .voicePlayShort { display: inline; }
   .projects { padding-block: 75px; }
   .projectsHead { align-items: start; flex-direction: column; margin-bottom: 40px; }
   .projectsHead h2 { font-size: 52px; }
@@ -340,5 +446,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stageImg, .word, .arr, .projectPhoto img { transition: none; }
+  .stageImg, .word, .arr, .projectPhoto img, .journeyImg img { transition: none; }
 }

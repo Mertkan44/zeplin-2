@@ -6,12 +6,16 @@ import Link from "next/link";
 import s from "@/app/hakkimizda/about.module.css";
 import { getProjectBySlug } from "@/data/projects";
 import { ABOUT, PRINCIPLES } from "@/data/about";
+import { CLIENT_BRANDS, CLIENT_VIDEOS, type ClientVideo } from "@/data/clients";
 
 /*
  * Hakkımızda hareket sahnesi — prototipteki (index.html) update / choreograph / choose / mode
  * mantığı aynen korunarak React'e taşındı. Görseller ve bağlantılar projects.ts'ten gelir.
  *   Reel:   235vh (mobil 180vh) bölüm; ilk %62 ilerlemede maske açılır.
  *   Üretim: 390vh (mobil 300vh) bölüm; 2. görsel %18–46, 3. görsel %58–86 aralığında yerleşir.
+ *   Akış:   Ritim filminden dört kare, bölüm ekrandan geçerken farklı hızlarda kayar.
+ * Reel'de sessiz showreel oynar (Milo + Ritim filmlerinden kesitler): yatay ekranda üçlü
+ * kurgu, dikey ekranda tek kolon. Hareket azaltıldığında ya da bölüm görünmezken durur.
  * Geri kaydırma aynı dönüşümleri tersine uygular.
  */
 
@@ -56,6 +60,20 @@ const STAGES = [
 
 const WORDS = ["BİR KARE.", "BİR HİKÂYE.", "BİR BÜTÜN."];
 
+/** Müzik gelene kadar sessiz. Yeniden üretmek için: scripts/build-showreel.sh */
+const SHOWREEL = {
+  wide: { src: "/videos/showreel-wide-web.mp4", poster: "/videos/posters/showreel-wide-poster.jpg" },
+  tall: { src: "/videos/showreel-tall-web.mp4", poster: "/videos/posters/showreel-tall-poster.jpg" },
+};
+
+/** Ritim Jewellery reklam filminden (ritim-bitti) sırayla dört kare: 8., 14., 23. ve 26. saniye. */
+const JOURNEY = [
+  { step: "Eskiz", text: "Film, bir tasarımcının defterindeki sembollerle açılıyor.", depth: 24 },
+  { step: "Vitrin", text: "Aynı hikâye bir ailenin önünde, mağaza vitrininde sürüyor.", depth: 80 },
+  { step: "Ürün", text: "Defterdeki semboller artık altın bir kolyenin üzerinde.", depth: 40 },
+  { step: "Duygu", text: "Film, takıyı taşıyan kişinin yüzünde kapanıyor.", depth: 100 },
+].map((f, i) => ({ ...f, img: `/images/about/ritim-yolculuk-${i + 1}.webp` }));
+
 const clamp = (x: number) => Math.max(0, Math.min(1, x));
 const smooth = (x: number) => {
   x = clamp(x);
@@ -70,11 +88,34 @@ export default function AboutMotion() {
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const stepRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const journeyRef = useRef<HTMLElement>(null);
+  const journeyFrameRefs = useRef<(HTMLElement | null)[]>([]);
+  const reelVideoRef = useRef<HTMLVideoElement>(null);
+  const reelVisibleRef = useRef(false);
+  const reelPausedRef = useRef(false);
+  const [reelPaused, setReelPaused] = useState(false);
 
   const [stage, setStage] = useState(0);
   const stageRef = useRef(0);
   const [reduced, setReduced] = useState(false);
   const reducedRef = useRef(false);
+
+  /** Showreel yalnızca görünürken, hareket açıkken ve kullanıcı durdurmamışken oynar. */
+  const syncReel = useCallback(() => {
+    const video = reelVideoRef.current;
+    if (!video || !video.getAttribute("src")) return;
+    if (reelVisibleRef.current && !reducedRef.current && !reelPausedRef.current) {
+      void video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, []);
+
+  const toggleReel = () => {
+    reelPausedRef.current = !reelPausedRef.current;
+    setReelPaused(reelPausedRef.current);
+    syncReel();
+  };
 
   /** choose(n): aktif sahne bilgisini değiştirir. */
   const choose = useCallback((n: number) => {
@@ -124,6 +165,11 @@ export default function AboutMotion() {
     reel.style.setProperty("--reel-opacity", String(clamp((p - 0.27) / 0.23)));
     reel.style.setProperty("--reel-y", `${(1 - clamp((p - 0.27) / 0.35)) * 50}px`);
     if (kickerRef.current) kickerRef.current.style.opacity = String(1 - clamp(p / 0.25));
+    const reelVisible = r.bottom > -200 && r.top < vh + 200;
+    if (reelVisible !== reelVisibleRef.current) {
+      reelVisibleRef.current = reelVisible;
+      syncReel();
+    }
 
     const a = approach.getBoundingClientRect();
     const ap = clamp((vh * 0.8 - a.top) / (vh * 0.65));
@@ -133,7 +179,16 @@ export default function AboutMotion() {
     const pp = clamp(-pr.top / Math.max(1, process.offsetHeight - vh));
     choreograph(pp);
     stepRefs.current.forEach((el, i) => el?.style.setProperty("--fill", `${clamp(pp * 3 - i) * 100}%`));
-  }, [choreograph]);
+
+    const journey = journeyRef.current;
+    if (journey) {
+      const j = journey.getBoundingClientRect();
+      const jp = clamp((vh - j.top) / (vh + j.height));
+      journeyFrameRefs.current.forEach((el, i) =>
+        el?.style.setProperty("--shift", `${(0.5 - jp) * JOURNEY[i].depth}px`),
+      );
+    }
+  }, [choreograph, syncReel]);
 
   /** mode(value): hareket azaltma tercihini uygular. */
   const mode = useCallback(
@@ -143,11 +198,13 @@ export default function AboutMotion() {
       if (value) {
         stepRefs.current.forEach((el) => el?.style.setProperty("--fill", "0%"));
         wordRefs.current.forEach((w) => w?.classList.add(s.lit));
+        journeyFrameRefs.current.forEach((el) => el?.style.setProperty("--shift", "0px"));
       } else {
         requestAnimationFrame(update);
       }
+      syncReel();
     },
-    [update],
+    [update, syncReel],
   );
 
   useEffect(() => {
@@ -174,6 +231,23 @@ export default function AboutMotion() {
       window.removeEventListener("resize", schedule);
     };
   }, [mode, update]);
+
+  // Showreel kaynağı ekran yönüne göre seçilir; görünürlük update() içinde izlenir.
+  useEffect(() => {
+    const video = reelVideoRef.current;
+    if (!video) return;
+    const landscape = window.matchMedia("(orientation: landscape)");
+    const pick = () => {
+      const variant = landscape.matches ? SHOWREEL.wide : SHOWREEL.tall;
+      if (video.getAttribute("src") === variant.src) return;
+      video.poster = variant.poster;
+      video.src = variant.src;
+      syncReel();
+    };
+    pick();
+    landscape.addEventListener("change", pick);
+    return () => landscape.removeEventListener("change", pick);
+  }, [syncReel]);
 
   const goToStage = (i: number) => {
     if (reducedRef.current) {
@@ -229,19 +303,16 @@ export default function AboutMotion() {
       </section>
 
       {/* ── Reel ───────────────────────────────────────── */}
-      <section ref={reelRef} className={s.reel} id="bakis" aria-label={`${milo.name} çalışmasına yakından bakış`}>
+      <section ref={reelRef} className={s.reel} id="bakis" aria-label="Film ve fotoğraf çalışmalarımızdan bir kesit">
         <div className={s.reelSticky}>
           <p ref={kickerRef} className={`${s.reelKicker} ${s.label}`}>
             01 / Bakış açımız
           </p>
           <div className={s.reelImg}>
-            <Image
-              src={MILO_IMG}
-              alt="Milo Restaurant için hazırlanan menü fotoğrafı: ikiye kesilmiş burger."
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
+            {/* Video yüklenene kadar (ve hareket kapalıyken) ekran yönüne uygun kare görünür. */}
+            <Image src={SHOWREEL.wide.poster} alt="" fill sizes="100vw" className={`object-cover ${s.posterWide}`} />
+            <Image src={SHOWREEL.tall.poster} alt="" fill sizes="100vw" className={`object-cover ${s.posterTall}`} />
+            <video ref={reelVideoRef} className={s.reelVideo} muted loop playsInline preload="none" aria-hidden="true" />
           </div>
           <h2 className={s.reelTitle}>
             HER İŞİN
@@ -249,11 +320,16 @@ export default function AboutMotion() {
             BİR BAKIŞI VAR.
           </h2>
           <div className={s.reelFoot}>
-            <p>
-              {milo.name}
-              <br />
-              <span className={s.small}>Menü fotoğrafçılığı</span>
-            </p>
+            <div>
+              <p>
+                {milo.name} · {ritim.name}
+                <br />
+                <span className={s.small}>Film ve fotoğraf çalışmalarından kesitler</span>
+              </p>
+              <button type="button" className={s.reelToggle} aria-pressed={reelPaused} onClick={toggleReel}>
+                {reelPaused ? "Oynat" : "Durdur"}
+              </button>
+            </div>
             <p className={s.label}>
               Fikirden
               <br />
@@ -369,10 +445,55 @@ export default function AboutMotion() {
         </div>
       </section>
 
+      {/* ── Bir filmin akışı (Ritim) ─────────────────────── */}
+      <section ref={journeyRef} className={`${s.journey} ${s.wrap}`} aria-labelledby="journey-title">
+        <div className={s.sectionTop}>
+          <p className={s.label}>04 / Bir filmin akışı</p>
+          <p className={s.label}>{ritim.name}</p>
+        </div>
+        <div className={s.journeyHead}>
+          <h2 id="journey-title">
+            <span>ESKİZDEN</span>
+            <span className={s.pink}>VİTRİNE.</span>
+          </h2>
+          <div>
+            <p>
+              Ritim Jewellery için hazırladığımız yapay zekâ destekli reklam filminde bir kolyenin hikâyesini otuz
+              saniyede anlattık. Defterdeki semboller, filmin sonunda vitrindeki kolyeye dönüşüyor.
+            </p>
+            <Link href={`/projeler/${ritim.slug}`} className={s.journeyLink}>
+              Filmleri izle <span className={s.arr} aria-hidden="true">↗</span>
+            </Link>
+          </div>
+        </div>
+        <ol className={s.journeyFrames}>
+          {JOURNEY.map((f, i) => (
+            <li
+              key={f.step}
+              ref={(el) => {
+                journeyFrameRefs.current[i] = el;
+              }}
+              className={s.journeyFrame}
+            >
+              <figure>
+                <div className={s.journeyImg}>
+                  <Image src={f.img} alt={`Ritim Jewellery filminden kare: ${f.step.toLowerCase()}.`} fill sizes="(min-width: 760px) 22vw, 45vw" className="object-cover" />
+                </div>
+                <figcaption>
+                  <span className={s.num}>0{i + 1}</span>
+                  <b>{f.step}</b>
+                  <span>{f.text}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       {/* ── Birlikte çalışırken ─────────────────────────── */}
       <section className={`${s.principles} ${s.wrap}`} aria-labelledby="principles-title">
         <p className={s.label} id="principles-title">
-          04 / Birlikte çalışırken
+          05 / Birlikte çalışırken
         </p>
         {PRINCIPLES.map((p, i) => (
           <article key={p.title} className={s.principle}>
@@ -383,11 +504,44 @@ export default function AboutMotion() {
         ))}
       </section>
 
+      {/* ── Birlikte çalıştıklarımız ─────────────────────── */}
+      <section className={`${s.voices} ${s.wrap}`} aria-labelledby="voices-title">
+        <div className={s.sectionTop}>
+          <p className={s.label}>06 / Birlikte çalıştıklarımız</p>
+          <p className={s.label}>Kendi anlatımlarıyla</p>
+        </div>
+        <div className={s.voicesGrid}>
+          <div className={s.voicesCopy}>
+            <h2 id="voices-title">
+              <span>BİZİ BİR DE</span>
+              <span className={s.pink}>ONLARDAN</span>
+              <span>DİNLEYİN.</span>
+            </h2>
+            <p>Birlikte çalıştığımız işletmelerden iki kısa değerlendirme.</p>
+          </div>
+          <VoiceVideos videos={CLIENT_VIDEOS} />
+        </div>
+        <div className={s.brands}>
+          <p className={s.label}>Birlikte çalıştığımız markalar</p>
+          <ul>
+            {CLIENT_BRANDS.map((b) => (
+              <li key={b.name} title={b.name}>
+                {b.logo ? (
+                  <Image src={b.logo} alt={b.name} width={120} height={60} className={s.brandLogo} />
+                ) : (
+                  <span>{b.name}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── Hikâye ve insanlar: yalnızca gerçek bilgi girildiğinde ── */}
       {(hasStory || ABOUT.people.length > 0) && (
         <section className={`${s.story} ${s.wrap}`} aria-labelledby="story-title">
           <div className={s.sectionTop}>
-            <p className={s.label}>05 / Hikâyemiz</p>
+            <p className={s.label}>07 / Hikâyemiz</p>
             <p className={s.label}>İşi kim yapıyor?</p>
           </div>
           {hasStory && (
@@ -454,6 +608,53 @@ export default function AboutMotion() {
         </div>
       </section>
 
+    </div>
+  );
+}
+
+/** Müşteri videoları: kapak görünür, tıklanınca sesli ve kontrollü oynar; biri başlayınca diğeri durur. */
+function VoiceVideos({ videos }: { videos: ClientVideo[] }) {
+  const refs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [started, setStarted] = useState<string[]>([]);
+
+  const start = (i: number) => {
+    setStarted((ids) => (ids.includes(videos[i].id) ? ids : [...ids, videos[i].id]));
+    void refs.current[i]?.play().catch(() => {});
+  };
+
+  return (
+    <div className={s.voiceList}>
+      {videos.map((v, i) => {
+        const isStarted = started.includes(v.id);
+        return (
+          <figure key={v.id} className={s.voice}>
+            <div className={s.voiceMedia}>
+              <video
+                ref={(el) => {
+                  refs.current[i] = el;
+                }}
+                src={v.videoSrc}
+                poster={v.posterSrc}
+                preload="none"
+                playsInline
+                controls={isStarted}
+                onPlay={() => refs.current.forEach((other, j) => j !== i && other?.pause())}
+              />
+              {!isStarted && (
+                <button type="button" className={s.voicePlay} onClick={() => start(i)} aria-label={`${v.brandName} videosunu izle`}>
+                  <span aria-hidden="true">▶</span>
+                  <span className={s.voicePlayLong}>{v.brandName} anlatıyor</span>
+                  <span className={s.voicePlayShort}>İzle</span>
+                </button>
+              )}
+            </div>
+            <figcaption>
+              <b>{v.brandName}</b>
+              <span>{v.personRole}</span>
+            </figcaption>
+          </figure>
+        );
+      })}
     </div>
   );
 }

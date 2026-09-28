@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { projects } from "@/data/projects";
 import { createPageMetadata, siteConfig } from "@/lib/seo";
 import { whatsappUrl } from "@/lib/contact";
+import { CLIENT_BRANDS, CLIENT_VIDEOS } from "@/data/clients";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Zeplin Media | İstanbul Dijital Ajans",
@@ -20,24 +21,6 @@ const VideoTestimonials = dynamic(() => import("@/components/VideoTestimonials")
 const BrandMarquee = dynamic(() => import("@/components/BrandMarquee"));
 const SocialBoardingPass = dynamic(() => import("@/components/SocialBoardingPass"));
 
-const videoTestimonials = [
-  {
-    id: "emma",
-    videoSrc: "/videos/emma-web.mp4",
-    posterSrc: "/videos/posters/emma-poster.jpg",
-    brandName: "Emma Hanım",
-    personName: "Referans Video",
-    personRole: "Eren Kozan Premium Cut",
-  },
-  {
-    id: "oguz-abi",
-    videoSrc: "/videos/oguz-abi-web.mp4",
-    posterSrc: "/videos/posters/oguz-abi-poster.jpg",
-    brandName: "Oğuz Bey",
-    personName: "Referans Video",
-    personRole: "Cherry Plus",
-  },
-];
 
 
 const blocks = [
@@ -88,17 +71,7 @@ export default function Home() {
           ihtiyacımı karşılıyor mu → başlayınca ne olacak → deneyim nasıl →
           başka neler var → diğer kanallar. Bkz. docs inceleme, madde 14. */}
       <BrandMarquee
-        brands={[
-          { name: "Gentleman", logo: "/brand-logos/gentleman-logo.webp" },
-          { name: "Hisar", logo: "/brand-logos/hisar-logo.webp" },
-          { name: "Kadıköy Sin", logo: "/brand-logos/kadikoy-sin-logo.webp" },
-          { name: "Master", logo: "/brand-logos/master-logo.webp" },
-          { name: "Mertcan Ağca", logo: "/brand-logos/mertcan-agca-logo.webp" },
-          { name: "Pam Akademi", logo: "/brand-logos/pam-akademi-logo.webp" },
-          { name: "Babi İstanbul", logo: "/brand-logos/babi-logo.webp" },
-          { name: "Ritim Jewellery", logo: "/brand-logos/ritim-logo.webp" },
-          { name: "Foton Sağlık Çözümleri", logo: "/brand-logos/foton-logo.svg" },
-        ]}
+        brands={CLIENT_BRANDS}
       />
 
       <BentoGrid blocks={[blocks[0]]} sectionId="home-first-section" />
@@ -107,7 +80,7 @@ export default function Home() {
 
       <HomeProcess />
 
-      <VideoTestimonials testimonials={videoTestimonials} />
+      <VideoTestimonials testimonials={CLIENT_VIDEOS} />
 
       <ServiceCircleDiagram />
 

@@ -9,7 +9,7 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 | 1 | 11 hizmet görseli (`docs/gorsel-promptlari.md`) → `~/Desktop/zeplin-gorseller/` | `python3 scripts/import-service-images.py` ile kartlara + AI bandı kolajı | 15 |
 | 2 | Foton sitesi ekran görüntüleri (masaüstü + mobil) | Kurumsal Web kartı, Foton proje sayfası, galeri | 17 |
 | 3 | Metriklerin gerçek değerleri (kaynak, dönem, tanım) ya da kaldırma kararı | `src/data/metrics.ts` | 18 |
-| 4 | Hakkımızda: gerçek isimler, roller, ekip / çekim fotoğrafları | `src/app/hakkimizda/page.tsx` (şu anki stüdyo görseli AI) | 20 |
+| 4 | Hakkımızda: gerçek isimler, roller, ekip / çekim fotoğrafları | `src/data/about.ts` (aşağıdaki Hakkımızda bölümü) | 20 |
 | 5 | Babi projesi için 4-6 fotoğraf | `src/data/projects.ts` → galeri | 17 |
 | 6 | Gerçek müşteri görüşleri (isim, rol, marka, yayın onayı) | Proje notlarından ayrı bölüm | 19 |
 | 7 | Hizmet kapsamı bilgileri: revizyon sınırı, tipik takvim, teslim listesi | Hizmet detay sayfaları | 15 |
@@ -20,8 +20,8 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 
 - [ ] **Resend API anahtarı** → Vercel: `RESEND_API_KEY`, `CONTACT_TO_EMAIL=smertkan33@gmail.com` (form e-postası)
 - [ ] **Vercel Analytics** eklensin mi? (madde 29; çerezsiz, ücretsiz katman)
-- [ ] **Orijinal videolar** (~340 MB, `public/videos/*.mp4` — `-web` olmayanlar) silinsin mi? Site kullanmıyor.
-- [ ] **Proje klasörü iCloud dışına** taşınsın mı? (Masaüstü eşitlemesi `.next` / `.git` içinde kopya dosyalar üretiyor)
+- [ ] **Orijinal videolar** (~340 MB, `public/videos/*.mp4` — `-web` olmayanlar) silinsin mi? Site kullanmıyor. Hepsi git'te izleniyor (52 MB `ritim-bitti.mp4` GitHub'a da gitti); silme kararı gelirse depodan da çıkarılır.
+- [x] ~~Proje klasörü iCloud dışına~~ → `~/Projects/zeplin-2-revize` (28.09.2026)
 - [ ] **Push + Vercel önizleme** ne zaman?
 - [ ] Reklam Yönetimi: Meta + Google doğru mu, TikTok vb. var mı?
 
@@ -72,3 +72,24 @@ Kod tarafı uygulandı: Hizmetler (açılış + indeks + 5 bölüm + süreç + k
 - [ ] Hizmet ↔ proje ilişkisini kimliklerle (`serviceIds`) tek kaynaktan yönetmek
 - [ ] Proje detayında "ilgili işler" (en fazla 2, editoryal)
 - [ ] 5 kişilik görev testi (bölüm 24.1)
+
+---
+
+# Bekleyenler — Hakkımızda (29.09.2026)
+
+Sayfa hareket prototipinden uyarlandı; ardından eklenenler: sessiz **showreel** (Milo + Ritim kesitleri, `scripts/build-showreel.sh`), **Bir filmin akışı** (Ritim filminden 4 kare), **Birlikte çalıştıklarımız** (2 müşteri videosu + 9 marka logosu, ana sayfayla ortak `src/data/clients.ts`). Hikâye ve ekip bölümü `src/data/about.ts` dolunca kendiliğinden görünür.
+
+## Senden gelecek cevaplar
+
+| # | Soru | Nereye |
+|---|---|---|
+| 1 | **Çalışma modeli**: kurucu odaklı mı, çekirdek ekip + proje bazlı uzman mı, tam ekip mi? | `ABOUT.workModel` |
+| 2 | **Kişiler**: isim, rol, somut sorumluluk (35–60 kelime), varsa profil bağlantısı | `ABOUT.people` |
+| 3 | **Kuruluş hikâyesi**: ne zaman, neden, ilk iş (120–180 kelime, gerçek olaylar) | `ABOUT.story` |
+| 4 | **Kurucu notu** için 3 soru: Neden bu işi yapıyorsun? Bir işte neye "tamam" dersin? Müşteri seninle çalışınca neyi fark etmeli? | `ABOUT.founderNote` |
+| 5 | **Portre ve set fotoğrafları** (gerçek; 4:5 portre, çekimden kareler + kısa açıklama) | `ABOUT.people[].photo`, `ABOUT.productionPhotos`, `ABOUT.heroPhoto` |
+| 6 | **"Zeplin" adının hikâyesi** (varsa) | Hikâye bölümü |
+| 7 | **Üç çalışma ilkesi** gerçek kural olarak onaylanıyor mu? (Önce doğru soru / Parçaları birlikte / Süreci açık tutmak) | `PRINCIPLES` |
+| 8 | **Showreel müziği** (lisanslı parça ya da kendi müziğiniz). Gelene kadar sessiz; gelince sese ayrı düğme eklenir | `scripts/build-showreel.sh` |
+| 9 | **Kamera arkası** (Milo çekimi, set, ışık hazırlığı) fotoğraf / kısa video | Showreel + `productionPhotos` |
+| 10 | Müşteri videolarındaki kişilerin **tam adı ve unvanı** yayınlanabilir mi? (şu an "Emma Hanım", "Oğuz Bey") | `src/data/clients.ts` |
