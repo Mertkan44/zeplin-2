@@ -47,6 +47,11 @@ ffmpeg -y -loglevel error -stream_loop 1 -i showreel-tall-web.mp4 -filter_comple
 [a1][b1][c1]hstack=3[h];[h]pad=1920:1080:(ow-iw)/2:0:color=0x111111,setsar=1[v]" \
   -map "[v]" -an -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p -movflags +faststart showreel-wide-web.mp4
 
+# Açılıştaki yuvarlak alan: Milo kokteyl filmi, kapanış logosundan (≈18. sn) önce kesilir.
+ffmpeg -y -loglevel error -i milo-kokteyl-web.mp4 -t 17.6 -an -vf "scale=720:1280,fps=30" \
+  -c:v libx264 -preset slow -crf 25 -pix_fmt yuv420p -movflags +faststart hero-kokteyl-web.mp4
+ffmpeg -y -loglevel error -ss 16.5 -i hero-kokteyl-web.mp4 -frames:v 1 -q:v 4 posters/hero-kokteyl-poster.jpg
+
 ffmpeg -y -loglevel error -ss 3 -i showreel-wide-web.mp4 -frames:v 1 -q:v 4 posters/showreel-wide-poster.jpg
 ffmpeg -y -loglevel error -ss 7.5 -i showreel-tall-web.mp4 -frames:v 1 -q:v 4 posters/showreel-tall-poster.jpg
 echo "Showreel hazır: $(du -h showreel-tall-web.mp4 showreel-wide-web.mp4 | tr '\n' ' ')"
