@@ -20,7 +20,7 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 
 - [ ] **Resend API anahtarı** → Vercel: `RESEND_API_KEY`, `CONTACT_TO_EMAIL=smertkan33@gmail.com` (form e-postası)
 - [ ] **Vercel Analytics** eklensin mi? (madde 29; çerezsiz, ücretsiz katman)
-- [ ] **Orijinal videolar** (~340 MB, `public/videos/*.mp4` — `-web` olmayanlar) silinsin mi? Site kullanmıyor. Hepsi git'te izleniyor (52 MB `ritim-bitti.mp4` GitHub'a da gitti); silme kararı gelirse depodan da çıkarılır.
+- [x] ~~Orijinal videolar~~ → `~/Movies/Zeplin Orijinal Videolar` (334 MB, 7 dosya, sağlaması doğrulandı); depodan çıkarıldı, `.gitignore` yeniden eklenmesini engelliyor (29.09.2026). Not: altısı `master` geçmişinde hâlâ var, `ritim-bitti.mp4` bu dalın geçmişinde; geçmiş yeniden yazılmadı.
 - [x] ~~Proje klasörü iCloud dışına~~ → `~/Projects/zeplin-2-revize` (28.09.2026)
 - [ ] **Push + Vercel önizleme** ne zaman?
 - [ ] Reklam Yönetimi: Meta + Google doğru mu, TikTok vb. var mı?

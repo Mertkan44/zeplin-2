@@ -44,3 +44,8 @@ public/images/hero-banner.png
 public/images/dag.png
 public/images/hero-foto.png
 public/images/hakkımızdafoto.png
+
+# Orijinal videolar depoda tutulmaz (yerel kopya: ~/Movies/Zeplin Orijinal Videolar).
+# Site yalnızca sıkıştırılmış -web sürümlerini kullanır.
+/public/videos/*.mp4
+!/public/videos/*-web.mp4
