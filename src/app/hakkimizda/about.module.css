@@ -61,27 +61,55 @@
 .hero h1 {
   font-size: clamp(58px, 11.5vw, 176px);
   font-weight: 600;
-  line-height: 0.88;
-  letter-spacing: -0.075em;
+  line-height: 1;
+  letter-spacing: -0.065em;
   position: relative;
   z-index: 2;
 }
 .line { display: block; }
-.heroLast { display: flex !important; align-items: center; gap: 4vw; }
-/* Başlığın içindeki hap: film ve fotoğraf işlerinden kısa sessiz döngü */
-.heroThumb {
-  display: inline-block;
-  position: relative;
-  flex: 0 0 auto;
-  width: 19vw;
-  max-width: 300px;
-  aspect-ratio: 9 / 4;
+/* Açılış hapı: projeler sağdan sırayla gelir */
+.heroStage { position: relative; }
+.heroPill {
+  position: absolute;
+  right: 0;
+  bottom: 0.4vw;
+  width: min(38vw, 660px);
+  aspect-ratio: 1.8;
   border-radius: 999px;
   overflow: hidden;
   background: #1a1714;
-  transform: translateY(0.06em);
+  isolation: isolate;
+  box-shadow: 0 30px 70px #17171626;
+  animation: pillIn 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
 }
-.heroThumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@keyframes pillIn {
+  from { transform: translateX(45%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.heroSlide { position: absolute; inset: 0; transform: translateX(100%); transition: none; z-index: 0; }
+.heroSlide.slideActive { transform: none; z-index: 2; transition: transform 1s cubic-bezier(0.65, 0, 0.25, 1); }
+.heroSlide.slidePrev { transform: translateX(-30%); opacity: 0; z-index: 1; transition: transform 1s cubic-bezier(0.65, 0, 0.25, 1), opacity 1s; }
+.heroSlide img { transition: transform 6s linear; transform: scale(1.08); }
+.heroSlide.slideActive img { transform: scale(1); }
+.heroChip {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  background: #f4f3efe8;
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  border-radius: 40px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.heroChip b { font: 500 11px var(--font-space-grotesk); color: var(--pink); }
 .heroBottom { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding-block: 55px 65px; }
 .heroBottom p { font-size: 18px; max-width: 430px; line-height: 1.6; }
 .scroll { align-self: end; display: flex; align-items: center; gap: 15px; font-size: 14px; }
@@ -360,11 +388,11 @@
 .motionOff .word { color: var(--ink); }
 .motionOff .word:last-child { color: var(--pink); }
 .motionOff .journeyFrame { transform: none; }
+.motionOff .heroPill { animation: none; }
 .motionOff * { transition: none !important; }
 
 @media (min-width: 1600px) {
   .hero h1 { font-size: 176px; }
-  .heroLast { gap: 50px; }
 }
 
 @media (max-width: 760px) {
@@ -372,8 +400,8 @@
   .heroMeta { margin-bottom: 40px; }
   .heroMeta .label:last-child { max-width: 150px; text-align: right; }
   .hero h1 { font-size: clamp(60px, 13vw, 98px); line-height: 0.94; }
-  .heroLast { gap: 15px; }
-  .heroThumb { width: 30vw; }
+  .heroPill { position: relative; bottom: auto; width: 100%; margin-top: 30px; }
+  .heroChip { font-size: 12px; bottom: 12px; }
   .heroBottom { grid-template-columns: 1fr; gap: 30px; padding-block: 38px 50px; }
   .heroBottom p { font-size: 16px; max-width: 360px; }
   .scroll { grid-row: 2; }
@@ -455,5 +483,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stageImg, .word, .arr, .projectPhoto img, .journeyImg img { transition: none; }
+  .stageImg, .word, .arr, .projectPhoto img, .journeyImg img, .heroSlide, .heroSlide img { transition: none; }
+  .heroPill { animation: none; }
 }

@@ -60,6 +60,16 @@ const STAGES = [
 
 const WORDS = ["BİR KARE.", "BİR HİKÂYE.", "BİR BÜTÜN."];
 
+/** Açılıştaki hap: projeler sağdan sırayla gelir (Foton kapağı geçici olduğu için yok). */
+const babi = getProjectBySlug("babi-restaurant")!;
+const HERO_SLIDES = [
+  { project: milo, img: MILO_IMG, position: "center 55%" },
+  { project: ritim, img: RITIM_IMG, position: "center" },
+  { project: pam, img: pam.cover ?? pam.image, position: "center 40%" },
+  { project: babi, img: babi.cover ?? babi.image, position: "center 60%" },
+];
+const HERO_INTERVAL = 4500;
+
 /** Müzik gelene kadar sessiz. Yeniden üretmek için: scripts/build-showreel.sh */
 const SHOWREEL = {
   wide: { src: "/videos/showreel-wide-web.mp4", poster: "/videos/posters/showreel-wide-poster.jpg" },
@@ -91,10 +101,10 @@ export default function AboutMotion() {
   const journeyRef = useRef<HTMLElement>(null);
   const journeyFrameRefs = useRef<(HTMLElement | null)[]>([]);
   const reelVideoRef = useRef<HTMLVideoElement>(null);
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
   const reelVisibleRef = useRef(false);
   const reelPausedRef = useRef(false);
   const [reelPaused, setReelPaused] = useState(false);
+  const [heroSlide, setHeroSlide] = useState(0);
 
   const [stage, setStage] = useState(0);
   const stageRef = useRef(0);
@@ -205,9 +215,7 @@ export default function AboutMotion() {
         stepRefs.current.forEach((el) => el?.style.setProperty("--fill", "0%"));
         wordRefs.current.forEach((w) => w?.classList.add(s.lit));
         journeyFrameRefs.current.forEach((el) => el?.style.setProperty("--shift", "0px"));
-        heroVideoRef.current?.pause();
       } else {
-        void heroVideoRef.current?.play().catch(() => {});
         requestAnimationFrame(update);
       }
       syncReel();
@@ -239,6 +247,15 @@ export default function AboutMotion() {
       window.removeEventListener("resize", schedule);
     };
   }, [mode, update]);
+
+  // Açılış hapı: hareket açıksa projeler sırayla sağdan gelir.
+  useEffect(() => {
+    if (reduced) return;
+    const id = window.setInterval(() => {
+      if (document.visibilityState === "visible") setHeroSlide((i) => (i + 1) % HERO_SLIDES.length);
+    }, HERO_INTERVAL);
+    return () => window.clearInterval(id);
+  }, [reduced]);
 
   // Showreel kaynağı ekran yönüne göre seçilir; görünürlük update() içinde izlenir.
   useEffect(() => {
@@ -288,26 +305,47 @@ export default function AboutMotion() {
             Tasarım · Web
           </p>
         </div>
-        <h1 id="hero-title">
-          <span className={s.line}>FİKRİ</span>
-          <span className={s.line}>GÖRÜNÜR</span>
-          <span className={`${s.line} ${s.heroLast}`}>
-            <span>
+        <div className={s.heroStage}>
+          <h1 id="hero-title">
+            <span className={s.line}>FİKRİ</span>
+            <span className={s.line}>GÖRÜNÜR</span>
+            <span className={s.line}>
               KILARIZ<span className={s.pink}>.</span>
             </span>
-            <span className={s.heroThumb} aria-hidden="true">
-              <video
-                ref={heroVideoRef}
-                src="/videos/hero-loop-web.mp4"
-                poster="/videos/posters/hero-loop-poster.jpg"
-                muted
-                loop
-                playsInline
-                preload="auto"
-              />
-            </span>
-          </span>
-        </h1>
+          </h1>
+          <div className={s.heroPill}>
+            {HERO_SLIDES.map((slide, i) => {
+              const prev = (heroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
+              const state = i === heroSlide ? s.slideActive : i === prev ? s.slidePrev : "";
+              return (
+                <Link
+                  key={slide.project.slug}
+                  href={`/projeler/${slide.project.slug}`}
+                  className={`${s.heroSlide} ${state}`}
+                  aria-hidden={i !== heroSlide}
+                  tabIndex={i === heroSlide ? 0 : -1}
+                >
+                  <Image
+                    src={slide.img}
+                    alt={`${slide.project.name}: ${slide.project.cardSummary}`}
+                    fill
+                    sizes="(min-width: 760px) 40vw, 100vw"
+                    className="object-cover"
+                    style={{ objectPosition: slide.position }}
+                    priority={i === 0}
+                  />
+                  <span className={s.heroChip}>
+                    <b>0{i + 1}</b>
+                    {slide.project.name}
+                    <span className={s.arr} aria-hidden="true">
+                      ↗
+                    </span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
         <div className={s.heroBottom}>
           <a className={s.scroll} href="#bakis">
             <span aria-hidden="true">↓</span>Biraz daha yakından.
