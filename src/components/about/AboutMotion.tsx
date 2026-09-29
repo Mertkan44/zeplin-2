@@ -68,10 +68,10 @@ const SHOWREEL = {
 
 /** Ritim Jewellery reklam filminden (ritim-bitti) sırayla dört kare: 8., 14., 23. ve 26. saniye. */
 const JOURNEY = [
-  { step: "Eskiz", text: "Film, bir tasarımcının defterindeki sembollerle açılıyor.", depth: 24 },
-  { step: "Vitrin", text: "Aynı hikâye bir ailenin önünde, mağaza vitrininde sürüyor.", depth: 80 },
-  { step: "Ürün", text: "Defterdeki semboller artık altın bir kolyenin üzerinde.", depth: 40 },
-  { step: "Duygu", text: "Film, takıyı taşıyan kişinin yüzünde kapanıyor.", depth: 100 },
+  { step: "Eskiz", text: "Film, bir tasarımcının defterindeki sembollerle açılıyor.", depth: 16 },
+  { step: "Vitrin", text: "Aynı hikâye bir ailenin önünde, mağaza vitrininde sürüyor.", depth: 56 },
+  { step: "Ürün", text: "Defterdeki semboller artık altın bir kolyenin üzerinde.", depth: 28 },
+  { step: "Duygu", text: "Film, takıyı taşıyan kişinin yüzünde kapanıyor.", depth: 72 },
 ].map((f, i) => ({ ...f, img: `/images/about/ritim-yolculuk-${i + 1}.webp` }));
 
 const clamp = (x: number) => Math.max(0, Math.min(1, x));
@@ -91,6 +91,7 @@ export default function AboutMotion() {
   const journeyRef = useRef<HTMLElement>(null);
   const journeyFrameRefs = useRef<(HTMLElement | null)[]>([]);
   const reelVideoRef = useRef<HTMLVideoElement>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
   const reelVisibleRef = useRef(false);
   const reelPausedRef = useRef(false);
   const [reelPaused, setReelPaused] = useState(false);
@@ -138,9 +139,6 @@ export default function AboutMotion() {
       images.forEach((el, i) => {
         el!.style.visibility = i === 0 || (i === 1 && p > 0.18) || (i === 2 && p > 0.58) ? "visible" : "hidden";
       });
-      process.style.setProperty("--frame-turn", `${-7 * first + 14 * second}deg`);
-      process.style.setProperty("--frame-alpha", String(1 - 0.6 * first + 0.6 * second));
-      process.style.setProperty("--ghost-x", `${-p * 100}px`);
       process.style.setProperty("--heading-shift", `${-12 * first + 12 * second}px`);
       choose(p < 0.37 ? 0 : p < 0.77 ? 1 : 2);
     },
@@ -159,8 +157,16 @@ export default function AboutMotion() {
     const r = reel.getBoundingClientRect();
     const p = clamp(-r.top / Math.max(1, reel.offsetHeight - vh));
     const expand = clamp(p / 0.62);
-    reel.style.setProperty("--reel-inset", `${17 * (1 - expand)}%`);
-    reel.style.setProperty("--reel-side", `${25 * (1 - expand)}%`);
+    // Başlangıçta yalnızca ortadaki dikey kesit görünür (yuvarlak köşeli kart), sonra üçlüye açılır.
+    const sticky = reel.firstElementChild as HTMLElement;
+    const sw = sticky.clientWidth;
+    const sh = sticky.clientHeight;
+    const panel = sw > sh ? Math.max(sw, (sh * 16) / 9) * 1.08 * (608 / 1920) : sw * 0.76;
+    const side0 = Math.max(0, (sw - panel) / 2 + 2);
+    const top0 = Math.max(sh * (sw > sh ? 0.1 : 0.14), 92); // üst menünün altında kalsın
+    reel.style.setProperty("--reel-inset", `${top0 * (1 - expand)}px`);
+    reel.style.setProperty("--reel-side", `${side0 * (1 - expand)}px`);
+    reel.style.setProperty("--reel-radius", `${28 * (1 - expand)}px`);
     reel.style.setProperty("--reel-zoom", String(1.08 - 0.08 * expand));
     reel.style.setProperty("--reel-opacity", String(clamp((p - 0.27) / 0.23)));
     reel.style.setProperty("--reel-y", `${(1 - clamp((p - 0.27) / 0.35)) * 50}px`);
@@ -199,7 +205,9 @@ export default function AboutMotion() {
         stepRefs.current.forEach((el) => el?.style.setProperty("--fill", "0%"));
         wordRefs.current.forEach((w) => w?.classList.add(s.lit));
         journeyFrameRefs.current.forEach((el) => el?.style.setProperty("--shift", "0px"));
+        heroVideoRef.current?.pause();
       } else {
+        void heroVideoRef.current?.play().catch(() => {});
         requestAnimationFrame(update);
       }
       syncReel();
@@ -220,7 +228,7 @@ export default function AboutMotion() {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onMedia = (e: MediaQueryListEvent) => mode(e.matches);
     // İlk tercih bir sonraki karede uygulanır (efekt gövdesinde state güncellenmez).
-    const initial = requestAnimationFrame(() => (media.matches ? mode(true) : schedule()));
+    const initial = requestAnimationFrame(() => mode(media.matches));
     media.addEventListener("change", onMedia);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
@@ -282,11 +290,21 @@ export default function AboutMotion() {
         </div>
         <h1 id="hero-title">
           <span className={s.line}>FİKRİ</span>
-          <span className={`${s.line} ${s.outline}`}>GÖRÜNÜR</span>
+          <span className={s.line}>GÖRÜNÜR</span>
           <span className={`${s.line} ${s.heroLast}`}>
-            KILARIZ
+            <span>
+              KILARIZ<span className={s.pink}>.</span>
+            </span>
             <span className={s.heroThumb} aria-hidden="true">
-              <Image src={MILO_IMG} alt="" fill sizes="270px" className="object-cover" priority />
+              <video
+                ref={heroVideoRef}
+                src="/videos/hero-loop-web.mp4"
+                poster="/videos/posters/hero-loop-poster.jpg"
+                muted
+                loop
+                playsInline
+                preload="auto"
+              />
             </span>
           </span>
         </h1>
@@ -490,24 +508,10 @@ export default function AboutMotion() {
         </ol>
       </section>
 
-      {/* ── Birlikte çalışırken ─────────────────────────── */}
-      <section className={`${s.principles} ${s.wrap}`} aria-labelledby="principles-title">
-        <p className={s.label} id="principles-title">
-          05 / Birlikte çalışırken
-        </p>
-        {PRINCIPLES.map((p, i) => (
-          <article key={p.title} className={s.principle}>
-            <p className={s.num}>0{i + 1}</p>
-            <h3>{p.title}</h3>
-            <p>{p.body}</p>
-          </article>
-        ))}
-      </section>
-
       {/* ── Birlikte çalıştıklarımız ─────────────────────── */}
       <section className={`${s.voices} ${s.wrap}`} aria-labelledby="voices-title">
         <div className={s.sectionTop}>
-          <p className={s.label}>06 / Birlikte çalıştıklarımız</p>
+          <p className={s.label}>05 / Birlikte çalıştıklarımız</p>
           <p className={s.label}>Kendi anlatımlarıyla</p>
         </div>
         <div className={s.voicesGrid}>
@@ -535,6 +539,20 @@ export default function AboutMotion() {
             ))}
           </ul>
         </div>
+      </section>
+
+      {/* ── Birlikte çalışırken ─────────────────────────── */}
+      <section className={`${s.principles} ${s.wrap}`} aria-labelledby="principles-title">
+        <p className={s.label} id="principles-title">
+          06 / Birlikte çalışırken
+        </p>
+        {PRINCIPLES.map((p, i) => (
+          <article key={p.title} className={s.principle}>
+            <p className={s.num}>0{i + 1}</p>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </article>
+        ))}
       </section>
 
       {/* ── Hikâye ve insanlar: yalnızca gerçek bilgi girildiğinde ── */}
@@ -628,7 +646,7 @@ function VoiceVideos({ videos }: { videos: ClientVideo[] }) {
         const isStarted = started.includes(v.id);
         return (
           <figure key={v.id} className={s.voice}>
-            <div className={s.voiceMedia}>
+            <div className={`${s.voiceMedia} ${isStarted ? s.voiceStarted : ""}`}>
               <video
                 ref={(el) => {
                   refs.current[i] = el;
@@ -641,10 +659,12 @@ function VoiceVideos({ videos }: { videos: ClientVideo[] }) {
                 onPlay={() => refs.current.forEach((other, j) => j !== i && other?.pause())}
               />
               {!isStarted && (
-                <button type="button" className={s.voicePlay} onClick={() => start(i)} aria-label={`${v.brandName} videosunu izle`}>
-                  <span aria-hidden="true">▶</span>
-                  <span className={s.voicePlayLong}>{v.brandName} anlatıyor</span>
-                  <span className={s.voicePlayShort}>İzle</span>
+                <button type="button" className={s.voiceCover} onClick={() => start(i)} aria-label={`${v.brandName} videosunu izle`}>
+                  <span className={s.voicePlay} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                      <path d="M8 5.14v13.72a1 1 0 001.5.86l11-6.86a1 1 0 000-1.72l-11-6.86A1 1 0 008 5.14z" />
+                    </svg>
+                  </span>
                 </button>
               )}
             </div>
