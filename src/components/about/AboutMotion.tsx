@@ -283,23 +283,25 @@ export default function AboutMotion() {
 
       {/* ── Açılış ─────────────────────────────────────── */}
       <section className={`${s.hero} ${s.wrap}`} aria-labelledby="hero-title">
-        <div className={s.heroMeta}>
-          <p className={s.label}>Zeplin&apos;in arkasında</p>
-          <p className={s.label}>
-            Fotoğraf · Film
-            <br />
-            Tasarım · Web
-          </p>
-        </div>
         <div className={s.heroStage}>
-          <h1 id="hero-title">
-            <span className={s.line}>FİKRİ</span>
-            <span className={s.line}>GÖRÜNÜR</span>
-            <span className={s.line}>
-              KILARIZ<span className={s.pink}>.</span>
-            </span>
-          </h1>
-          <Link href={`/projeler/${milo.slug}`} className={s.heroOrb}>
+          <div className={s.heroCopy}>
+            <h1 id="hero-title">
+              <span className={s.line}>FİKRİ</span>
+              <span className={s.line}>GÖRÜNÜR</span>
+              <span className={s.line}>
+                KILARIZ<span className={s.pink}>.</span>
+              </span>
+            </h1>
+            <p className={s.heroLead}>
+              Fotoğraf, film, tasarım ve web.
+              <br />
+              Markanızın anlatacaklarını birlikte şekillendiriyoruz.
+            </p>
+            <a className={s.scroll} href="#bakis">
+              <span aria-hidden="true">↓</span>Biraz daha yakından.
+            </a>
+          </div>
+          <Link href={`/projeler/${milo.slug}`} className={s.heroMedia} aria-label={`${milo.name}: Reels videosu`}>
             <video
               ref={heroVideoRef}
               src={HERO_VIDEO.src}
@@ -310,23 +312,18 @@ export default function AboutMotion() {
               preload="auto"
               aria-hidden="true"
             />
-            <span className={s.heroChip}>
-              {milo.name} · Kokteyl filmi
-              <span className={s.arr} aria-hidden="true">
-                ↗
+            <span className={s.heroCaption}>
+              <span className={s.heroCaptionKicker} lang="en">
+                {milo.name}
+              </span>
+              <span className={s.heroCaptionTitle}>
+                Reels Videosu
+                <span className={s.heroCaptionArrow} aria-hidden="true">
+                  ↗
+                </span>
               </span>
             </span>
           </Link>
-        </div>
-        <div className={s.heroBottom}>
-          <a className={s.scroll} href="#bakis">
-            <span aria-hidden="true">↓</span>Biraz daha yakından.
-          </a>
-          <p>
-            Fotoğraf, film, tasarım ve web.
-            <br />
-            Markanızın anlatacaklarını birlikte şekillendiriyoruz.
-          </p>
         </div>
       </section>
 
