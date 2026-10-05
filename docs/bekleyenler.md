@@ -1,3 +1,12 @@
+# Sıradaki işler (kod tarafı)
+
+Takip yerel sunucudan: http://127.0.0.1:3002 (Vercel deploy kotası bitmek üzere — 05.10.2026). Her push, dal da olsa bir Vercel derlemesi başlatır; yalnızca istenince push.
+
+1. [ ] **Ana sayfa bölümler arası boşluk ritmi** — "Birlikte büyüdüğümüz markalar" logo bandı ile "Son işlerimiz, tek tek." arasında fazla boşluk (bant bölümünün alt boşluğu ~82px + sonraki bölümün üst boşluğu 64px + logolar ile bölüm sonu arası 90px → etiket logolardan ~180px+ uzakta). Tüm ana sayfa bölümleri için tek bir dikey boşluk ölçeği kurulacak.
+2. [ ] **Özel Yazılım — Aşama 3**: imza scroll sahnesi (masaüstü, reduced-motion'da kapalı).
+
+---
+
 # Bekleyenler — Tasarım ve İşlevsellik İncelemesi (24.09.2026)
 
 Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı; aşağıdakiler içerik, karar ya da dış hesap bekliyor.
