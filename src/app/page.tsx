@@ -85,7 +85,7 @@ export default function Home() {
       <ServiceCircleDiagram />
 
       {/* Üstteki koyu hizmet çemberiyle arasında nefes payı: iki koyu blok birbirine değmesin. */}
-      <section className="px-5 py-16 md:px-12 md:py-24">
+      <section className="px-5 py-[var(--home-space)] md:px-12">
         <div className="mx-auto max-w-6xl">
           <SocialBoardingPass socials={blocks[1].socials ?? []} />
         </div>

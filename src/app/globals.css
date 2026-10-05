@@ -562,6 +562,14 @@ body:where(.dark *) {
   .bp-arrow { transition-duration: 1ms; }
 }
 
+/* Ana sayfa dikey ritmi: her bölüm üstte ve altta aynı boşluğu kullanır; böylece iki
+   komşu bölümün içerikleri arasında hep 2 × --home-space kalır (≈ 96 px mobil, ≈ 168 px geniş
+   ekran). Kendi zemini olan bloklarda (koyu bant, kart, panel) kenar içerik sayılır.
+   İç bileşenler bu boşluğa ayrıca dikey boşluk eklemez. */
+:root {
+  --home-space: clamp(48px, 5.8vw, 84px);
+}
+
 /* Footer'ın yuvarlak üst köşelerinin arkası: sayfanın bittiği renk.
    Koyu bir bölümle biten sayfalar o bölüme data-footer-under="dark" verir. */
 .site-footer {

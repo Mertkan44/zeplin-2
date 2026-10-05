@@ -13,7 +13,7 @@ const STEPS = [
 
 export default function HomeProcess() {
   return (
-    <section aria-labelledby="home-process-title" className="px-5 pb-16 md:px-12 md:pb-24">
+    <section aria-labelledby="home-process-title" className="px-5 py-[var(--home-space)] md:px-12">
       <div className="mx-auto max-w-6xl rounded-[28px] bg-zinc-50 px-6 py-10 dark:bg-white/[0.03] md:px-12 md:py-14">
         <motion.div variants={revealVariants} initial="hidden" whileInView="visible" viewport={revealViewport} custom={0}>
           <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-[#DB2777] dark:text-[#F472B6]" style={FONT}>

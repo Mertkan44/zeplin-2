@@ -122,7 +122,7 @@ export default function ProjectCoverflow({ projects }: ProjectCoverflowProps) {
 
   return (
     <section
-      className="coverflow relative mx-[calc(50%-50vw)] overflow-hidden py-10 md:py-14"
+      className="coverflow relative mx-[calc(50%-50vw)] overflow-hidden pb-2"
       aria-roledescription="carousel"
       aria-label="Seçili işler"
       onKeyDown={handleKeyDown}

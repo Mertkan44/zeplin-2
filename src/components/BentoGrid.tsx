@@ -61,7 +61,7 @@ export default function BentoGrid({ blocks, sectionId }: BentoGridProps) {
     <MotionConfig reducedMotion="user">
       <section
         id={sectionId}
-        className="px-5 pt-10 pb-12 scroll-mt-28 md:px-12 md:pt-16 md:pb-12 md:scroll-mt-36"
+        className="px-5 py-[var(--home-space)] scroll-mt-28 md:px-12 md:scroll-mt-36"
       >
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-8 md:gap-9" style={{ overflow: "visible" }}>

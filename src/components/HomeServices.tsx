@@ -16,7 +16,7 @@ const GROUP_COPY: Record<string, string> = {
 
 export default function HomeServices() {
   return (
-    <section aria-labelledby="home-services-title" className="px-5 py-16 md:px-12 md:py-24">
+    <section aria-labelledby="home-services-title" className="px-5 py-[var(--home-space)] md:px-12">
       <div className="mx-auto max-w-6xl">
         <motion.div
           variants={revealVariants}

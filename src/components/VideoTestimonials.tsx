@@ -359,7 +359,7 @@ export default function VideoTestimonials({
   return (
     <MotionConfig reducedMotion="user">
       <section
-        className="relative overflow-hidden px-4 py-12 md:px-12 md:py-16"
+        className="relative overflow-hidden px-4 py-[var(--home-space)] md:px-12"
         style={{
           background: isDark
             ? "radial-gradient(ellipse 70% 55% at 72% 45%, rgba(157,23,77,0.08) 0%, transparent 68%)"
