@@ -23,7 +23,8 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 - [x] ~~Orijinal videolar~~ → `~/Movies/Zeplin Orijinal Videolar` (334 MB, 7 dosya, sağlaması doğrulandı); depodan çıkarıldı, `.gitignore` yeniden eklenmesini engelliyor (29.09.2026). Not: altısı `master` geçmişinde hâlâ var, `ritim-bitti.mp4` bu dalın geçmişinde; geçmiş yeniden yazılmadı.
 - [x] ~~Proje klasörü iCloud dışına~~ → `~/Projects/zeplin-2-revize` (28.09.2026)
 - [x] ~~Push + Vercel~~ → `revize/asama-a` master'a alındı, canlı: https://zeplin-2.vercel.app (05.10.2026)
-- [ ] **Alan adı**: `www.zeplinmedia.com` DNS kaydı yok (çözülmüyor), ama site kanonik adres / sitemap için onu kullanıyor (`siteConfig.url`). Ya alan adı Vercel'e bağlanmalı ya da geçici olarak Vercel'de `NEXT_PUBLIC_SITE_URL=https://zeplin-2.vercel.app` tanımlanmalı.
+- [x] ~~Kanonik adres~~: gerçek alan adı `www.zeplinmedia.com.tr` (Vercel'de bağlı; çıplak adres www'ye yönleniyor). `siteConfig.url` varsayılanı buna çevrildi (05.10.2026).
+- [ ] **E-posta adresi**: sitede `info@zeplinmedia.com` yazıyor (altbilgi, İletişim, Gizlilik, Çerez, Hizmetler) ama ne `.com` ne `.com.tr` için MX kaydı var — bu adrese giden posta ulaşmıyor. Hangi adres gösterilsin? (ör. `.com.tr` üzerinde e-posta kurulumu ya da mevcut bir adres)
 - [ ] Reklam Yönetimi: Meta + Google doğru mu, TikTok vb. var mı?
 
 ## Sonra yapılacak (içerik oturunca)

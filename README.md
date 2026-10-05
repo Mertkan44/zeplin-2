@@ -22,7 +22,7 @@ npm run lint
 | `RESEND_API_KEY` | "Projeni Anlat" formunun e-posta göndermesi |
 | `CONTACT_TO_EMAIL` | Form taleplerinin düşeceği adres |
 | `CONTACT_FROM_EMAIL` | (Opsiyonel) Doğrulanmış gönderici. Yoksa `onboarding@resend.dev` |
-| `NEXT_PUBLIC_SITE_URL` | (Opsiyonel) Canonical adres. Yoksa `https://www.zeplinmedia.com` |
+| `NEXT_PUBLIC_SITE_URL` | (Opsiyonel) Canonical adres. Yoksa `https://www.zeplinmedia.com.tr` |
 
 Anahtar yoksa form sahte başarı göstermez; "gönderilemedi" mesajı ve WhatsApp alternatifi çıkar.
 

@@ -5,7 +5,7 @@ import type { ServiceData } from "@/data/services";
 export const siteConfig = {
   name: "Zeplin Media",
   legalName: "Zeplin Media Dijital Ajans",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zeplinmedia.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zeplinmedia.com.tr",
   locale: "tr_TR",
   language: "tr",
   description:
