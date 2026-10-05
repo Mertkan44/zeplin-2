@@ -392,9 +392,9 @@ const SERVICE_CONTENT_MAP = {
   yazilim: {
     title: "Özel Yazılım",
     short:
-      "Chatbot ve sesli asistanı tek merkezde birleştirip süreçleri tek panelden yönetir.",
+      "Dağınık araçları ve tekrar eden işleri ekibinizin kullanabileceği bir sisteme dönüştürür.",
     long:
-      "**Chatbot ve sesli asistanın birleşimi** — işletmenizin tüm iletişim süreçlerini **tek bir akıllı sistem**de toplar, size sadece **sonuçları** sunar.",
+      "**İşinize uyan yazılım** — operasyon uygulamaları, **müşteri portalları** ve **entegrasyonlar**; gerektiğinde chatbot ve sesli asistan da aynı sisteme bağlanır.",
   },
   sesli: {
     title: "Sesli Asistan",

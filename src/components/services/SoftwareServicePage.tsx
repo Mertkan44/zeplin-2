@@ -1,479 +1,429 @@
-"use client";
+/*
+ * /hizmetler/ozel-yazilim — "İşinize uyan yazılım."
+ * Şartname: zeplin-ozel-yazilim-tasarim-ve-uygulama-plani.md
+ *
+ * Sunucu bileşeni: açıklama, vaka, süreç ve SSS okunabilir HTML olarak gelir.
+ * Yalnızca demo (SoftwareDemo) ve ihtiyaç seçimi (SoftwareBrief) istemcide çalışır.
+ * Demo kayıtları kurmacadır ve her yerde öyle etiketlenir.
+ */
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { EASE, FONT, revealVariants } from "@/lib/motion";
-import { getRelatedServices } from "@/data/services";
-import type { ServiceData } from "@/data/services";
+import Link from "next/link";
+import { getRelatedServices, type ServiceData } from "@/data/services";
+import { DELIVERY, FAQ, PROCESS, SCENARIOS, SOLUTIONS, softwareContactHref } from "@/data/software";
 import { RelatedServices } from "./RelatedServices";
-import { CTABanner } from "./CTABanner";
-import { ServiceProof } from "./ServiceProof";
-import { DemoFigure } from "./DemoCaption";
+import SoftwareDemo from "./software/SoftwareDemo";
+import SoftwareBrief from "./software/SoftwareBrief";
+import { ActivityList, DemoChrome, Field, PaneTitle, RecordList, StatusBadge } from "./software/ui";
 
-/* ── Hub nodes ────────────────────────────────────────────────────── */
-// Icons are drawn in a 16×16 coordinate space, centered via translate(nx-8, ny-8)
-const hubNodes = [
-  {
-    id: "chatbot", label: "Akıllı Chatbot", angle: 210, color: "#DB2777",
-    icon: <path d="M1.5 1h13a1 1 0 011 1v7a1 1 0 01-1 1H8l-4 3.5V10H1.5a1 1 0 01-1-1V2a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinejoin="round" strokeLinecap="round"/>,
-  },
-  {
-    id: "voice", label: "Sesli Asistan", angle: 270, color: "#9D174D",
-    icon: <><rect x="5" y="0.5" width="6" height="8.5" rx="3" stroke="currentColor" strokeWidth="1.3" fill="none"/><path d="M2 7.5a6 6 0 0012 0M8 14v1.5M5.5 15.5h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" fill="none"/></>,
-  },
-  {
-    id: "crm", label: "CRM", angle: 330, color: "#EC4899",
-    icon: <><rect x="0.5" y="1" width="15" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.3" fill="none"/><path d="M0.5 5h15M4 8.5h8M4 11h5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></>,
-  },
-  {
-    id: "erp", label: "ERP", angle: 30, color: "#F472B6",
-    icon: <><path d="M1 12.5L4.5 7 8 10.5 11.5 4 15 8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/><path d="M1 15.5h14" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></>,
-  },
-  {
-    id: "report", label: "Raporlama", angle: 90, color: "#DB2777",
-    icon: <><rect x="0.5" y="9.5" width="4" height="6" rx="0.75" stroke="currentColor" strokeWidth="1.3" fill="none"/><rect x="6" y="5" width="4" height="10.5" rx="0.75" stroke="currentColor" strokeWidth="1.3" fill="none"/><rect x="11.5" y="0.5" width="4" height="15" rx="0.75" stroke="currentColor" strokeWidth="1.3" fill="none"/></>,
-  },
-  {
-    id: "api", label: "Özel API", angle: 150, color: "#9D174D",
-    icon: <path d="M10.5 1.5L7 14.5M2.5 5.5L0.5 8l2 2.5M13.5 5.5L15.5 8l-2 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>,
-  },
-];
-
-/* ── Dashboard rows ───────────────────────────────────────────────── */
-const dashStats = [
-  { label: "Aktif Konuşma", value: "1,284", trend: "+12%" },
-  { label: "Çözüm Oranı",  value: "%94.7",  trend: "+3.1%" },
-  { label: "Ort. Süre",    value: "1:42",   trend: "-18%" },
-  { label: "Bu Hafta",     value: "8,391",  trend: "+27%" },
-];
-
-/* ── Hub Diagram ──────────────────────────────────────────────────── */
-function HubDiagram({ isActive }: { isActive: boolean }) {
-  // Everything lives inside the SVG — fully responsive, no fixed pixel sizes
-  const cx = 220;
-  const cy = 220;
-  const r  = 140;   // node orbit radius
-  const lr = 192;   // label orbit radius
-
-  return (
-    <div className="mx-auto w-full max-w-[480px]">
-      <svg
-        viewBox="0 0 440 440"
-        className="h-auto w-full"
-        style={{ overflow: "visible" }}
-      >
-        {/* Outer orbit ring (dashed, slow spin) */}
-        <motion.circle
-          cx={cx} cy={cy} r={r}
-          fill="none"
-          stroke="rgba(219,39,119,0.14)"
-          strokeWidth={1}
-          strokeDasharray="5 7"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          style={{ transformOrigin: `${cx}px ${cy}px` }}
-        />
-
-        {/* Inner glow ring */}
-        <circle cx={cx} cy={cy} r={52} fill="rgba(219,39,119,0.06)" stroke="rgba(219,39,119,0.18)" strokeWidth={1} />
-
-        {/* Lines + pulses + nodes */}
-        {hubNodes.map((node, i) => {
-          const rad = (node.angle * Math.PI) / 180;
-          const nx  = cx + r  * Math.cos(rad);
-          const ny  = cy + r  * Math.sin(rad);
-          const lx  = cx + lr * Math.cos(rad);
-          const ly  = cy + lr * Math.sin(rad);
-
-          return (
-            <g key={node.id}>
-              {/* Connection line */}
-              <motion.line
-                x1={cx} y1={cy} x2={nx} y2={ny}
-                stroke="rgba(219,39,119,0.22)"
-                strokeWidth={1}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={isActive ? { pathLength: 1, opacity: 1 } : {}}
-                transition={{ duration: 0.55, delay: 0.3 + i * 0.09, ease: EASE }}
-              />
-
-              {/* Data pulse */}
-              {isActive && (
-                <motion.circle
-                  r={3}
-                  fill={node.color}
-                  animate={{ cx: [cx, nx, cx], cy: [cy, ny, cy], opacity: [0, 1, 0] }}
-                  transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.42, ease: "easeInOut" }}
-                />
-              )}
-
-              {/* Satellite node circle */}
-              <motion.g
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={isActive ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.4, delay: 0.45 + i * 0.1, ease: EASE }}
-                style={{ transformOrigin: `${nx}px ${ny}px` }}
-              >
-                <circle
-                  cx={nx} cy={ny} r={26}
-                  fill="rgba(8,5,7,0.95)"
-                  stroke={node.color}
-                  strokeWidth={1}
-                  strokeOpacity={0.45}
-                />
-                {/* SVG icon, centered at node — 16×16 coordinate space */}
-                <g
-                  transform={`translate(${nx - 8}, ${ny - 8})`}
-                  stroke={node.color}
-                  strokeOpacity={0.9}
-                >
-                  {node.icon}
-                </g>
-              </motion.g>
-
-              {/* Label as SVG text — stays inside SVG, scales with it */}
-              <motion.text
-                x={lx}
-                y={ly}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize={10.5}
-                fill="rgba(255,255,255,0.38)"
-                fontFamily="var(--font-jost), sans-serif"
-                fontWeight={500}
-                letterSpacing={0.3}
-                initial={{ opacity: 0 }}
-                animate={isActive ? { opacity: 1 } : {}}
-                transition={{ duration: 0.4, delay: 0.7 + i * 0.08 }}
-              >
-                {node.label}
-              </motion.text>
-            </g>
-          );
-        })}
-
-        {/* Center node */}
-        <motion.circle
-          cx={cx} cy={cy} r={46}
-          fill="url(#centerGrad)"
-          stroke="rgba(219,39,119,0.5)"
-          strokeWidth={1}
-          animate={isActive ? { r: [46, 49, 46] } : {}}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <defs>
-          <radialGradient id="centerGrad" cx="40%" cy="35%">
-            <stop offset="0%" stopColor="#2a0e1e" />
-            <stop offset="100%" stopColor="#0d0508" />
-          </radialGradient>
-        </defs>
-
-        {/* Center icon */}
-        <g transform={`translate(${cx - 10}, ${cy - 10})`} stroke="#F472B6" strokeWidth={1.4} strokeLinecap="round" fill="none">
-          <circle cx={10} cy={10} r={3} fill="#F472B6" stroke="none" />
-          <path d="M10 2.5v3M10 14.5v3M2.5 10h3M14.5 10h3M4.6 4.6l2.1 2.1M13.3 13.3l2.1 2.1M4.6 15.4l2.1-2.1M13.3 6.7l2.1-2.1" strokeOpacity={0.55} />
-        </g>
-
-        {/* Center label */}
-        <text
-          x={cx} y={cy + 62}
-          textAnchor="middle"
-          fontSize={9}
-          fill="rgba(244,114,182,0.6)"
-          fontFamily="var(--font-jost), sans-serif"
-          fontWeight={600}
-          letterSpacing={1.5}
-        >
-          MERKEZ
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-/* ── Dashboard Mockup ─────────────────────────────────────────────── */
-function DashboardMockup({ isActive }: { isActive: boolean }) {
-  return (
-    <div className="overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#0a0608] shadow-[0_32px_80px_rgba(0,0,0,0.5)]">
-      {/* Titlebar */}
-      <div className="flex items-center gap-2.5 border-b border-white/[0.05] bg-[#070405] px-5 py-3">
-        <div className="flex gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-red-500/50" />
-          <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/50" />
-          <div className="h-2.5 w-2.5 rounded-full bg-green-500/50" />
-        </div>
-        <span className="mx-auto text-[12px] text-white/55" style={FONT}>Zeplin · Yönetim Paneli</span>
-        <span className="flex items-center gap-1 text-[12px] text-emerald-400/70">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />canlı
-        </span>
-      </div>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="flex w-10 flex-col gap-2 border-r border-white/[0.05] bg-[#070405] py-4 items-center">
-          {[
-            <path key="h" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />,
-            <><rect key="b1" x="3" y="4" width="6" height="16" rx="1"/><rect key="b2" x="9" y="8" width="6" height="12" rx="1"/><rect key="b3" x="15" y="11" width="6" height="9" rx="1"/></>,
-            <path key="c" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />,
-            <circle key="s" cx="11" cy="11" r="8"/>,
-          ].map((icon, i) => (
-            <div key={i} className={`flex h-7 w-7 items-center justify-center rounded-lg ${i === 0 ? "bg-[#DB2777]/20" : ""}`}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={i === 0 ? "#F472B6" : "rgba(255,255,255,0.2)"} strokeWidth="1.8" strokeLinecap="round">
-                {icon}
-              </svg>
-            </div>
-          ))}
-        </div>
-
-        {/* Main */}
-        <div className="flex-1 p-4">
-          {/* Stat strip */}
-          <div className="mb-3 grid grid-cols-4 gap-2">
-            {dashStats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 8 }}
-                animate={isActive ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.35, delay: 0.2 + i * 0.07, ease: EASE }}
-                className="rounded-[10px] border border-white/[0.05] bg-white/[0.02] p-2.5"
-              >
-                <p className="text-[12px] text-white/60 truncate" style={FONT}>{s.label}</p>
-                <p className="mt-0.5 text-[14px] font-semibold leading-none text-white" style={FONT}>{s.value}</p>
-                <p className="mt-1 text-[12px] text-emerald-400/70">{s.trend}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Chart area */}
-          <div className="rounded-[12px] border border-white/[0.05] bg-white/[0.015] p-3">
-            <p className="mb-3 text-[12px] text-white/60" style={FONT}>Son 7 Gün · Konuşma Hacmi</p>
-            <div className="flex items-end gap-1.5" style={{ height: 72 }}>
-              {[38, 52, 44, 68, 60, 76, 88].map((h, i) => (
-                <motion.div
-                  key={i}
-                  className="flex-1 rounded-t-[3px]"
-                  style={{
-                    background: i === 6
-                      ? "linear-gradient(to top, #9D174D, #F472B6)"
-                      : "rgba(219,39,119,0.18)",
-                    maxWidth: 20,
-                  }}
-                  initial={{ height: 0 }}
-                  animate={isActive ? { height: h } : { height: 0 }}
-                  transition={{ duration: 0.5, delay: 0.5 + i * 0.06, ease: EASE }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Channel rows */}
-          <div className="mt-3 flex flex-col gap-1.5">
-            {[
-              { name: "WhatsApp", pct: 62, color: "#25D366" },
-              { name: "Web",      pct: 24, color: "#DB2777" },
-              { name: "Sesli",    pct: 14, color: "#9D174D" },
-            ].map((ch, i) => (
-              <motion.div
-                key={ch.name}
-                initial={{ opacity: 0 }}
-                animate={isActive ? { opacity: 1 } : {}}
-                transition={{ duration: 0.3, delay: 0.8 + i * 0.08 }}
-                className="flex items-center gap-2"
-              >
-                <span className="w-12 text-[12px] text-white/60 shrink-0" style={FONT}>{ch.name}</span>
-                <div className="flex-1 h-[5px] rounded-full bg-white/[0.05]">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: ch.color, opacity: 0.7 }}
-                    initial={{ width: "0%" }}
-                    animate={isActive ? { width: `${ch.pct}%` } : {}}
-                    transition={{ duration: 0.6, delay: 0.9 + i * 0.08, ease: EASE }}
-                  />
-                </div>
-                <span className="w-7 text-right text-[12px] text-white/55 shrink-0" style={FONT}>{ch.pct}%</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════ */
+const wrap = "mx-auto w-full max-w-[1240px] px-5 md:px-12";
+const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
+const h2 = "mt-4 text-[clamp(32px,4.2vw,54px)] font-semibold leading-[1.06] tracking-[-0.035em] text-[#171719] dark:text-white";
+const lead = "mt-5 max-w-[60ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 md:text-[18px]";
+const rule = "border-[#DAD8DF] dark:border-white/10";
 
 export function SoftwareServicePage({ service }: { service: ServiceData }) {
-  const related  = getRelatedServices(service.relatedSlugs);
-  const hubRef   = useRef<HTMLDivElement>(null);
-  const dashRef  = useRef<HTMLDivElement>(null);
-  const hubInView  = useInView(hubRef,  { once: true, margin: "15% 0px 15% 0px" });
-  const dashInView = useInView(dashRef, { once: true, margin: "15% 0px 15% 0px" });
+  const related = getRelatedServices(service.relatedSlugs);
+  const lead0 = SCENARIOS[0];
 
   return (
-    <main className="min-h-screen bg-white text-zinc-900 dark:bg-[#0a0a0a] dark:text-zinc-100">
+    <main className="min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white">
+      {/* ── 1 · Açılış ─────────────────────────────────────────────── */}
+      <section aria-labelledby="software-title" className="pb-16 pt-28 md:pb-24 md:pt-40">
+        <div className={wrap}>
+          <nav aria-label="Breadcrumb" className="text-[14px] text-[#62616B] dark:text-white/55">
+            <ol className="flex flex-wrap items-center gap-2">
+              <li>
+                <Link href="/" className="underline-offset-4 hover:text-[#171719] hover:underline dark:hover:text-white">Ana sayfa</Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link href="/hizmetler" className="underline-offset-4 hover:text-[#171719] hover:underline dark:hover:text-white">Hizmetler</Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="font-medium text-[#171719] dark:text-white">{service.title}</li>
+            </ol>
+          </nav>
 
-      {/* ── Hub Diyagramı ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" ref={hubRef}>
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#080508_0%,#0d0810_50%,#080508_100%)]" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#DB2777]/5 blur-[160px]" />
-
-        <div className="relative mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
-            <motion.div
-              variants={revealVariants} initial="hidden" whileInView="visible"
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
-            >
-              <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>
-                entegrasyon merkezi
-              </span>
-              <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
-                Hepsi Tek<br />Sistemde
-              </h2>
-              <p className="mt-4 max-w-[38ch] text-[14px] leading-[1.75] text-white/70" style={FONT}>
-                Chatbot, sesli asistan, CRM, ERP ve tüm iş araçlarınız tek merkezden yönetilir. Veri akışı kesintisiz, süreçler birbirine bağlı.
+          <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[1.3fr_1fr] lg:items-end lg:gap-16">
+            <div>
+              <p className={eyebrow}>Özel yazılım &amp; iş uygulamaları</p>
+              <h1
+                id="software-title"
+                className="mt-5 text-[clamp(44px,7.6vw,104px)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#171719] dark:text-white"
+              >
+                İşinize uyan yazılım<span className="text-[#DB2777]">.</span>
+              </h1>
+            </div>
+            <div className="lg:pb-3">
+              <p className="max-w-[46ch] text-[18px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:text-[20px]">
+                Dağınık araçları, tekrar eden işleri ve size uymayan süreçleri; ekibinizin kullanabileceği bir sisteme dönüştürelim.
               </p>
-
-              <div className="mt-8 flex flex-col gap-3">
-                {[
-                  "Tüm kanallar tek panelde",
-                  "Gerçek zamanlı veri akışı",
-                  "Özel API entegrasyonları",
-                  "Rol bazlı erişim yönetimi",
-                ].map((item, i) => (
-                  <motion.div
-                    key={item}
-                    variants={revealVariants} initial="hidden" whileInView="visible"
-                    viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.1 + i * 0.06}
-                    className="flex items-center gap-3"
-                  >
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#DB2777]/15">
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#F472B6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
-                    <span className="text-[13.5px] text-white/60" style={FONT}>{item}</span>
-                  </motion.div>
-                ))}
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href="#brief"
+                  className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#DB2777] px-7 text-[16px] font-semibold text-white transition-colors hover:bg-[#BE185D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777]"
+                >
+                  Yazılım ihtiyacını anlat <span aria-hidden="true">→</span>
+                </a>
+                <a
+                  href="#demo"
+                  className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-[#171719] px-7 text-[16px] font-semibold text-[#171719] transition-colors hover:bg-[#171719] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777] dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-[#171719]"
+                >
+                  Örnek sistemi dene
+                </a>
               </div>
-            </motion.div>
+              <p className="mt-6 text-[14px] text-[#62616B] dark:text-white/55">
+                İş uygulamaları · Müşteri portalları · Entegrasyonlar · İlk ürün sürümleri
+              </p>
+            </div>
+          </div>
 
-            <motion.div
-              variants={revealVariants} initial="hidden" whileInView="visible"
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.12}
-            >
-              <HubDiagram isActive={hubInView} />
-            </motion.div>
+          {/* Açılış önizlemesi: demo verisinden statik görünüm (aşağıdaki çalışan demoyla aynı dil) */}
+          <figure className="mt-12 md:mt-16">
+            <div aria-hidden="true">
+              <DemoChrome title="Örnek iş paneli" label="Örnek arayüz · örnek veriler">
+                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.9fr)] lg:grid-cols-[minmax(230px,0.85fr)_minmax(0,1.5fr)_minmax(230px,0.9fr)]">
+                  <div className="hidden border-r border-[#3B3946] p-5 lg:block">
+                    <PaneTitle count={3}>Gelen kayıtlar</PaneTitle>
+                    <RecordList
+                      rows={[
+                        { ...lead0.main, status: "İnceleniyor", tone: "progress", selected: true },
+                        { ...lead0.others[0], tone: "accent" },
+                        { ...lead0.others[1], tone: "progress" },
+                      ]}
+                    />
+                  </div>
+                  <div className="p-5 md:p-6">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#B5B4C0]">Seçili kayıt</p>
+                        <p className="mt-1.5 text-[18px] font-semibold leading-snug text-white md:text-[20px]">{lead0.main.title}</p>
+                      </div>
+                      <StatusBadge tone="progress">İnceleniyor</StatusBadge>
+                    </div>
+                    <div className="mt-5">
+                      <Field label="Kaynak">Web formu</Field>
+                      <Field label="Kayıt no">TLP-1024</Field>
+                      <Field label="Sorumlu">Atama bekliyor</Field>
+                      <Field label="Sonraki adım">Sorumlu onayı</Field>
+                    </div>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <span className="rounded-xl border border-[#DB2777] bg-[#DB2777]/10 px-3.5 py-2.5 text-[14px] text-white">
+                        <span className="font-semibold">Deniz</span> <span className="text-[#8E8D99]">· Prodüksiyon</span>
+                      </span>
+                      <span className="rounded-xl border border-[#3B3946] px-3.5 py-2.5 text-[14px] text-[#D6D5DE]">
+                        <span className="font-semibold">Ece</span> <span className="text-[#8E8D99]">· Satış</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hidden border-l border-[#3B3946] p-5 md:block">
+                    <PaneTitle count={3}>İşlem geçmişi</PaneTitle>
+                    <ActivityList
+                      items={[
+                        { id: "p1", label: "Web formundan yeni talep geldi: Atlas Atölye", kind: "info" },
+                        { id: "p2", label: "Talep kayda dönüştürüldü: TLP-1024", kind: "success" },
+                        { id: "p3", label: "Durum: İnceleniyor", kind: "info" },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </DemoChrome>
+            </div>
+            <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[14px] text-[#62616B] dark:text-white/55">
+              <span>Örnek bir talep takip ekranı. Kayıtlar kurmacadır.</span>
+              <a href="#demo" className="font-semibold text-[#171719] underline-offset-4 hover:underline dark:text-white">
+                Bu akışı aşağıda kendiniz deneyin ↓
+              </a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* ── 2 · Çalışan demo ───────────────────────────────────────── */}
+      <section id="demo" aria-labelledby="demo-title" className={`scroll-mt-24 border-t ${rule} py-20 md:py-28`}>
+        {/* "Örnek akışı dene" bağlantılarının hedefleri (JS yokken de çalışan çapalar) */}
+        {SCENARIOS.map((x) => (
+          <span key={x.id} id={`demo-${x.id}`} className="block scroll-mt-24" aria-hidden="true" />
+        ))}
+        <div className={wrap}>
+          <div className="mb-10 grid gap-6 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+            <div>
+              <p className={eyebrow}>Örnek sistemi dene</p>
+              <h2 id="demo-title" className={h2}>
+                Bir talebin sisteme dönüşmesini görün.
+              </h2>
+            </div>
+            <p className="max-w-[46ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 lg:pb-2">
+              Bir senaryo seçin. Talebi işleyin, onay adımını tamamlayın ve sonucu takip edin.
+            </p>
+          </div>
+          <SoftwareDemo />
+        </div>
+      </section>
+
+      {/* ── 3 · Çözüm alanları ─────────────────────────────────────── */}
+      <section aria-labelledby="solutions-title" className={`border-t ${rule} py-20 md:py-28`}>
+        <div className={wrap}>
+          <p className={eyebrow}>Neler geliştiriyoruz</p>
+          <h2 id="solutions-title" className={h2}>
+            Sistem, yaptığınız işe göre şekillensin.
+          </h2>
+          <p className={lead}>Hazır bir paketi işinize uydurmak yerine, işinizin nasıl yürüdüğünden yola çıkıyoruz.</p>
+
+          <ol className="mt-12 md:mt-16">
+            {SOLUTIONS.map((x, i) => (
+              <li key={x.id} className={`grid gap-6 border-t ${rule} py-10 md:grid-cols-[72px_minmax(0,1.25fr)_minmax(0,1fr)] md:gap-10 md:py-12`}>
+                <span className="text-[15px] font-semibold tabular-nums text-[#DB2777]">0{i + 1}</span>
+                <div>
+                  <h3 className="text-[clamp(26px,2.6vw,34px)] font-semibold leading-[1.12] tracking-[-0.025em]">{x.title}</h3>
+                  <p className="mt-4 text-[17px] italic leading-[1.6] text-[#62616B] dark:text-white/60">“{x.problem}”</p>
+                  <p className="mt-3 max-w-[56ch] text-[17px] leading-[1.65] text-[#3A3942] dark:text-white/80">{x.solution}</p>
+                  {x.scenario ? (
+                    <a
+                      href={`#demo-${x.scenario}`}
+                      className="mt-5 inline-flex min-h-[44px] items-center gap-2 text-[15px] font-semibold text-[#171719] underline decoration-[#DB2777] decoration-2 underline-offset-[6px] hover:text-[#DB2777] dark:text-white"
+                    >
+                      Örnek akışı dene <span aria-hidden="true">↑</span>
+                    </a>
+                  ) : (
+                    <a
+                      href="#brief"
+                      className="mt-5 inline-flex min-h-[44px] items-center gap-2 text-[15px] font-semibold text-[#171719] underline decoration-[#DB2777] decoration-2 underline-offset-[6px] hover:text-[#DB2777] dark:text-white"
+                    >
+                      İlk sürümü planlayalım <span aria-hidden="true">↓</span>
+                    </a>
+                  )}
+                </div>
+                <div className="self-start rounded-2xl border border-[#DAD8DF] bg-white p-5 dark:border-white/10 dark:bg-white/[0.04]">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#62616B] dark:text-white/50">Örnek çıktılar</p>
+                  <ul className="mt-3 space-y-2.5">
+                    {x.outputs.map((o) => (
+                      <li key={o} className="flex items-center gap-3 text-[15.5px]">
+                        <span aria-hidden="true" className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#FCE7F3] text-[13px] font-bold text-[#BE185D] dark:bg-[#DB2777]/20 dark:text-[#F9A8D4]">
+                          ✓
+                        </span>
+                        {o}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <div className={`mt-2 rounded-2xl border ${rule} bg-white/60 px-5 py-5 dark:bg-white/[0.03] md:flex md:items-center md:justify-between md:gap-8 md:px-7`}>
+            <p className="max-w-[62ch] text-[16px] leading-[1.6] text-[#3A3942] dark:text-white/75">
+              <strong className="font-semibold text-[#171719] dark:text-white">Yapay zekâ bir zorunluluk değil, bir bileşen.</strong>{" "}
+              Gerektiğinde chatbot ya da sesli asistan gibi parçaları aynı sisteme bağlayabiliriz.
+            </p>
+            <div className="mt-3 flex shrink-0 gap-5 text-[15px] font-semibold md:mt-0">
+              <Link href="/hizmetler/akilli-chatbot" className="underline-offset-4 hover:underline">Akıllı Chatbot →</Link>
+              <Link href="/hizmetler/sesli-asistan" className="underline-offset-4 hover:underline">Sesli Asistan →</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Dashboard Mockup ──────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-14 md:py-20" ref={dashRef}>
-        <motion.div
-          variants={revealVariants} initial="hidden" whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
-          className="mb-10"
-        >
-          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>
-            yönetim paneli
-          </span>
-          <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
-            Her Şey Bir Bakışta
-          </h2>
-          <p className="mt-3 max-w-[50ch] text-[14px] leading-[1.75] text-zinc-500 dark:text-zinc-400" style={FONT}>
-            Canlı konuşma akışları, kanal bazlı dağılım, çözüm oranı ve haftalık trendler — hepsi gerçek zamanlı olarak tek ekranda.
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={revealVariants} initial="hidden" whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0.08}
-        >
-          <DemoFigure><DashboardMockup isActive={dashInView} /></DemoFigure>
-        </motion.div>
+      {/* ── 4 · Örnek bir çözümün içi (konsept) ────────────────────── */}
+      <section aria-labelledby="concept-title" className="bg-[#111116] py-20 text-white md:py-28">
+        <div className={wrap}>
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
+            <div>
+              <span className="inline-flex rounded-full border border-[#F472B6]/40 bg-[#DB2777]/10 px-3 py-1.5 text-[13px] font-semibold text-[#F9A8D4]">
+                Konsept demo · gerçek müşteri projesi değildir
+              </span>
+              <h2 id="concept-title" className="mt-5 text-[clamp(32px,4.2vw,54px)] font-semibold leading-[1.06] tracking-[-0.035em]">
+                Örnek bir çözümün içi.
+              </h2>
+              <p className="mt-5 max-w-[52ch] text-[17px] leading-[1.65] text-[#B5B4C0] md:text-[18px]">
+                Bir prodüksiyon stüdyosu düşünün: talepler WhatsApp ve e-postada, iş takibi tablolarda, müşteri onayları mesajlarda. Yukarıdaki üç
+                senaryo, bu stüdyo için tasarlanmış tek bir sistemin üç parçasıdır.
+              </p>
+            </div>
+            <dl className="divide-y divide-[#3B3946] border-y border-[#3B3946]">
+              {[
+                ["Kullanıcılar", "Satış talepleri karşılar, prodüksiyon iş emirlerini yürütür, müşteri teslimleri onaylar. Herkes kendi rolünün ekranını görür."],
+                ["Ekranlar", "Talepler · İş emirleri · Müşteri onay alanı."],
+                ["İş kuralları", "Her kaydın bir sorumlusu olur. Koşullar tamamlanmadan iş emri kapanmaz. Müşteri onayı olmadan teslim tamamlanmış sayılmaz."],
+                ["Bağlantılar", "Web formundan gelen talep kayda dönüşür. Onaylanan iş, erişim imkânı varsa kullanılan muhasebe ya da CRM aracına aktarılır."],
+                ["İlk sürümde yok", "Ödeme alma, muhasebe ve mobil uygulama. Bunlar ihtiyaç doğrulanınca sonraki sürümlere bırakılır."],
+              ].map(([k, v]) => (
+                <div key={k} className="grid gap-2 py-5 sm:grid-cols-[150px_1fr] sm:gap-6">
+                  <dt className="text-[14px] font-semibold uppercase tracking-[0.12em] text-[#F9A8D4]">{k}</dt>
+                  <dd className="text-[16.5px] leading-[1.6] text-[#E4E3EA]">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
       </section>
 
-      {/* ── Özellikler ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a0e17_0%,#120a10_50%,#1a0e17_100%)]" />
-        <div className="pointer-events-none absolute -left-32 top-1/3 h-[400px] w-[400px] rounded-full bg-[#DB2777]/6 blur-[120px]" />
-        <div className="pointer-events-none absolute -right-32 bottom-1/3 h-[300px] w-[300px] rounded-full bg-[#9D174D]/5 blur-[100px]" />
+      {/* ── 5 · Mevcut araçlarla birlikte ──────────────────────────── */}
+      <section aria-labelledby="tools-title" className="py-20 md:py-28">
+        <div className={wrap}>
+          <p className={eyebrow}>Mevcut araçlarla birlikte</p>
+          <h2 id="tools-title" className={h2}>
+            Her şeyi değiştirmeden başlayabiliriz.
+          </h2>
+          <p className={lead}>Mevcut araçlarınızı ve veri akışınızı inceler, hangi parçaların birlikte çalışabileceğini belirleriz.</p>
 
-        <div className="relative mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <motion.div
-            variants={revealVariants} initial="hidden" whileInView="visible"
-            viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
-            className="mb-12"
-          >
-            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-white/60" style={FONT}>özellikler</span>
-            <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[36px]" style={FONT}>
-              Platform Ne Sunar?
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {service.features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                variants={revealVariants} initial="hidden" whileInView="visible"
-                viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={i * 0.08}
-                className="group relative overflow-hidden rounded-[22px] border border-white/[0.06] bg-white/[0.02] p-6 transition-colors duration-300 hover:border-[#DB2777]/20 hover:bg-white/[0.04] md:p-7"
-              >
-                {/* Glow on hover */}
-                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB2777]/0 blur-[40px] transition-all duration-500 group-hover:bg-[#DB2777]/12" />
-                <div className="relative flex items-start gap-4">
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#9D174D]/30 bg-[#9D174D]/10">
-                    <span className="text-[13px] font-bold tabular-nums text-[#F472B6]" style={FONT}>0{i + 1}</span>
-                  </span>
-                  <div>
-                    <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-white" style={FONT}>{f.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-[1.7] text-white/70" style={FONT}>{f.desc}</p>
-                  </div>
+          <ol className="mt-12 grid gap-3 md:grid-cols-4 md:gap-0">
+            {[
+              { k: "Giriş", v: "Web formu", d: "Talep, form ya da mesajla gelir." },
+              { k: "Uygulama", v: "Kayıt ve iş akışı", d: "Geliştirilen sistem kaydı oluşturur." },
+              { k: "Kontrol", v: "Sorumlu onayı", d: "Bir insan onaylar; hata burada yakalanır." },
+              { k: "Hedef", v: "Kullandığınız CRM ya da muhasebe aracı", d: "Uygunsa veri oraya aktarılır." },
+            ].map((n, i, all) => (
+              <li key={n.k} className="relative md:pr-8">
+                <div
+                  className={`h-full rounded-2xl border p-5 ${
+                    i === 1
+                      ? "border-[#DB2777] bg-[#FCE7F3] dark:bg-[#DB2777]/15"
+                      : i === 2
+                        ? "border-amber-400/60 bg-amber-50 dark:bg-amber-300/10"
+                        : "border-[#DAD8DF] bg-white dark:border-white/10 dark:bg-white/[0.04]"
+                  }`}
+                >
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#62616B] dark:text-white/55">
+                    {i + 1} · {n.k}
+                  </p>
+                  <p className="mt-2 text-[18px] font-semibold leading-snug">{n.v}</p>
+                  <p className="mt-2 text-[15px] leading-[1.55] text-[#62616B] dark:text-white/60">{n.d}</p>
                 </div>
-              </motion.div>
+                {i < all.length - 1 && (
+                  <span aria-hidden="true" className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 text-[22px] text-[#DB2777] md:block">
+                    →
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
+
+          <details className={`group mt-8 rounded-2xl border ${rule} bg-white px-5 dark:bg-white/[0.04] md:px-7`}>
+            <summary className="flex min-h-[60px] cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold [&::-webkit-details-marker]:hidden">
+              Entegrasyon için neye bakıyoruz?
+              <span aria-hidden="true" className="text-[22px] text-[#DB2777] transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <ul className="grid gap-x-10 gap-y-3 pb-6 text-[16px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:grid-cols-2">
+              <li><strong className="font-semibold text-[#171719] dark:text-white">API ve erişim:</strong> İlgili sistem dışarıdan veri alıp veriyor mu, hangi yetkiyle?</li>
+              <li><strong className="font-semibold text-[#171719] dark:text-white">Veri alanları:</strong> Hangi bilgi nereye, hangi biçimde aktarılacak?</li>
+              <li><strong className="font-semibold text-[#171719] dark:text-white">İzinler:</strong> Kim neyi görebilir, kim neyi değiştirebilir?</li>
+              <li><strong className="font-semibold text-[#171719] dark:text-white">Hata durumları:</strong> Aktarım başarısız olursa ne olur, kim haberdar edilir?</li>
+              <li><strong className="font-semibold text-[#171719] dark:text-white">Üçüncü taraf ücretler:</strong> Kullanılan servislerin lisans ve kullanım bedelleri.</li>
+            </ul>
+          </details>
+        </div>
+      </section>
+
+      {/* ── 6 · Süreç ──────────────────────────────────────────────── */}
+      <section aria-labelledby="process-title" className={`border-t ${rule} py-20 md:py-28`}>
+        <div className={wrap}>
+          <p className={eyebrow}>Nasıl geliştiriyoruz</p>
+          <h2 id="process-title" className={h2}>
+            İlk görüşmeden kullanılabilir sürüme.
+          </h2>
+          <p className={lead}>Her aşamanın sonunda ne göreceğinizi ve hangi kararı birlikte vereceğimizi baştan biliyorsunuz.</p>
+
+          <div className="mt-12">
+            <div className={`hidden grid-cols-[200px_1.2fr_1fr_1fr] gap-8 border-b ${rule} pb-3 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#62616B] dark:text-white/50 lg:grid`}>
+              <span>Aşama</span>
+              <span>Yapılan iş</span>
+              <span>Göreceğiniz çıktı</span>
+              <span>Karar noktası</span>
+            </div>
+            <ol>
+              {PROCESS.map((p) => (
+                <li key={p.step} className={`grid gap-3 border-b ${rule} py-7 lg:grid-cols-[200px_1.2fr_1fr_1fr] lg:gap-8`}>
+                  <p className="flex items-baseline gap-3">
+                    <span className="text-[15px] font-semibold tabular-nums text-[#DB2777]">{p.step}</span>
+                    <span className="text-[22px] font-semibold tracking-[-0.02em]">{p.title}</span>
+                  </p>
+                  <p className="text-[16.5px] leading-[1.6] text-[#3A3942] dark:text-white/75">{p.work}</p>
+                  <p className="text-[16.5px] leading-[1.6]">
+                    <span className="mr-2 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#62616B] dark:text-white/50 lg:hidden">Çıktı:</span>
+                    {p.output}
+                  </p>
+                  <p className="text-[16.5px] italic leading-[1.6] text-[#62616B] dark:text-white/60">
+                    <span className="mr-2 not-italic text-[13px] font-semibold uppercase tracking-[0.12em] lg:hidden">Karar:</span>
+                    {p.decision}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <p className="mt-6 text-[15px] text-[#62616B] dark:text-white/55">
+            Aşamaların süresi gerçek kapsama göre belirlenir; tahmini takvimi kapsam aşamasının sonunda paylaşırız.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 7 · Teslim ve devamı ───────────────────────────────────── */}
+      <section aria-labelledby="delivery-title" className={`border-t ${rule} py-20 md:py-28`}>
+        <div className={`${wrap} grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-20`}>
+          <div>
+            <p className={eyebrow}>Teslim ve devamı</p>
+            <h2 id="delivery-title" className={h2}>
+              Yalnızca ekranları değil, teslim kapsamını da netleştirelim.
+            </h2>
+            <p className={lead}>Aşağıdaki başlıkları teklif aşamasında sizinle birlikte yazılı olarak netleştiririz.</p>
+          </div>
+          <dl className={`divide-y ${rule} border-y ${rule} divide-[#DAD8DF] dark:divide-white/10`}>
+            {DELIVERY.map((d) => (
+              <div key={d.topic} className="grid gap-1.5 py-5 sm:grid-cols-[210px_1fr] sm:gap-6">
+                <dt className="text-[17px] font-semibold">{d.topic}</dt>
+                <dd className="text-[16.5px] leading-[1.6] text-[#3A3942] dark:text-white/70">{d.detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* ── 8 · SSS ────────────────────────────────────────────────── */}
+      <section aria-labelledby="faq-title" className={`border-t ${rule} py-20 md:py-28`}>
+        <div className={`${wrap} grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-20`}>
+          <div>
+            <p className={eyebrow}>Sık sorulanlar</p>
+            <h2 id="faq-title" className={h2}>
+              Aklınızdaki sorular.
+            </h2>
+          </div>
+          <div className={`border-t ${rule}`}>
+            {FAQ.map((f) => (
+              <details key={f.q} className={`group border-b ${rule}`}>
+                <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-6 py-4 text-[18px] font-semibold leading-snug [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <span aria-hidden="true" className="text-[24px] font-normal text-[#DB2777] transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="max-w-[64ch] pb-6 text-[16.5px] leading-[1.65] text-[#3A3942] dark:text-white/70">{f.a}</p>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Süreç ──────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-14 md:py-20">
-        <motion.div
-          variants={revealVariants} initial="hidden" whileInView="visible"
-          viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={0}
-          className="mb-12"
-        >
-          <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400" style={FONT}>çalışma süreci</span>
-          <h2 className="mt-4 text-[28px] font-semibold leading-[1.1] tracking-[-0.03em] text-zinc-900 dark:text-white md:text-[36px]" style={FONT}>
-            Nasıl Kurulur?
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-5 md:gap-4">
-          {service.process.map((step, i) => (
-            <motion.div
-              key={step.step}
-              variants={revealVariants} initial="hidden" whileInView="visible"
-              viewport={{ once: true, amount: 0.01, margin: "15% 0px 15% 0px" }} custom={i * 0.1}
-              className="relative flex flex-col items-start"
+      {/* ── 9 · İhtiyaç brief'i ────────────────────────────────────── */}
+      <section id="brief" aria-labelledby="brief-title" className="scroll-mt-24 bg-[#FCE7F3]/60 py-20 dark:bg-[#DB2777]/[0.06] md:py-28">
+        <div className={`${wrap} grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16`}>
+          <div>
+            <p className={eyebrow}>Nereden başlayalım?</p>
+            <h2 id="brief-title" className={h2}>
+              Başlamak için işinizi anlatmanız yeterli.
+            </h2>
+            <p className={lead}>
+              Üç kısa seçimle ihtiyacınızı özetleyelim; özet iletişim formuna taşınır ve dilediğiniz gibi düzenlersiniz. Teknik şartname gerekmez.
+            </p>
+            <Link
+              href={softwareContactHref()}
+              className="mt-7 inline-flex min-h-[48px] items-center gap-2 text-[16px] font-semibold text-[#171719] underline decoration-[#DB2777] decoration-2 underline-offset-[6px] hover:text-[#DB2777] dark:text-white"
             >
-              {i < service.process.length - 1 && (
-                <div className="pointer-events-none absolute left-14 right-0 top-7 hidden h-[1px] bg-gradient-to-r from-[#DB2777]/20 to-transparent md:block" />
-              )}
-              <div className="relative z-10 mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-[#DB2777]/25 bg-[#DB2777]/8">
-                <span className="text-[14px] font-bold tabular-nums text-[#F472B6]" style={FONT}>{step.step}</span>
-              </div>
-              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-zinc-900 dark:text-white" style={FONT}>{step.title}</h3>
-              <p className="mt-1.5 text-[12.5px] leading-[1.65] text-zinc-500 dark:text-zinc-400" style={FONT}>{step.desc}</p>
-            </motion.div>
-          ))}
+              Ya da doğrudan projenizi anlatın →
+            </Link>
+          </div>
+          <SoftwareBrief />
         </div>
       </section>
 
-      <ServiceProof service={service} />
-
       <RelatedServices services={related} />
-      <CTABanner service={service} />
     </main>
   );
 }

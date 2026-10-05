@@ -96,3 +96,24 @@ Sayfa hareket prototipinden uyarlandı; ardından eklenenler: sessiz **showreel*
 | 8 | **Showreel müziği** (lisanslı parça ya da kendi müziğiniz). Gelene kadar sessiz; gelince sese ayrı düğme eklenir | `scripts/build-showreel.sh` |
 | 9 | **Kamera arkası** (Milo çekimi, set, ışık hazırlığı) fotoğraf / kısa video | Showreel + `productionPhotos` |
 | 10 | Müşteri videolarındaki kişilerin **tam adı ve unvanı** yayınlanabilir mi? (şu an "Emma Hanım", "Oğuz Bey") | `src/data/clients.ts` |
+
+---
+
+# Bekleyenler — Özel Yazılım sayfası (05.10.2026)
+
+Şartname: `zeplin-ozel-yazilim-tasarim-ve-uygulama-plani.md`. Kapsam kararı: geniş özel yazılım (operasyon uygulamaları, müşteri/ekip portalları, entegrasyon/otomasyon, yeni ürünün ilk sürümü); yapay zekâ isteğe bağlı bileşen. Vaka: gerçek iş yok → "Konsept demo" etiketli örnek.
+
+**Uygulandı (Aşama 0–2):** tek H1 + yeni title/description; formda "Özel Yazılım" seçeneği (ön yüz + sunucu doğrulaması); `/iletisim?service=custom-software&need=&current=&priority=&scenario=` (yalnızca izinli kimlikler, özet mesaja düzenlenebilir eklenir, eski `?ihtiyac=` çalışıyor); üç senaryolu çalışan demo (çift tıklama kilidi, hata yolları, sıfırla, klavyeyle sekmeler, aria-live); çözüm alanları, konsept vaka, entegrasyon akışı, süreç, teslim kapsamı, SSS; üç adımlı brief. Ana sayfa hizmet çemberindeki "Özel Yazılım" tanımı yeni kapsama göre güncellendi.
+
+**Sonra:** Aşama 3 — imza scroll sahnesi ("dağınık bilgiden ortak kayda"); yalnızca masaüstü, reduced-motion'da kapalı. Ölçüm olayları: sitede analitik yok (Vercel Analytics kararı bekliyor), eklenince `software_demo_*`, `software_brief_*` olayları bağlanacak.
+
+## Yayın öncesi senden onay gereken metinler
+
+| Konu | Sayfadaki taslak | Nerede |
+|---|---|---|
+| Teslim kapsamı | "Bu başlıkları teklif aşamasında sizinle birlikte yazılı olarak netleştiririz." — gerçek çalışma biçimin bu mu? | `SoftwareServicePage` · Teslim ve devamı |
+| SSS cevapları (8 adet) | Kaynak kod/hesaplar, bakım, değişiklik, veri taşıma, maliyet/süre | `src/data/software.ts` → `FAQ` |
+| Kod, barındırma ve erişim devri | Şu an taahhüt yok, "sözleşmede açıkça yazılır" deniyor | SSS + Teslim |
+| Desteklenen entegrasyonlar | Kategori adıyla anlatılıyor (CRM / muhasebe), logo yok | Entegrasyon bölümü |
+| Teklif / ilk dönüş süresi | Sayfada süre vaadi yok; form başarı metninde "bir iş günü" var (genel madde) | — |
+| Gerçek bir yazılım işi | Gelince konsept bölümü gerçek vakayla değiştirilecek (izin, rol, ekran, sonuç) | Konsept bölümü |

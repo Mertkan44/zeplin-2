@@ -16,6 +16,7 @@ export const BRIEF_NEEDS = [
   "Sosyal Medya & İçerik",
   "Marka & Tasarım",
   "Web Sitesi",
+  "Özel Yazılım",
   "AI & Otomasyon",
   "Henüz emin değilim",
 ] as const;

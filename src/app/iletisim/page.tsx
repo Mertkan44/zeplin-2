@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import BriefForm from "@/components/BriefForm";
 import { BRIEF_NEEDS, whatsappUrl } from "@/lib/contact";
 import { createPageMetadata, siteConfig } from "@/lib/seo";
+import {
+  CUSTOM_SOFTWARE_NEED,
+  CUSTOM_SOFTWARE_SERVICE_ID,
+  parseSoftwareParams,
+  softwareBriefSummary,
+} from "@/data/software";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Projeni Anlat",
@@ -13,10 +19,15 @@ export const metadata: Metadata = createPageMetadata({
 export default async function IletisimPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ihtiyac?: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
-  const { ihtiyac } = await searchParams;
+  const params = await searchParams;
+  // Hizmet kimliği (yeni sözleşme) ya da eski "ihtiyac" etiketi; bilinmeyenler yok sayılır.
+  const fromSoftware = params.service === CUSTOM_SOFTWARE_SERVICE_ID;
+  const ihtiyac = fromSoftware ? CUSTOM_SOFTWARE_NEED : params.ihtiyac;
   const initialNeed = (BRIEF_NEEDS as readonly string[]).includes(ihtiyac ?? "") ? ihtiyac : undefined;
+  // Özel yazılım sayfasındaki seçimlerden düzenlenebilir başlangıç özeti (yalnızca izinli kimlikler)
+  const summary = fromSoftware ? softwareBriefSummary(parseSoftwareParams(params)) : "";
 
   return (
     <main className="min-h-screen bg-white px-5 pb-24 pt-28 text-zinc-900 dark:bg-[#0a0a0a] dark:text-white md:px-12 md:pt-40">
@@ -56,7 +67,12 @@ export default async function IletisimPage({
         </header>
 
         <section aria-label="Proje formu">
-          <BriefForm initialNeed={initialNeed} />
+          {summary && (
+            <p className="mb-6 rounded-2xl border border-[#DB2777]/20 bg-[#FDF2F8] px-5 py-4 text-sm leading-6 text-zinc-700 dark:border-[#DB2777]/30 dark:bg-[#DB2777]/10 dark:text-white/80">
+              Özel yazılım sayfasındaki seçimlerinizi mesajın başına ekledik; dilediğiniz gibi düzenleyebilir ya da silebilirsiniz.
+            </p>
+          )}
+          <BriefForm initialNeed={initialNeed} initialMessage={summary ? `${summary}\n\n` : undefined} />
         </section>
       </div>
     </main>

@@ -18,7 +18,7 @@ const inputCls =
 const labelCls = "block text-sm font-semibold text-zinc-800 dark:text-white/85";
 const errCls = "mt-1.5 text-sm text-red-600 dark:text-red-400";
 
-export default function BriefForm({ initialNeed }: { initialNeed?: string }) {
+export default function BriefForm({ initialNeed, initialMessage }: { initialNeed?: string; initialMessage?: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
 
@@ -133,6 +133,7 @@ export default function BriefForm({ initialNeed }: { initialNeed?: string }) {
           id="message"
           name="message"
           rows={5}
+          defaultValue={initialMessage}
           placeholder="Ne yapmak istiyorsunuz, hedefiniz ne, elinizde neler var?"
           className={inputCls}
           aria-invalid={!!errors.message}

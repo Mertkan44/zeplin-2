@@ -31,8 +31,8 @@ export const CATEGORY_BRIEF_NEED: Record<ServiceCategory, string> = {
   "ai-otomasyon": "AI & Otomasyon",
 };
 
-export function briefHref(service: Pick<ServiceData, "category">) {
-  return `/iletisim?ihtiyac=${encodeURIComponent(CATEGORY_BRIEF_NEED[service.category])}`;
+export function briefHref(service: Pick<ServiceData, "category" | "briefNeed">) {
+  return `/iletisim?ihtiyac=${encodeURIComponent(service.briefNeed ?? CATEGORY_BRIEF_NEED[service.category])}`;
 }
 
 /** Eski sekme adresleri (paylaşılmış bağlantılar) yeni gruplara yönlenir. */
@@ -55,6 +55,11 @@ export interface ServiceData {
   process: ServiceProcess[];
   relatedSlugs: string[];
   customPage?: "ai" | "video" | "chatbot" | "voice" | "software";
+  /** Formda kategoriden farklı bir ihtiyaç seçilecekse (ör. Özel Yazılım → "Özel Yazılım"). */
+  briefNeed?: string;
+  /** Kategori varsayılanından farklı arama başlığı / açıklaması */
+  seoTitle?: string;
+  seoDescription?: string;
   /** Image overlay style */
   dark?: boolean;
 }
@@ -388,25 +393,28 @@ export const services: ServiceData[] = [
     category: "web",
     categoryLabel: CATEGORY_LABELS["web"],
     customPage: "software",
-    shortDesc: "Tüm AI kanallarını tek merkezde birleştiren platform",
+    briefNeed: "Özel Yazılım",
+    seoTitle: "Özel Yazılım ve İş Uygulamaları",
+    seoDescription:
+      "İşinize özel paneller, müşteri portalları ve entegrasyonlar. Süreçlerinizi birlikte analiz edelim, ihtiyaçlarınıza uygun yazılımı tasarlayıp geliştirelim.",
+    shortDesc: "İş uygulamaları, müşteri portalları ve entegrasyonlar",
     longDesc:
-      "Chatbot ve sesli asistanı tek bir akıllı sistemde birleştiren özel yazılım platformu. İşletmenizin tüm iletişim süreçlerini yönetir, raporlar ve optimize eder — size sadece sonuçları sunar.",
+      "Dağınık araçları, tekrar eden işleri ve size uymayan süreçleri ekibinizin kullanabileceği bir sisteme dönüştürüyoruz: operasyon uygulamaları, müşteri portalları, entegrasyonlar ve yeni ürünlerin ilk sürümleri.",
     heroImage: serviceImages.software,
     dark: true,
     features: [
-      { title: "Merkezi Yönetim Paneli", desc: "Tüm AI kanallarını ve konuşmalarını tek ekrandan yönetme" },
-      { title: "Gerçek Zamanlı Raporlama", desc: "Anlık performans metrikleri, dönüşüm oranları ve dashboard" },
-      { title: "Özel Entegrasyon", desc: "CRM, ERP ve mevcut yazılımlarınızla tam entegrasyon" },
-      { title: "Ölçeklenebilir Mimari", desc: "İşletmeniz büyüdükçe otomatik genişleyen sistem altyapısı" },
+      { title: "İş ve operasyon uygulamaları", desc: "Görev, onay ve durum takibi tek iş akışında" },
+      { title: "Müşteri ve ekip portalları", desc: "Teslim, onay ve revizyon geçmişi tek yerde" },
+      { title: "Entegrasyon ve otomasyon", desc: "Uygun araçlar arasında kontrollü veri aktarımı" },
+      { title: "Yeni ürünlerin ilk sürümü", desc: "Kapsam, prototip ve kullanılabilir ilk sürüm" },
     ],
     process: [
-      { step: "01", title: "İhtiyaç Analizi", desc: "Mevcut sistemlerinizi ve boşlukları inceliyoruz" },
-      { step: "02", title: "Mimari Tasarım", desc: "Özel yazılım mimarisi ve entegrasyon planı" },
-      { step: "03", title: "Geliştirme", desc: "Agile süreçlerle iteratif geliştirme ve testler" },
-      { step: "04", title: "Entegrasyon", desc: "Mevcut sistemlere sorunsuz entegrasyon" },
-      { step: "05", title: "Canlıya Alma", desc: "Eğitim, dokümantasyon ve sürekli destek" },
+      { step: "01", title: "Kapsam", desc: "İş akışı, kullanıcılar, mevcut araçlar ve öncelikler" },
+      { step: "02", title: "Akış ve tasarım", desc: "Temel ekranlar ve tıklanabilir prototip" },
+      { step: "03", title: "Geliştirme ve test", desc: "Onaylanan kapsam ve hata yolları" },
+      { step: "04", title: "Teslim ve devam", desc: "Yayın, erişimler ve kullanıma geçiş" },
     ],
-    relatedSlugs: ["akilli-chatbot", "sesli-asistan", "yapay-zeka"],
+    relatedSlugs: ["kurumsal-web-sitesi", "akilli-chatbot", "sesli-asistan"],
   },
 
   /* ── Otomasyon (özel sayfa) ───────────────────────────────────── */
@@ -592,7 +600,7 @@ export const serviceTabs: ServiceTab[] = [
     label: CATEGORY_LABELS.web,
     cards: [
       { slug: "kurumsal-web-sitesi", title: "Kurumsal Web Sitesi", desc: "Tasarımdan yayına, mobil uyumlu kurumsal site", img: serviceImages.website, dark: true },
-      { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "Panel, raporlama ve mevcut sistemlerle entegrasyon", img: serviceImages.software, dark: false },
+      { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "İş uygulamaları, müşteri portalları ve entegrasyonlar", img: serviceImages.software, dark: false },
     ],
   },
   {
