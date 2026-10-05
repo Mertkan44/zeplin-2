@@ -13,6 +13,7 @@ import { DELIVERY, FAQ, PROCESS, SCENARIOS, SOLUTIONS, softwareContactHref } fro
 import { RelatedServices } from "./RelatedServices";
 import SoftwareDemo from "./software/SoftwareDemo";
 import SoftwareBrief from "./software/SoftwareBrief";
+import WorkflowStory from "./software/WorkflowStory";
 import { ActivityList, DemoChrome, Field, PaneTitle, RecordList, StatusBadge } from "./software/ui";
 
 const wrap = "mx-auto w-full max-w-[1240px] px-5 md:px-12";
@@ -138,6 +139,9 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
           </figure>
         </div>
       </section>
+
+      {/* ── İmza sahne: dağınık bilgiden ortak kayda (yalnızca geniş ekranda hareketli) ── */}
+      <WorkflowStory />
 
       {/* ── 2 · Çalışan demo ───────────────────────────────────────── */}
       <section id="demo" aria-labelledby="demo-title" className={`scroll-mt-24 border-t ${rule} py-20 md:py-28`}>
