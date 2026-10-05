@@ -4,7 +4,9 @@ Takip yerel sunucudan: http://127.0.0.1:3002 (Vercel deploy kotası bitmek üzer
 
 1. [x] **Ana sayfa bölümler arası boşluk ritmi** (05.10.2026: tek ölçü `--home-space`, globals.css) — "Birlikte büyüdüğümüz markalar" logo bandı ile "Son işlerimiz, tek tek." arasında fazla boşluk (bant bölümünün alt boşluğu ~82px + sonraki bölümün üst boşluğu 64px + logolar ile bölüm sonu arası 90px → etiket logolardan ~180px+ uzakta). Tüm ana sayfa bölümleri için tek bir dikey boşluk ölçeği kurulacak.
 2. [x] **Özel Yazılım — Aşama 3**: imza scroll sahnesi (05.10.2026, `WorkflowStory.tsx`)
-3. [ ] **Yapay zekâ hizmetleri yeniden düzenleme** — kategori karışık ve takip edilemiyor; sayfalar neredeyse tamamen metin, görsellik çok zayıf (Akıllı Chatbot, Sesli Asistan, Yapay Zeka Hizmetleri ve ilgili sayfalar). Önce kategori yapısı ve sayfalar arası ilişki, sonra görsel anlatım.
+3. [x] **Yapay zekâ hizmetleri** (05.10.2026): chatbot + callbot tek sayfada → `/hizmetler/yapay-zeka` "Özel Yapay Zekâ Asistanları"; eski `/akilli-chatbot` ve `/sesli-asistan` 308 ile #chatbot / #callbot'a yönleniyor; AI grubu Hizmetler ve ana sayfada en üstte; grup görseli kendi demomuzun ekran görüntüsü.
+4. [ ] **Ses örnekleri** (8 dosya: 4 ses × samimi/resmî) → `public/audio/voices/<defne|selin|kaan|ozan>-<samimi|resmi>.mp3`. Magnific TTS ile ≈ 32 kredi/örnek ≈ 256 kredi — onay bekliyor. Katalog sesleri: Defne=Pınar Şahin, Selin=Selin Koç, Kaan=Serkan Yıldırım, Ozan=Serkan Şahin. Metinler `src/data/assistants.ts` → `TONES`.
+5. [ ] **Maskot** (yapay zekâ asistanı için) — sonra.
 
 ---
 
@@ -127,3 +129,19 @@ Sayfa hareket prototipinden uyarlandı; ardından eklenenler: sessiz **showreel*
 | Desteklenen entegrasyonlar | Kategori adıyla anlatılıyor (CRM / muhasebe), logo yok | Entegrasyon bölümü |
 | Teklif / ilk dönüş süresi | Sayfada süre vaadi yok; form başarı metninde "bir iş günü" var (genel madde) | — |
 | Gerçek bir yazılım işi | Gelince konsept bölümü gerçek vakayla değiştirilecek (izin, rol, ekran, sonuç) | Konsept bölümü |
+
+---
+
+# Bekleyenler — Özel Yapay Zekâ Asistanları (05.10.2026)
+
+Henüz yayında müşteri asistanı yok: bütün konuşmalar "örnek konuşma · kurmaca işletme" etiketli (Atlas Restoran, Ada Klinik, Liman Butik).
+
+## Yayın öncesi senden onay gereken metinler (`src/data/assistants.ts`)
+
+| Konu | Taslak |
+|---|---|
+| Güven ilkeleri (3) | Bilmediğini uydurmaz · Sağlık/hukuk/finansta tavsiye vermez · Veriyi KVKK çerçevesinde birlikte belirleriz |
+| Kanal notları | WhatsApp için WhatsApp Business API + Meta onayı; telefon için mevcut hat/santrale göre yönlendirme |
+| SSS (7) | Yanlış cevap, numara değişikliği, WhatsApp gereksinimi, ses seçimi, diller (Türkçe + istenirse İngilizce), maliyet kalemleri, veri saklama |
+| Yetenekler | "Hatırlatma gönderir", "onayı kısa mesajla gönderir", "sipariş durumunu söyler (erişim varsa)" — kurulumda gerçekten sunulacak mı? |
+

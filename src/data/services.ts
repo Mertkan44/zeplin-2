@@ -54,7 +54,7 @@ export interface ServiceData {
   features: ServiceFeature[];
   process: ServiceProcess[];
   relatedSlugs: string[];
-  customPage?: "ai" | "video" | "chatbot" | "voice" | "software";
+  customPage?: "ai" | "video" | "software";
   /** Formda kategoriden farklı bir ihtiyaç seçilecekse (ör. Özel Yazılım → "Özel Yazılım"). */
   briefNeed?: string;
   /** Kategori varsayılanından farklı arama başlığı / açıklaması */
@@ -334,59 +334,6 @@ export const services: ServiceData[] = [
     relatedSlugs: ["post-tasarimi", "senaryo-script", "banner-afis"],
   },
 
-  /* ── Otomasyon AI Alt Hizmetler ──────────────────────────────── */
-  {
-    slug: "akilli-chatbot",
-    title: "Akıllı Chatbot",
-    category: "ai-otomasyon",
-    categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
-    customPage: "chatbot",
-    shortDesc: "7/24 yapay zeka destekli müşteri iletişimi",
-    longDesc:
-      "WhatsApp ve web kanallarınıza entegre edilen chatbot, müşterilerinizin her sorusunu anında yanıtlar. Öğrenen yapısıyla zamanla daha akıllı hale gelir ve ekibinizin iletişim yükünü ciddi ölçüde azaltır.",
-    heroImage: serviceImages.ai,
-    dark: true,
-    features: [
-      { title: "WhatsApp Entegrasyonu", desc: "WhatsApp Business API ile doğrudan entegrasyon ve 7/24 otomatik yanıt" },
-      { title: "Doğal Dil Anlama", desc: "Müşteri mesajlarını bağlamına göre anlayan ve öğrenen AI motoru" },
-      { title: "Çoklu Kanal Desteği", desc: "Web sitesi, WhatsApp ve sosyal medya kanallarında tek yönetim paneli" },
-      { title: "Canlı Temsilciye Aktarım", desc: "Gerektiğinde insan desteğine sorunsuz geçiş ve konuşma geçmişi aktarımı" },
-    ],
-    process: [
-      { step: "01", title: "Analiz", desc: "Müşteri iletişim akışlarınızı inceliyoruz" },
-      { step: "02", title: "Senaryo", desc: "Chatbot diyalog akışları ve yanıt senaryoları" },
-      { step: "03", title: "Geliştirme", desc: "AI motoru ve kanal entegrasyonu" },
-      { step: "04", title: "Test", desc: "Kapsamlı test ve ince ayar süreci" },
-      { step: "05", title: "Canlıya Alma", desc: "Yayına alım ve sürekli performans izleme" },
-    ],
-    relatedSlugs: ["sesli-asistan", "ozel-yazilim", "yapay-zeka"],
-  },
-  {
-    slug: "sesli-asistan",
-    title: "Sesli Asistan",
-    category: "ai-otomasyon",
-    categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
-    customPage: "voice",
-    shortDesc: "Telefon görüşmelerinde akıllı rezervasyon ve yönlendirme",
-    longDesc:
-      "Restoranlar, klinikler ve işletmeler için telefon görüşmelerini yöneten sesli AI sistemi. Rezervasyon alır, soruları yanıtlar ve müşterilerinizle doğal bir şekilde konuşur — 7/24 kesintisiz.",
-    heroImage: serviceImages.aiCallbot,
-    dark: false,
-    features: [
-      { title: "Türkçe Ses Tanıma", desc: "Yüksek doğrulukla çalışan Türkçe ses tanıma ve anlama motoru" },
-      { title: "Doğal Konuşma Akışı", desc: "İnsan gibi konuşan, bağlamı takip eden yapay zeka diyalog sistemi" },
-      { title: "Rezervasyon Yönetimi", desc: "Otomatik rezervasyon alma ve takvim entegrasyonu" },
-      { title: "IVR Entegrasyonu", desc: "Mevcut telefon ve PBX sisteminizle uyumlu entegrasyon" },
-    ],
-    process: [
-      { step: "01", title: "Süreç Analizi", desc: "Telefon akışlarınızı ve ihtiyaçlarınızı anlıyoruz" },
-      { step: "02", title: "Senaryo Tasarımı", desc: "Konuşma akışları ve yönlendirme senaryoları" },
-      { step: "03", title: "Geliştirme", desc: "Sesli AI sistemi geliştirme ve entegrasyon" },
-      { step: "04", title: "Test", desc: "Gerçek çağrılarla kapsamlı test süreci" },
-      { step: "05", title: "Canlıya Alma", desc: "Yayına alım ve performans optimizasyonu" },
-    ],
-    relatedSlugs: ["akilli-chatbot", "ozel-yazilim", "yapay-zeka"],
-  },
   {
     slug: "ozel-yazilim",
     title: "Özel Yazılım",
@@ -414,35 +361,37 @@ export const services: ServiceData[] = [
       { step: "03", title: "Geliştirme ve test", desc: "Onaylanan kapsam ve hata yolları" },
       { step: "04", title: "Teslim ve devam", desc: "Yayın, erişimler ve kullanıma geçiş" },
     ],
-    relatedSlugs: ["kurumsal-web-sitesi", "akilli-chatbot", "sesli-asistan"],
+    relatedSlugs: ["yapay-zeka", "kurumsal-web-sitesi", "fotograf-cekimi"],
   },
 
   /* ── Otomasyon (özel sayfa) ───────────────────────────────────── */
   {
     slug: "yapay-zeka",
-    title: "Yapay Zeka Hizmetleri",
+    title: "Özel Yapay Zekâ Asistanları",
     category: "ai-otomasyon",
     categoryLabel: CATEGORY_LABELS["ai-otomasyon"],
-    shortDesc: "AI destekli otomasyon çözümleri",
+    seoTitle: "Özel Yapay Zekâ Asistanları: Chatbot ve Callbot",
+    seoDescription:
+      "WhatsApp ve web için chatbot, telefon için callbot. Markanıza özel sesi, kişiliği ve senaryosu olan yapay zekâ asistanları tasarlayıp kuruyoruz.",
+    shortDesc: "Chatbot ve callbot: yazan da arayan da cevapsız kalmasın",
     longDesc:
-      "Chatbot, callbot ve otomasyon akışlarını markanızın günlük operasyonuna sade ama güçlü bir katman olarak yerleştiriyoruz. Müşteri desteği, CRM, raporlama ve tekrar eden süreçleri tek bir akışta bağlarız.",
-    heroImage: serviceImages.ai,
+      "WhatsApp ve web için chatbot, telefon için callbot. Markanıza özel sesi, kişiliği ve senaryosu olan; rezervasyon, randevu ve sık sorulan soruları üstlenen, gerektiğinde ekibinize devreden yapay zekâ asistanları.",
+    heroImage: "/images/services/ai-asistan-demo.webp",
     dark: true,
     customPage: "ai",
     features: [
-      { title: "AI Chatbot", desc: "7/24 akıllı müşteri destek sistemi" },
-      { title: "AI Callbot", desc: "Sesli yanıt ve yönlendirme otomasyonu" },
-      { title: "İş Akışı Otomasyonu", desc: "Tekrarlayan süreçlerin otomasyonu" },
-      { title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle entegrasyon" },
+      { title: "Chatbot", desc: "WhatsApp ve web sitenizde yazan müşteriye anında yanıt" },
+      { title: "Callbot", desc: "Telefonda rezervasyon, randevu ve soru yanıtlama" },
+      { title: "Ses ve kişilik", desc: "Markanıza uygun ses, üslup ve senaryo" },
+      { title: "Ekibe devretme", desc: "Gerektiğinde konuşmayı ekibinize aktarma" },
     ],
     process: [
-      { step: "01", title: "Analiz", desc: "Mevcut süreçlerinizi inceliyoruz" },
-      { step: "02", title: "Tasarım", desc: "AI çözüm mimarisini kuruyoruz" },
-      { step: "03", title: "Geliştirme", desc: "Sistemi geliştirip entegre ediyoruz" },
-      { step: "04", title: "Test", desc: "Kapsamlı test ve optimizasyon" },
-      { step: "05", title: "Canlı", desc: "Sistemi devreye alıp izliyoruz" },
+      { step: "01", title: "Senaryo", desc: "Hangi soruları ve işleri üstleneceğini belirliyoruz" },
+      { step: "02", title: "Ses ve kişilik", desc: "Ses, üslup ve marka dilini seçiyoruz" },
+      { step: "03", title: "Kurulum ve test", desc: "Kanallara bağlıyor, örnek konuşmalarla deniyoruz" },
+      { step: "04", title: "Yayın ve izleme", desc: "Yayına alıyor, konuşmalara göre iyileştiriyoruz" },
     ],
-    relatedSlugs: ["e-posta-pazarlama", "blog-yazilari", "post-tasarimi"],
+    relatedSlugs: ["ozel-yazilim", "kurumsal-web-sitesi", "sosyal-medya-yonetimi"],
   },
   /* ── Yeni: Fotoğraf, Sosyal Medya Yönetimi, Reklam, Web ─────────── */
   {
@@ -543,7 +492,7 @@ export const services: ServiceData[] = [
       { step: "04", title: "Geliştirme", desc: "Kodlama, içerik girişi ve testler" },
       { step: "05", title: "Yayın", desc: "Alan adı, yayın ve teslim sonrası destek" },
     ],
-    relatedSlugs: ["ozel-yazilim", "logo-tasarimi", "akilli-chatbot"],
+    relatedSlugs: ["ozel-yazilim", "yapay-zeka", "logo-tasarimi"],
   },
 ];
 
@@ -563,6 +512,15 @@ export function getRelatedServices(slugs: string[]): ServiceData[] {
 export const AI_BAND_IMAGE = serviceImages.aiBand;
 
 export const serviceTabs: ServiceTab[] = [
+  {
+    id: "ai-otomasyon",
+    label: CATEGORY_LABELS["ai-otomasyon"],
+    cards: [
+      { slug: "yapay-zeka", title: "Özel Yapay Zekâ Asistanları", desc: "Chatbot ve callbot tek çatı altında; ses ve kişilik size özel", img: "/images/services/ai-asistan-demo.webp", dark: true },
+      { slug: "yapay-zeka#chatbot", title: "Chatbot", desc: "WhatsApp ve web sitenizde yazan müşteriye anında yanıt", img: serviceImages.ai, dark: true },
+      { slug: "yapay-zeka#callbot", title: "Callbot", desc: "Telefonda rezervasyon, randevu ve soru yanıtlama", img: serviceImages.aiCallbot, dark: false },
+    ],
+  },
   {
     id: "foto-video",
     label: CATEGORY_LABELS["foto-video"],
@@ -603,16 +561,6 @@ export const serviceTabs: ServiceTab[] = [
       { slug: "ozel-yazilim", title: "Özel Yazılım & Entegrasyon", desc: "İş uygulamaları, müşteri portalları ve entegrasyonlar", img: serviceImages.software, dark: false },
     ],
   },
-  {
-    id: "ai-otomasyon",
-    label: CATEGORY_LABELS["ai-otomasyon"],
-    cards: [
-      { slug: "akilli-chatbot", title: "AI Chatbot", desc: "Web ve WhatsApp için akıllı müşteri destek sistemi", img: serviceImages.ai, dark: true },
-      { slug: "sesli-asistan", title: "AI Callbot", desc: "Sesli yanıt ve yönlendirme otomasyonu", img: serviceImages.aiCallbot, dark: false },
-      { slug: "yapay-zeka", title: "İş Akışı Otomasyonu", desc: "Tekrarlayan süreçleri birbirine bağlayan otomasyon", img: serviceImages.workflowAutomation, dark: true },
-      { slug: "ozel-yazilim", title: "CRM Entegrasyonu", desc: "Mevcut sistemlerinizle temiz veri akışı", img: serviceImages.crmIntegration, dark: false },
-    ],
-  },
 ];
 
 /* ── Hizmetler sayfası: beş ana grup ─────────────────────────────── */
@@ -630,6 +578,16 @@ export interface ServiceGroup {
 }
 
 export const SERVICE_GROUPS: ServiceGroup[] = [
+  {
+    id: "ai-otomasyon",
+    label: CATEGORY_LABELS["ai-otomasyon"],
+    summary:
+      "Markanıza özel yapay zekâ asistanları: WhatsApp ve web sitenizde yazan, telefonda arayan müşteriye anında yanıt veren; sesini, üslubunu ve senaryosunu sizin seçtiğiniz chatbot ve callbot. Gerektiğinde konuşmayı ekibinize devreder.",
+    image: "/images/services/ai-asistan-demo.webp",
+    imageAlt: "Örnek WhatsApp konuşması ve telefon görüşmesi: yapay zekâ asistanı Atlas Restoran için rezervasyon alıyor",
+    imageIsIllustrative: true,
+    relatedProjects: [],
+  },
   {
     id: "foto-video",
     label: CATEGORY_LABELS["foto-video"],
@@ -666,15 +624,5 @@ export const SERVICE_GROUPS: ServiceGroup[] = [
     imageAlt: "Web arayüzlerini temsil eden görsel",
     imageIsIllustrative: true,
     relatedProjects: ["foton-saglik-cozumleri", "pam-akademi"],
-  },
-  {
-    id: "ai-otomasyon",
-    label: CATEGORY_LABELS["ai-otomasyon"],
-    summary:
-      "Tekrarlayan işleri ve müşteri iletişimini, ihtiyacınıza uygun otomasyon akışlarıyla düzenliyoruz. Önce süreci birlikte çıkarıyor, sonra hangi adımın otomatikleşeceğine ve nerede insan kontrolü kalacağına karar veriyoruz.",
-    image: serviceImages.aiBand,
-    imageAlt: "Otomasyon arayüzlerini temsil eden görsel",
-    imageIsIllustrative: true,
-    relatedProjects: [],
   },
 ];

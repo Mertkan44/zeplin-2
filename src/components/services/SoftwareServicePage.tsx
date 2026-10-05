@@ -221,8 +221,7 @@ export function SoftwareServicePage({ service }: { service: ServiceData }) {
               Gerektiğinde chatbot ya da sesli asistan gibi parçaları aynı sisteme bağlayabiliriz.
             </p>
             <div className="mt-3 flex shrink-0 gap-5 text-[15px] font-semibold md:mt-0">
-              <Link href="/hizmetler/akilli-chatbot" className="underline-offset-4 hover:underline">Akıllı Chatbot →</Link>
-              <Link href="/hizmetler/sesli-asistan" className="underline-offset-4 hover:underline">Sesli Asistan →</Link>
+              <Link href="/hizmetler/yapay-zeka" className="underline-offset-4 hover:underline">Özel Yapay Zekâ Asistanları →</Link>
             </div>
           </div>
         </div>

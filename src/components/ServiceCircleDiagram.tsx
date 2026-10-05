@@ -408,9 +408,9 @@ const SERVICE_CONTENT_MAP = {
 /* ── Component ──────────────────────────────────────────────────────────── */
 
 const NAV_MAP = {
-  chatbot: "/hizmetler/akilli-chatbot",
+  chatbot: "/hizmetler/yapay-zeka#chatbot",
   yazilim: "/hizmetler/ozel-yazilim",
-  sesli: "/hizmetler/sesli-asistan",
+  sesli: "/hizmetler/yapay-zeka#callbot",
 } as const;
 
 export default function ServiceCircleDiagram() {

@@ -581,3 +581,16 @@ body:has([data-footer-under="dark"]) .site-footer {
 body:has([data-footer-under="pink"]) .site-footer {
   background: #db2777;
 }
+
+/* Yapay zekâ asistanları demosu: mesaj girişi ve konuşan asistanın ses dalgası */
+@keyframes aiMsg {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes aiWave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[aiMsg"], [class*="animate-[aiWave"] { animation: none !important; }
+}

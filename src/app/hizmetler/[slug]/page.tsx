@@ -3,8 +3,6 @@ import { services, getServiceBySlug } from "@/data/services";
 import { ServiceDetailTemplate } from "@/components/services/ServiceDetailTemplate";
 import { AIServicePage } from "@/components/services/AIServicePage";
 import { VideoServicePage } from "@/components/services/VideoServicePage";
-import { ChatbotServicePage } from "@/components/services/ChatbotServicePage";
-import { VoiceServicePage } from "@/components/services/VoiceServicePage";
 import { SoftwareServicePage } from "@/components/services/SoftwareServicePage";
 import {
   breadcrumbJsonLd,
@@ -60,11 +58,7 @@ export default async function ServiceDetailPage({ params }: Props) {
   ];
 
   const content =
-    service.customPage === "chatbot" ? (
-      <ChatbotServicePage service={service} />
-    ) : service.customPage === "voice" ? (
-      <VoiceServicePage service={service} />
-    ) : service.customPage === "software" ? (
+    service.customPage === "software" ? (
       <SoftwareServicePage service={service} />
     ) : service.customPage === "ai" ? (
       <AIServicePage service={service} />
