@@ -24,7 +24,7 @@ Dal: `revize/asama-a` (yerelde, push edilmedi). Raporun kod tarafı tamamlandı;
 - [x] ~~Proje klasörü iCloud dışına~~ → `~/Projects/zeplin-2-revize` (28.09.2026)
 - [x] ~~Push + Vercel~~ → `revize/asama-a` master'a alındı, canlı: https://zeplin-2.vercel.app (05.10.2026)
 - [x] ~~Kanonik adres~~: gerçek alan adı `www.zeplinmedia.com.tr` (Vercel'de bağlı; çıplak adres www'ye yönleniyor). `siteConfig.url` varsayılanı buna çevrildi (05.10.2026).
-- [ ] **E-posta adresi**: sitede `info@zeplinmedia.com` yazıyor (altbilgi, İletişim, Gizlilik, Çerez, Hizmetler) ama ne `.com` ne `.com.tr` için MX kaydı var — bu adrese giden posta ulaşmıyor. Hangi adres gösterilsin? (ör. `.com.tr` üzerinde e-posta kurulumu ya da mevcut bir adres)
+- [ ] **E-posta adresi**: sitede `info@zeplinmedia.com` yazıyor (altbilgi, İletişim, Gizlilik, Çerez, Hizmetler) ama ne `.com` ne `.com.tr` için MX kaydı var — bu adrese giden posta ulaşmıyor. **Yapılacak:** `.com` gelene kadar çalışan geçici bir adres seçilip `siteConfig.email`'e yazılacak (ör. `smertkan33@gmail.com` ya da `.com.tr` üzerinde kurulacak bir adres); `.com` alınıp MX kurulunca `info@zeplinmedia.com`'a geri dönülecek.
 - [ ] **`.com` alımı (~Kasım 2026)**: alınınca Vercel → Domains'e eklenecek, tek bir ana adres seçilecek (diğeri 308 ile ona yönlenir), `siteConfig.url` / `NEXT_PUBLIC_SITE_URL` buna göre güncellenecek; `info@zeplinmedia.com` için MX + Resend gönderici doğrulaması (`CONTACT_FROM_EMAIL`) yapılacak.
 - [ ] Reklam Yönetimi: Meta + Google doğru mu, TikTok vb. var mı?
 
