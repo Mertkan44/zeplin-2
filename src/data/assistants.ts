@@ -40,7 +40,7 @@ export const SECTORS: Sector[] = [
     ],
     call: [
       { from: "assistant", text: "Atlas Restoran, merhaba. Size nasıl yardımcı olabilirim?" },
-      { from: "customer", text: "Cumartesi akşamı için iki kişilik yer ayırtmak istiyorum." },
+      { from: "customer", text: "Merhaba, cumartesi akşamı için iki kişilik yer ayırtmak istiyorum." },
       { from: "assistant", text: "Cumartesi için 20.00 ve 21.30 uygun. Hangisini tercih edersiniz?" },
       { from: "customer", text: "20.00 iyi." },
       { from: "assistant", text: "Cumartesi 20.00, iki kişi. Onayı kısa mesajla gönderiyorum. İyi akşamlar!" },
@@ -62,12 +62,12 @@ export const SECTORS: Sector[] = [
     ],
     call: [
       { from: "assistant", text: "Ada Klinik, merhaba. Size nasıl yardımcı olabilirim?" },
-      { from: "customer", text: "Dünkü işlemden sonra ağrım var, ne yapmam gerekiyor?" },
-      { from: "assistant", text: "Bu konuda sizi hemen ekibimizden birine aktarıyorum; sizinle bir sağlık personelimiz görüşecek." },
+      { from: "customer", text: "Merhaba, dünkü işlemden sonra ağrım var. Ne yapmam gerekiyor?" },
+      { from: "assistant", text: "Geçmiş olsun. Sizi hemen ekibimizden birine aktarıyorum; bir sağlık personelimiz sizinle görüşecek." },
     ],
     records: [
       { channel: "WhatsApp", title: "Randevu oluşturuldu", detail: "Cuma 11.30 · ön görüşme", kind: "success" },
-      { channel: "Telefon", title: "Ekibe aktarıldı", detail: "İşlem sonrası şikâyet · öncelikli", kind: "handoff" },
+      { channel: "Telefon", title: "İşlem sonrası ağrı", detail: "Öncelikli · sağlık personeline aktarıldı", kind: "handoff" },
     ],
   },
   {
@@ -82,7 +82,7 @@ export const SECTORS: Sector[] = [
     ],
     call: [
       { from: "assistant", text: "Liman Butik, merhaba. Size nasıl yardımcı olabilirim?" },
-      { from: "customer", text: "Aldığım ceketin bedeni olmadı, değiştirebilir miyim?" },
+      { from: "customer", text: "Merhaba, aldığım ceketin bedeni olmadı. Değiştirebilir miyim?" },
       { from: "assistant", text: "Elbette. Değişim talebinizi açıyorum; adımları kısa mesajla gönderiyorum." },
     ],
     records: [
@@ -91,6 +91,203 @@ export const SECTORS: Sector[] = [
     ],
   },
 ];
+
+/** Telefon görüşmesi sesleri: /audio/calls/<sektör>-<satır>.mp3 (asistan: Defne sesi) */
+export const callAudio = (sector: SectorId, line: number) => `/audio/calls/${sector}-${line}.mp3`;
+
+/* ── Yazarak deneme: hazır seçeneklerle dallanan sohbet (öngösterim) ─ */
+
+export interface ChatRecord {
+  title: string;
+  detail: string;
+  kind: "success" | "handoff" | "info";
+}
+export interface ChatNode {
+  bot: string[];
+  options: { label: string; next: string }[];
+  record?: ChatRecord;
+}
+export type ChatFlow = Record<string, ChatNode>;
+
+const AGAIN = (start: string) => [{ label: "Başka bir sorum var", next: start }];
+
+export const CHAT_FLOWS: Record<SectorId, ChatFlow> = {
+  restoran: {
+    start: {
+      bot: ["Merhaba, Atlas Restoran'a hoş geldiniz! Size nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Bu akşam yer var mı?", next: "rez" },
+        { label: "Menüde vegan seçenek var mı?", next: "vegan" },
+        { label: "Adresiniz nerede?", next: "adres" },
+        { label: "Bir yetkiliyle görüşmek istiyorum", next: "insan" },
+      ],
+    },
+    menu: {
+      bot: ["Başka nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Bu akşam yer var mı?", next: "rez" },
+        { label: "Menüde vegan seçenek var mı?", next: "vegan" },
+        { label: "Adresiniz nerede?", next: "adres" },
+        { label: "Bir yetkiliyle görüşmek istiyorum", next: "insan" },
+      ],
+    },
+    rez: {
+      bot: ["Bu akşam için 19.30 ve 21.00'de masamız var. Hangisini ayırayım?"],
+      options: [
+        { label: "19.30 · 4 kişi", next: "rez-1930" },
+        { label: "21.00 · 2 kişi", next: "rez-2100" },
+      ],
+    },
+    "rez-1930": {
+      bot: ["Harika! Bu akşam 19.30 için 4 kişilik masanız ayrıldı.", "Saatinden önce size hatırlatma göndereceğim. Afiyet olsun!"],
+      options: AGAIN("menu"),
+      record: { title: "Rezervasyon oluşturuldu", detail: "Bu akşam 19.30 · 4 kişi", kind: "success" },
+    },
+    "rez-2100": {
+      bot: ["Harika! Bu akşam 21.00 için 2 kişilik masanız ayrıldı.", "Saatinden önce size hatırlatma göndereceğim. Afiyet olsun!"],
+      options: AGAIN("menu"),
+      record: { title: "Rezervasyon oluşturuldu", detail: "Bu akşam 21.00 · 2 kişi", kind: "success" },
+    },
+    vegan: {
+      bot: ["Evet! Menümüzde vegan ana yemekler ve tatlılar var. Menüyü göndereyim mi?"],
+      options: [
+        { label: "Evet, gönder", next: "vegan-menu" },
+        { label: "Rezervasyon yapalım", next: "rez" },
+      ],
+    },
+    "vegan-menu": {
+      bot: ["Menümüzü gönderdim 📎 Vegan seçenekler yeşil yaprakla işaretli."],
+      options: AGAIN("menu"),
+      record: { title: "Menü paylaşıldı", detail: "Vegan seçenekler soruldu", kind: "info" },
+    },
+    adres: {
+      bot: ["Örnek Sokak No: 12'deyiz. Konumu gönderdim 📍 Akşamları sokağın başında vale var."],
+      options: AGAIN("menu"),
+      record: { title: "Konum paylaşıldı", detail: "Adres soruldu", kind: "info" },
+    },
+    insan: {
+      bot: ["Elbette. Sizi ekibimizden birine aktarıyorum; en kısa sürede buradan size yazacaklar."],
+      options: AGAIN("menu"),
+      record: { title: "Yetkili talebi", detail: "Müşteri bir çalışanla görüşmek istedi", kind: "handoff" },
+    },
+  },
+  klinik: {
+    start: {
+      bot: ["Merhaba, Ada Klinik'e hoş geldiniz. Size nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Randevu almak istiyorum", next: "randevu" },
+        { label: "Çalışma saatleriniz neler?", next: "saat" },
+        { label: "İşlem ücretleri ne kadar?", next: "ucret" },
+        { label: "Ağrım var, ne yapmalıyım?", next: "agri" },
+      ],
+    },
+    menu: {
+      bot: ["Başka nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Randevu almak istiyorum", next: "randevu" },
+        { label: "Çalışma saatleriniz neler?", next: "saat" },
+        { label: "İşlem ücretleri ne kadar?", next: "ucret" },
+        { label: "Ağrım var, ne yapmalıyım?", next: "agri" },
+      ],
+    },
+    randevu: {
+      bot: ["Ön görüşme için Perşembe 14.00 ya da Cuma 11.30 uygun. Hangisi size uyar?"],
+      options: [
+        { label: "Perşembe 14.00", next: "rnd-per" },
+        { label: "Cuma 11.30", next: "rnd-cuma" },
+      ],
+    },
+    "rnd-per": {
+      bot: ["Perşembe 14.00 için randevunuz oluşturuldu.", "Bir gün önce size hatırlatma göndereceğim."],
+      options: AGAIN("menu"),
+      record: { title: "Randevu oluşturuldu", detail: "Perşembe 14.00 · ön görüşme", kind: "success" },
+    },
+    "rnd-cuma": {
+      bot: ["Cuma 11.30 için randevunuz oluşturuldu.", "Bir gün önce size hatırlatma göndereceğim."],
+      options: AGAIN("menu"),
+      record: { title: "Randevu oluşturuldu", detail: "Cuma 11.30 · ön görüşme", kind: "success" },
+    },
+    saat: {
+      bot: ["Hafta içi 09.00–19.00, cumartesi 10.00–16.00 arası açığız. Pazar kapalıyız."],
+      options: AGAIN("menu"),
+    },
+    ucret: {
+      bot: ["Ücret, yapılacak işleme ve muayene sonucuna göre değişiyor; hekimimiz ön görüşmede netleştiriyor.", "Size bir ön görüşme randevusu ayarlayayım mı?"],
+      options: [
+        { label: "Evet, randevu alalım", next: "randevu" },
+        { label: "Şimdilik hayır", next: "menu" },
+      ],
+    },
+    agri: {
+      bot: ["Geçmiş olsun. Bu konuda bir sağlık personelimizin sizinle görüşmesi gerekiyor; sizi hemen ekibe aktarıyorum."],
+      options: AGAIN("menu"),
+      record: { title: "İşlem sonrası şikâyet", detail: "Öncelikli · sağlık personeline aktarıldı", kind: "handoff" },
+    },
+  },
+  magaza: {
+    start: {
+      bot: ["Merhaba, Liman Butik'e hoş geldiniz. Size nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Siparişim nerede?", next: "siparis" },
+        { label: "Değişim yapmak istiyorum", next: "degisim" },
+        { label: "Bu ceketin M bedeni var mı?", next: "beden" },
+        { label: "Bir yetkiliyle görüşmek istiyorum", next: "insan" },
+      ],
+    },
+    menu: {
+      bot: ["Başka nasıl yardımcı olabilirim?"],
+      options: [
+        { label: "Siparişim nerede?", next: "siparis" },
+        { label: "Değişim yapmak istiyorum", next: "degisim" },
+        { label: "Bu ceketin M bedeni var mı?", next: "beden" },
+        { label: "Bir yetkiliyle görüşmek istiyorum", next: "insan" },
+      ],
+    },
+    siparis: {
+      bot: ["Hangi siparişiniz? Son siparişlerinizi listeledim."],
+      options: [{ label: "#4821 · 2 ürün", next: "sip-ok" }],
+    },
+    "sip-ok": {
+      bot: ["4821 numaralı siparişiniz bugün kargoya verildi; yarın teslim edilmesi bekleniyor.", "Takip bağlantısını gönderdim 📦"],
+      options: AGAIN("menu"),
+      record: { title: "Kargo bilgisi paylaşıldı", detail: "Sipariş 4821 · takip bağlantısı", kind: "success" },
+    },
+    degisim: {
+      bot: ["Ürünü teslimden sonraki 14 gün içinde değiştirebilirsiniz. Değişim talebi açayım mı?"],
+      options: [
+        { label: "Evet, açalım", next: "deg-ok" },
+        { label: "Şimdilik hayır", next: "menu" },
+      ],
+    },
+    "deg-ok": {
+      bot: ["Değişim talebiniz açıldı; adımları kısa mesajla gönderdim."],
+      options: AGAIN("menu"),
+      record: { title: "Değişim talebi açıldı", detail: "Beden değişimi", kind: "success" },
+    },
+    beden: {
+      bot: ["M beden şu an tükendi 😕 Gelince size haber vereyim mi?"],
+      options: [
+        { label: "Evet, haber ver", next: "beden-ok" },
+        { label: "L bedene bakalım", next: "beden-l" },
+      ],
+    },
+    "beden-ok": {
+      bot: ["Tamamdır! M beden gelir gelmez size buradan yazacağım."],
+      options: AGAIN("menu"),
+      record: { title: "Stok bildirimi kuruldu", detail: "Ceket · M beden", kind: "info" },
+    },
+    "beden-l": {
+      bot: ["L beden stokta var. Sepete eklemeniz için bağlantıyı gönderdim 🛍️"],
+      options: AGAIN("menu"),
+      record: { title: "Ürün bağlantısı paylaşıldı", detail: "Ceket · L beden", kind: "info" },
+    },
+    insan: {
+      bot: ["Elbette. Sizi ekibimizden birine aktarıyorum; en kısa sürede buradan size yazacaklar."],
+      options: AGAIN("menu"),
+      record: { title: "Yetkili talebi", detail: "Müşteri bir çalışanla görüşmek istedi", kind: "handoff" },
+    },
+  },
+};
 
 /* ── Ses ve üslup ─────────────────────────────────────────────────── */
 

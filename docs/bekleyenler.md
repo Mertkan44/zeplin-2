@@ -5,7 +5,7 @@ Takip yerel sunucudan: http://127.0.0.1:3002 (Vercel deploy kotası bitmek üzer
 1. [x] **Ana sayfa bölümler arası boşluk ritmi** (05.10.2026: tek ölçü `--home-space`, globals.css) — "Birlikte büyüdüğümüz markalar" logo bandı ile "Son işlerimiz, tek tek." arasında fazla boşluk (bant bölümünün alt boşluğu ~82px + sonraki bölümün üst boşluğu 64px + logolar ile bölüm sonu arası 90px → etiket logolardan ~180px+ uzakta). Tüm ana sayfa bölümleri için tek bir dikey boşluk ölçeği kurulacak.
 2. [x] **Özel Yazılım — Aşama 3**: imza scroll sahnesi (05.10.2026, `WorkflowStory.tsx`)
 3. [x] **Yapay zekâ hizmetleri** (05.10.2026): chatbot + callbot tek sayfada → `/hizmetler/yapay-zeka` "Özel Yapay Zekâ Asistanları"; eski `/akilli-chatbot` ve `/sesli-asistan` 308 ile #chatbot / #callbot'a yönleniyor; AI grubu Hizmetler ve ana sayfada en üstte; grup görseli kendi demomuzun ekran görüntüsü.
-4. [ ] **Ses örnekleri** (8 dosya: 4 ses × samimi/resmî) → `public/audio/voices/<defne|selin|kaan|ozan>-<samimi|resmi>.mp3`. Magnific TTS ile ≈ 32 kredi/örnek ≈ 256 kredi — onay bekliyor. Katalog sesleri: Defne=Pınar Şahin, Selin=Selin Koç, Kaan=Serkan Yıldırım, Ozan=Serkan Şahin. Metinler `src/data/assistants.ts` → `TONES`.
+4. [x] **Sesler** (06.10.2026): Magnific TTS (ElevenLabs v3), ≈362 kredi — 8 karşılama `public/audio/voices/` (Defne=Pınar Şahin, Selin=Selin Koç, Kaan=Serkan Yıldırım, Ozan=Serkan Şahin) + 11 görüşme satırı `public/audio/calls/` (asistan Defne; arayanlar Emre Yıldız, Zeynep Yılmaz, Barış Kaya). Magnific'te "Zeplin site — yapay zekâ asistanı sesleri" projesinde.
 5. [ ] **Maskot** (yapay zekâ asistanı için) — sonra.
 
 ---
