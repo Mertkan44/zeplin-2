@@ -104,7 +104,14 @@ export default function HeroPhone() {
 
   return (
     <div className="relative w-full lg:-mt-16 lg:ml-auto lg:max-w-[520px] lg:translate-x-4">
-      <div ref={stageRef} aria-hidden="true" className="hero-phone-stage relative mx-auto h-[540px] w-full max-w-[460px] md:h-[660px]">
+      {/* Sahne: dokulu daire + dışa yayılan sinyal halkaları ("çalan telefon"); telefon oturduktan sonra gelir */}
+      <div aria-hidden="true" className="hero-backdrop pointer-events-none absolute inset-0 z-0">
+        <span className="hero-ring-static absolute left-1/2 top-1/2 h-[min(640px,118vw)] w-[min(640px,118vw)] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-[#DB2777]/20" />
+        <span className="hero-ring absolute left-1/2 top-1/2 h-[min(520px,96vw)] w-[min(520px,96vw)] rounded-full border-[1.5px] border-[#DB2777]/40" />
+        <span className="hero-ring hero-ring-2 absolute left-1/2 top-1/2 h-[min(520px,96vw)] w-[min(520px,96vw)] rounded-full border-[1.5px] border-[#DB2777]/40" />
+        <span className="hero-disc absolute left-1/2 top-1/2 h-[min(520px,96vw)] w-[min(520px,96vw)] -translate-x-1/2 -translate-y-1/2 rounded-full" />
+      </div>
+      <div ref={stageRef} aria-hidden="true" className="hero-phone-stage relative z-[1] mx-auto h-[540px] w-full max-w-[460px] md:h-[660px]">
         <div className="hero-phone absolute left-1/2 top-1/2 w-[250px] md:w-[300px]">
           {/* Telefon gövdesi */}
           <div className="rounded-[44px] bg-[#0B0B0F] p-[10px] shadow-[0_50px_100px_rgba(23,23,25,0.35),inset_0_0_0_1.5px_rgba(255,255,255,0.12)]">
@@ -168,7 +175,7 @@ export default function HeroPhone() {
         <button
           type="button"
           onClick={askPermission}
-          className="absolute bottom-1 left-1/2 min-h-[44px] -translate-x-1/2 whitespace-nowrap rounded-full border border-[#DAD8DF] bg-white/90 px-4 text-[13px] font-semibold text-[#171719] shadow-[0_8px_24px_rgba(23,23,25,0.12)] backdrop-blur"
+          className="absolute bottom-1 left-1/2 z-[2] min-h-[44px] -translate-x-1/2 whitespace-nowrap rounded-full border border-[#DAD8DF] bg-white/90 px-4 text-[13px] font-semibold text-[#171719] shadow-[0_8px_24px_rgba(23,23,25,0.12)] backdrop-blur"
         >
           📱 Telefonunu sağa sola eğ
         </button>
