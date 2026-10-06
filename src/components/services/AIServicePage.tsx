@@ -45,13 +45,13 @@ export function AIServicePage({ service }: { service: ServiceData }) {
             </ol>
           </nav>
 
-          <div className="mt-8 grid items-center gap-6 lg:mt-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
-            <div>
+          <div className="mt-8 grid items-start gap-6 lg:mt-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-0">
+            <div className="lg:pt-6">
               <p className={eyebrow}>Özel yapay zekâ asistanlarımız</p>
-              <h1 id="ai-title" className="mt-5 text-[clamp(42px,5.6vw,84px)] font-semibold leading-[1.03] tracking-[-0.05em]">
+              <h1 id="ai-title" className="mt-5 max-w-[11.5ch] text-[clamp(42px,5.6vw,84px)] font-semibold leading-[1.03] tracking-[-0.05em]">
                 Yazan da arayan da cevapsız kalmasın<span className="text-[#DB2777]">.</span>
               </h1>
-              <p className="mt-7 max-w-[46ch] text-[18px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:text-[20px]">
+              <p className="mt-7 max-w-[40ch] text-[18px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:text-[20px]">
                 WhatsApp ve web için chatbot, telefon için callbot. Sesini, üslubunu ve senaryosunu sizin seçtiğiniz yapay zekâ asistanları.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">

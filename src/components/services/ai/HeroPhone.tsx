@@ -44,7 +44,7 @@ export default function HeroPhone() {
   }, []);
 
   return (
-    <div ref={stageRef} aria-hidden="true" className="hero-phone-stage relative mx-auto hidden h-[660px] w-full max-w-[460px] md:block">
+    <div ref={stageRef} aria-hidden="true" className="hero-phone-stage relative mx-auto hidden h-[660px] w-full max-w-[460px] md:block lg:mt-12 min-[1400px]:-ml-14">
       <div className="hero-phone absolute left-1/2 top-1/2 w-[270px] md:w-[300px]">
         {/* Telefon gövdesi */}
         <div className="hero-phone-body rounded-[46px] bg-[#0B0B0F] p-[10px] shadow-[0_50px_100px_rgba(23,23,25,0.35),inset_0_0_0_1.5px_rgba(255,255,255,0.12)]">
@@ -78,7 +78,7 @@ export default function HeroPhone() {
         </div>
 
         {/* Önde yüzen kartlar (farklı derinlik) */}
-        <div className="hero-float hero-float-call absolute -left-[12%] top-[14%] w-[210px] md:-left-[38%] md:top-[17%] md:w-[230px] rounded-2xl bg-[#111116] p-3.5 text-white shadow-[0_24px_50px_rgba(17,17,22,0.35)]">
+        <div className="hero-float hero-float-call absolute -left-[12%] top-[14%] w-[210px] md:-left-[20%] md:top-[17%] md:w-[230px] min-[1400px]:-left-[38%] rounded-2xl bg-[#111116] p-3.5 text-white shadow-[0_24px_50px_rgba(17,17,22,0.35)]">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#DB2777] text-[16px]">📞</span>
             <div className="min-w-0">
