@@ -15,7 +15,7 @@ import ConversationDemo from "./ai/ConversationDemo";
 import VoicePicker from "./ai/VoicePicker";
 import HeroPhone from "./ai/HeroPhone";
 
-const wrap = "mx-auto w-full max-w-[1240px] px-5 md:px-12";
+const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
 const h2 = "mt-4 text-[clamp(32px,4.2vw,54px)] font-semibold leading-[1.06] tracking-[-0.035em] text-[#171719] dark:text-white";
 const lead = "mt-5 max-w-[60ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 md:text-[18px]";

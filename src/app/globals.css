@@ -622,7 +622,11 @@ body:has([data-footer-under="pink"]) .site-footer {
   50% { translate: 0 -8px; }
 }
 @media (max-width: 767px) {
-  .hero-phone { transform: translate(-50%, -50%) rotateX(5deg) rotateY(-12deg) rotateZ(1deg); }
+  /* Mobil: jiroskop/kaydırma eğimi daha hızlı izlenir */
+  .hero-phone {
+    transform: translate(-50%, -50%) rotateX(calc(5deg + var(--tilt-x))) rotateY(calc(-10deg + var(--tilt-y))) rotateZ(1deg);
+    transition: transform 0.25s ease-out;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-phone, .hero-float, .hero-msg, .hero-wave { animation: none !important; }
