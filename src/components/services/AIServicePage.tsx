@@ -13,6 +13,7 @@ import { whatsappUrl } from "@/lib/contact";
 import { RelatedServices } from "./RelatedServices";
 import ConversationDemo from "./ai/ConversationDemo";
 import VoicePicker from "./ai/VoicePicker";
+import HeroPhone from "./ai/HeroPhone";
 
 const wrap = "mx-auto w-full max-w-[1240px] px-5 md:px-12";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
@@ -28,7 +29,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
   return (
     <main className="min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white">
       {/* ── Açılış + iki kanal demosu ──────────────────────────────── */}
-      <section aria-labelledby="ai-title" className="pb-20 pt-28 md:pb-28 md:pt-40">
+      <section aria-labelledby="ai-title" className="overflow-x-clip pb-20 pt-28 md:pb-28 md:pt-36">
         <div className={wrap}>
           <nav aria-label="Breadcrumb" className="text-[14px] text-[#62616B] dark:text-white/55">
             <ol className="flex flex-wrap items-center gap-2">
@@ -44,21 +45,16 @@ export function AIServicePage({ service }: { service: ServiceData }) {
             </ol>
           </nav>
 
-          <div className="mt-10 lg:mt-14">
-            <p className={eyebrow}>Özel yapay zekâ asistanlarımız</p>
-            <h1 id="ai-title" className="mt-5 max-w-[15ch] text-[clamp(42px,6.6vw,96px)] font-semibold leading-[1.03] tracking-[-0.05em]">
-              Yazan da arayan da cevapsız kalmasın<span className="text-[#DB2777]">.</span>
-            </h1>
-          </div>
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <div className="mt-8 grid items-center gap-6 lg:mt-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
             <div>
-              <p className="max-w-[46ch] text-[18px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:text-[20px]">
+              <p className={eyebrow}>Özel yapay zekâ asistanlarımız</p>
+              <h1 id="ai-title" className="mt-5 text-[clamp(42px,5.6vw,84px)] font-semibold leading-[1.03] tracking-[-0.05em]">
+                Yazan da arayan da cevapsız kalmasın<span className="text-[#DB2777]">.</span>
+              </h1>
+              <p className="mt-7 max-w-[46ch] text-[18px] leading-[1.6] text-[#3A3942] dark:text-white/75 md:text-[20px]">
                 WhatsApp ve web için chatbot, telefon için callbot. Sesini, üslubunu ve senaryosunu sizin seçtiğiniz yapay zekâ asistanları.
               </p>
-              <p className="mt-4 text-[14px] text-[#62616B] dark:text-white/55">Rezervasyon · Randevu · Sık sorulan sorular · Sipariş takibi</p>
-            </div>
-            <div>
-              <div className="flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#basla" className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-[#DB2777] px-7 text-[16px] font-semibold text-white transition-colors hover:bg-[#BE185D]">
                   Asistanınızı tasarlayalım <span aria-hidden="true">→</span>
                 </a>
@@ -69,7 +65,9 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                   Sesleri dinleyin
                 </a>
               </div>
+              <p className="mt-6 text-[14px] text-[#62616B] dark:text-white/55">Rezervasyon · Randevu · Sık sorulan sorular · Sipariş takibi</p>
             </div>
+            <HeroPhone />
           </div>
 
           <div id="demo" className="mt-12 scroll-mt-24 md:mt-16">
