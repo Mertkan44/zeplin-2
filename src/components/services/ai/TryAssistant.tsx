@@ -20,6 +20,8 @@ type CallState = "idle" | "ringing" | "active" | "ended";
 
 const TYPE_MS = 750;
 const scene = (id: SectorId) => ({ video: `/videos/assistants/${id}.mp4`, poster: `/videos/assistants/posters/${id}.jpg` });
+/** Sohbet penceresi solda durduğu için öznesi solda kalan videolar yatayda yansıtılır. */
+const MIRROR: Partial<Record<SectorId, boolean>> = { magaza: true };
 
 let nextId = 1;
 const newId = () => nextId++;
@@ -212,7 +214,7 @@ export default function TryAssistant() {
                     <img
                       src={scene(s.id).poster}
                       alt=""
-                      className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${selected ? "" : "opacity-75 grayscale-[35%]"}`}
+                      className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${MIRROR[s.id] ? "-scale-x-100 group-hover:-scale-x-105" : ""} ${selected ? "" : "opacity-75 grayscale-[35%]"}`}
                     />
                   </span>
                   <span className={`mt-2 block text-[15px] font-semibold ${selected ? "text-[#171719] dark:text-white" : "text-[#62616B] dark:text-white/60"}`}>{s.tab}</span>
@@ -282,7 +284,7 @@ export default function TryAssistant() {
             el.muted = true;
             void el.play().catch(() => {});
           }}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover ${MIRROR[sectorId] ? "-scale-x-100" : ""}`}
         />
         <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.2)_0%,rgba(10,10,12,0.05)_40%,rgba(10,10,12,0.55)_100%)]" />
         <p className="absolute left-5 top-5 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white/85 backdrop-blur-md">
@@ -290,7 +292,7 @@ export default function TryAssistant() {
         </p>
 
         {/* Sonuçlar: sahnenin sol üst köşesine bildirim olarak */}
-        <ul aria-live="polite" aria-label="Sonuçlar" className="absolute left-4 right-4 top-14 z-[2] space-y-2 sm:left-5 sm:right-auto sm:w-[270px]">
+        <ul aria-live="polite" aria-label="Sonuçlar" className="absolute left-4 right-4 top-14 z-[2] space-y-2 sm:left-auto sm:right-5 sm:top-5 sm:w-[270px]">
           {records.map((r, i) => (
             <li key={r.id} className={`${i === 0 ? "try-pop" : ""} ${i > 0 ? "hidden sm:block" : ""}`}>
               <RecordCard r={r} faded={i > 0} />
@@ -300,7 +302,7 @@ export default function TryAssistant() {
 
         {mode === "chat" ? (
           /* Yüzen sohbet penceresi (telefon çerçevesi yok) */
-          <div className="try-pop absolute inset-x-3 bottom-3 z-[1] flex max-h-[430px] flex-col overflow-hidden rounded-[22px] bg-white/95 text-[#171719] shadow-[0_30px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[370px] lg:max-h-[470px]">
+          <div className="try-pop absolute inset-x-3 bottom-3 z-[1] flex max-h-[430px] flex-col overflow-hidden rounded-[22px] bg-white/95 text-[#171719] shadow-[0_30px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:inset-x-auto sm:bottom-6 sm:left-6 sm:w-[370px] lg:max-h-[470px]">
             <div className="flex items-center gap-3 border-b border-black/[0.06] px-4 py-3">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-[#1F5F4E] text-[13px] font-bold text-white">{sector.business.charAt(0)}</span>
               <div className="min-w-0">
