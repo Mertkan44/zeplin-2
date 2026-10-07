@@ -21,7 +21,7 @@ type CallState = "idle" | "ringing" | "active" | "ended";
 const TYPE_MS = 750;
 const scene = (id: SectorId) => ({ video: `/videos/assistants/${id}.mp4`, poster: `/videos/assistants/posters/${id}.jpg` });
 /** Sohbet penceresi solda durduğu için öznesi solda kalan videolar yatayda yansıtılır. */
-const MIRROR: Partial<Record<SectorId, boolean>> = { magaza: true };
+const MIRROR: Partial<Record<SectorId, boolean>> = { klinik: true, magaza: true };
 
 let nextId = 1;
 const newId = () => nextId++;
