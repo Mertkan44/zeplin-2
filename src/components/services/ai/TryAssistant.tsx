@@ -183,9 +183,9 @@ export default function TryAssistant() {
   const media = scene(sectorId);
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center lg:gap-14">
-      {/* ── Sol: anlatım ve kontroller ─────────────────────── */}
-      <div>
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1.22fr)_minmax(0,0.78fr)] lg:items-center lg:gap-14">
+      {/* ── Anlatım ve kontroller (masaüstünde sağda; mobilde sahneden önce) ── */}
+      <div className="lg:order-2">
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]">Kendiniz deneyin</p>
           <span className="rounded-full border border-[#DB2777]/30 px-2.5 py-1 text-[12px] font-semibold text-[#BE185D] dark:border-[#F472B6]/30 dark:text-[#F9A8D4]">
@@ -264,8 +264,8 @@ export default function TryAssistant() {
         </p>
       </div>
 
-      {/* ── Sağ: video sahne ───────────────────────────────── */}
-      <div className="relative h-[620px] overflow-hidden rounded-[28px] bg-[#1A1714] lg:h-[680px]">
+      {/* ── Video sahne (masaüstünde solda) ─────────────────── */}
+      <div className="relative h-[620px] lg:order-1 overflow-hidden rounded-[28px] bg-[#1A1714] lg:h-[680px]">
         <video
           key={`${sectorId}-${reduced}`}
           src={reduced ? undefined : media.video}
