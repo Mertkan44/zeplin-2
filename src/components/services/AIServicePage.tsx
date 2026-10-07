@@ -8,13 +8,13 @@
 
 import Link from "next/link";
 import { briefHref, getRelatedServices, type ServiceData } from "@/data/services";
-import { FAQ, PRINCIPLES } from "@/data/assistants";
+import { CHANNELS, FAQ, PRINCIPLES } from "@/data/assistants";
 import { whatsappUrl } from "@/lib/contact";
 import { RelatedServices } from "./RelatedServices";
 import TryAssistant from "./ai/TryAssistant";
 import VoicePicker from "./ai/VoicePicker";
 import HeroPhone from "./ai/HeroPhone";
-import AssistantFlow from "./ai/AssistantFlow";
+import NightStory from "./ai/NightStory";
 
 const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
@@ -79,23 +79,17 @@ export function AIServicePage({ service }: { service: ServiceData }) {
         </div>
       </section>
 
-      {/* ── İki kanal, tek asistan (kanallar + yetenekler, akış animasyonu) ── */}
-      <section aria-labelledby="flow-title" className={`border-t ${rule} py-20 md:py-28`}>
-        <div className={wrap}>
-          <div className="mb-12 grid gap-6 lg:mb-14 lg:grid-cols-[1.3fr_1fr] lg:items-end">
-            <div>
-              <p className={eyebrow}>Nasıl çalışır</p>
-              <h2 id="flow-title" className={h2}>
-                İki kanal, tek asistan.
-              </h2>
-            </div>
-            <p className="max-w-[46ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 lg:pb-2">
-              Müşteriniz ister yazsın ister arasın; aynı asistan aynı bilgiyle yanıtlar, işi tamamlar ya da ekibinize devreder.
-            </p>
-          </div>
-          <AssistantFlow />
-        </div>
-      </section>
+      {/* ── Bir gece, bir asistan: kanallar + yetenekler hikâye olarak ("23.47") ── */}
+      <span id="chatbot" className="block scroll-mt-24" aria-hidden="true" />
+      <span id="callbot" className="block" aria-hidden="true" />
+      <NightStory />
+      <div className={`${wrap} grid gap-3 py-8 text-[13.5px] leading-relaxed text-[#62616B] dark:text-white/55 md:grid-cols-2 md:gap-10`}>
+        {CHANNELS.map((c) => (
+          <p key={c.id}>
+            <span className="font-semibold text-[#3A3942] dark:text-white/80">{c.name} · {c.where}:</span> {c.lead} {c.note}
+          </p>
+        ))}
+      </div>
 
       {/* ── Ses ve kişilik ─────────────────────────────────────────── */}
       <section id="ses" aria-labelledby="voice-title" className={`scroll-mt-24 border-t ${rule} py-20 md:py-28`}>
