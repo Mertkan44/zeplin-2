@@ -276,6 +276,12 @@ export default function TryAssistant() {
           playsInline
           preload="metadata"
           aria-hidden="true"
+          // Safari: istemcide oluşan videoda "muted" geç uygulanırsa otomatik oynatma engellenir
+          ref={(el) => {
+            if (!el || reduced) return;
+            el.muted = true;
+            void el.play().catch(() => {});
+          }}
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.2)_0%,rgba(10,10,12,0.05)_40%,rgba(10,10,12,0.55)_100%)]" />
