@@ -8,13 +8,13 @@
 
 import Link from "next/link";
 import { briefHref, getRelatedServices, type ServiceData } from "@/data/services";
-import { CAPABILITIES, CHANNELS, FAQ, PRINCIPLES } from "@/data/assistants";
+import { FAQ, PRINCIPLES } from "@/data/assistants";
 import { whatsappUrl } from "@/lib/contact";
 import { RelatedServices } from "./RelatedServices";
 import TryAssistant from "./ai/TryAssistant";
 import VoicePicker from "./ai/VoicePicker";
 import HeroPhone from "./ai/HeroPhone";
-import { IconBox, IconCalendar, IconChat, IconHandoff, IconMoon, IconPanel, IconPhone, IconQuestion } from "./ai/icons";
+import AssistantFlow from "./ai/AssistantFlow";
 
 const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
@@ -22,7 +22,6 @@ const h2 = "mt-4 text-[clamp(32px,4.2vw,54px)] font-semibold leading-[1.06] trac
 const lead = "mt-5 max-w-[60ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 md:text-[18px]";
 const rule = "border-[#DAD8DF] dark:border-white/10";
 
-const CAP_ICONS = [IconCalendar, IconQuestion, IconBox, IconMoon, IconHandoff, IconPanel];
 
 export function AIServicePage({ service }: { service: ServiceData }) {
   const related = getRelatedServices(service.relatedSlugs);
@@ -80,45 +79,21 @@ export function AIServicePage({ service }: { service: ServiceData }) {
         </div>
       </section>
 
-      {/* ── İki kanal ──────────────────────────────────────────────── */}
-      <section aria-labelledby="channels-title" className={`border-t ${rule} py-20 md:py-28`}>
+      {/* ── İki kanal, tek asistan (kanallar + yetenekler, akış animasyonu) ── */}
+      <section aria-labelledby="flow-title" className={`border-t ${rule} py-20 md:py-28`}>
         <div className={wrap}>
-          <p className={eyebrow}>Kanallar</p>
-          <h2 id="channels-title" className={h2}>
-            İki kanal, tek asistan.
-          </h2>
-          <p className={lead}>Aynı bilgiyle, aynı üslupla; müşteriniz ister yazsın ister arasın.</p>
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {CHANNELS.map((c) => (
-              <article
-                key={c.id}
-                id={c.id}
-                className={`scroll-mt-28 rounded-[24px] border p-6 md:p-8 ${
-                  c.id === "chatbot" ? "border-[#DAD8DF] bg-white dark:border-white/10 dark:bg-white/[0.04]" : "border-transparent bg-[#111116] text-white"
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <span aria-hidden="true" className={`grid h-14 w-14 place-items-center rounded-2xl ${c.id === "chatbot" ? "bg-[#FCE7F3] text-[#BE185D] dark:bg-[#DB2777]/20 dark:text-[#F9A8D4]" : "bg-[#DB2777]/20 text-[#F9A8D4]"}`}>
-                    {c.id === "chatbot" ? <IconChat size={26} /> : <IconPhone size={26} />}
-                  </span>
-                  <div>
-                    <h3 className="text-[28px] font-semibold tracking-[-0.02em]">{c.name}</h3>
-                    <p className={`text-[14px] ${c.id === "chatbot" ? "text-[#62616B] dark:text-white/55" : "text-white/60"}`}>{c.where}</p>
-                  </div>
-                </div>
-                <p className={`mt-6 text-[19px] leading-[1.5] ${c.id === "chatbot" ? "text-[#3A3942] dark:text-white/80" : "text-white/85"}`}>{c.lead}</p>
-                <ul className="mt-5 space-y-2.5">
-                  {c.points.map((pt) => (
-                    <li key={pt} className="flex items-center gap-3 text-[16px]">
-                      <span aria-hidden="true" className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#DB2777] text-[12px] font-bold text-white">✓</span>
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-                <p className={`mt-6 border-t pt-4 text-[14px] leading-relaxed ${c.id === "chatbot" ? `${rule} text-[#62616B] dark:text-white/55` : "border-white/10 text-white/55"}`}>{c.note}</p>
-              </article>
-            ))}
+          <div className="mb-12 grid gap-6 lg:mb-14 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+            <div>
+              <p className={eyebrow}>Nasıl çalışır</p>
+              <h2 id="flow-title" className={h2}>
+                İki kanal, tek asistan.
+              </h2>
+            </div>
+            <p className="max-w-[46ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 lg:pb-2">
+              Müşteriniz ister yazsın ister arasın; aynı asistan aynı bilgiyle yanıtlar, işi tamamlar ya da ekibinize devreder.
+            </p>
           </div>
+          <AssistantFlow />
         </div>
       </section>
 
@@ -137,27 +112,6 @@ export function AIServicePage({ service }: { service: ServiceData }) {
             </p>
           </div>
           <VoicePicker />
-        </div>
-      </section>
-
-      {/* ── Neleri üstlenir ────────────────────────────────────────── */}
-      <section aria-labelledby="caps-title" className={`border-t ${rule} py-20 md:py-28`}>
-        <div className={wrap}>
-          <p className={eyebrow}>Neleri üstlenir</p>
-          <h2 id="caps-title" className={h2}>
-            Tekrar eden soruları o yanıtlasın, ekibiniz işine baksın.
-          </h2>
-          <ul className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {CAPABILITIES.map((c, i) => (
-              <li key={c.title} className={`border-t ${rule} pt-6`}>
-                <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[#BE185D] shadow-[0_6px_20px_rgba(23,23,25,0.06)] dark:bg-white/10">
-                  {(() => { const Icon = CAP_ICONS[i]; return <Icon size={22} />; })()}
-                </span>
-                <h3 className="mt-4 text-[21px] font-semibold tracking-[-0.015em]">{c.title}</h3>
-                <p className="mt-2 text-[16.5px] leading-[1.6] text-[#3A3942] dark:text-white/70">{c.desc}</p>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 

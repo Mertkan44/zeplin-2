@@ -660,6 +660,26 @@ body:has([data-footer-under="pink"]) .site-footer {
   from { translate: -40px 10px; scale: 0.7; opacity: 0; }
   to { translate: 0 0; scale: 1; opacity: 1; }
 }
+/* Yapay zekâ akış diyagramı: istek ulaştığında ilgili sonuç satırı vurgulanır (12 sn döngü, 2 sn arayla) */
+.flow-row { transition: background-color 0.3s; }
+.flow-row-anim { animation: flowRow 12s linear infinite; }
+.flow-row-anim .flow-icon { animation: flowIcon 12s linear infinite; animation-delay: inherit; }
+@keyframes flowRow {
+  0%, 11% { background-color: transparent; box-shadow: none; }
+  13%, 19% { background-color: #fff; box-shadow: 0 16px 40px rgba(23, 23, 25, 0.08); }
+  23%, 100% { background-color: transparent; box-shadow: none; }
+}
+@keyframes flowIcon {
+  0%, 11% { background-color: #fff; color: #be185d; }
+  13%, 19% { background-color: #db2777; color: #fff; }
+  23%, 100% { background-color: #fff; color: #be185d; }
+}
+.dark .flow-row-anim { animation-name: flowRowDark; }
+@keyframes flowRowDark {
+  0%, 11% { background-color: transparent; }
+  13%, 19% { background-color: rgba(255, 255, 255, 0.06); }
+  23%, 100% { background-color: transparent; }
+}
 @keyframes heroPhoneIn {
   from { translate: 60% 8%; rotate: y 40deg; opacity: 0; }
   to { translate: 0 0; rotate: y 0deg; opacity: 1; }
