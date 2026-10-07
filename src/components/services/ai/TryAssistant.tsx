@@ -1,16 +1,17 @@
 "use client";
 
 /*
- * "Kendiniz deneyin" (öngösterim): ziyaretçi asistanı izlemez, kullanır.
- * Tasarım açılışın dilini sürdürür: açık zemin, dokulu disk üzerinde tek telefon; sonuçlar ayrı
- * bir panel yerine telefonun yanından "uçan bildirim kartı" olarak çıkar.
+ * "Kendiniz deneyin" (öngösterim). Açılıştaki 3B telefonu tekrar etmemek için burada telefon yok:
+ * seçilen işletmenin gerçek videosu (stok, Magnific) sahne olur; sohbet penceresi ya da görüşme
+ * şeridi videonun üstünde yüzer, sonuçlar sahnenin köşesine bildirim olarak düşer.
  * - Yazarak: hazır seçeneklerle dallanan sohbet (CHAT_FLOWS). Serbest metin / gerçek yapay zekâ yok.
  * - Arayarak: "Ara" → görüşme gerçekten sesli oynar, konuşulan satır eşzamanlı yazılır.
- * Zamanlayıcılar ve ses, sektör/kanal değişince temizlenir.
+ * Zamanlayıcılar ve ses, sektör/kanal değişince temizlenir. Hareket azaltıldığında video durur (poster).
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { CHAT_FLOWS, SECTORS, callAudio, type ChatRecord, type SectorId } from "@/data/assistants";
+import { IconChat, IconCheck, IconHandoff, IconInfo, IconPhone } from "./icons";
 
 type Mode = "chat" | "call";
 type Msg = { id: number; from: "customer" | "assistant"; text: string };
@@ -18,21 +19,26 @@ type Rec = ChatRecord & { id: number; channel: "WhatsApp" | "Telefon" };
 type CallState = "idle" | "ringing" | "active" | "ended";
 
 const TYPE_MS = 750;
-const ICONS: Record<SectorId, string> = { restoran: "🍽️", klinik: "🦷", magaza: "🛍️" };
+const scene = (id: SectorId) => ({ video: `/videos/assistants/${id}.mp4`, poster: `/videos/assistants/posters/${id}.jpg` });
 
 let nextId = 1;
 const newId = () => nextId++;
 const startMessages = (id: SectorId): Msg[] => CHAT_FLOWS[id].start.bot.map((t) => ({ id: newId(), from: "assistant", text: t }));
 
-/* Masaüstünde bildirim kartlarının telefon çevresindeki yerleri (en yeni ilk sırada) */
-const SLOTS = [
-  "left-[calc(50%+92px)] top-[9%] xl:left-[calc(50%+128px)]",
-  "right-[calc(50%+92px)] top-[24%] xl:right-[calc(50%+128px)]",
-  "left-[calc(50%+104px)] top-[40%] xl:left-[calc(50%+140px)]",
-  "right-[calc(50%+104px)] top-[56%] xl:right-[calc(50%+140px)]",
-];
+const REDUCED = "(prefers-reduced-motion: reduce)";
+const useReducedMotion = () =>
+  useSyncExternalStore(
+    (cb) => {
+      const m = window.matchMedia(REDUCED);
+      m.addEventListener("change", cb);
+      return () => m.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(REDUCED).matches,
+    () => false,
+  );
 
 export default function TryAssistant() {
+  const reduced = useReducedMotion();
   const [sectorId, setSectorId] = useState<SectorId>("restoran");
   const [mode, setMode] = useState<Mode>("chat");
   const [records, setRecords] = useState<Rec[]>([]);
@@ -52,7 +58,7 @@ export default function TryAssistant() {
   };
 
   const addRecord = useCallback((r: ChatRecord, channel: Rec["channel"]) => {
-    setRecords((list) => [{ ...r, channel, id: newId() }, ...list].slice(0, 4));
+    setRecords((list) => [{ ...r, channel, id: newId() }, ...list].slice(0, 3));
   }, []);
 
   const choose = (label: string, next: string) => {
@@ -173,17 +179,16 @@ export default function TryAssistant() {
   const current = line >= 0 ? sector.call[line] : null;
   const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
   const ss = String(seconds % 60).padStart(2, "0");
-  const ringing = mode === "call" && (call === "ringing" || call === "active");
-
   const step = "mb-3 text-[13px] font-semibold uppercase tracking-[0.14em] text-[#62616B] dark:text-white/55";
+  const media = scene(sectorId);
 
   return (
-    <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-6">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center lg:gap-14">
       {/* ── Sol: anlatım ve kontroller ─────────────────────── */}
       <div>
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]">Kendiniz deneyin</p>
-          <span className="rounded-full border border-[#DB2777]/30 bg-[#FCE7F3] px-2.5 py-1 text-[12px] font-semibold text-[#BE185D] dark:border-[#F472B6]/30 dark:bg-[#DB2777]/15 dark:text-[#F9A8D4]">
+          <span className="rounded-full border border-[#DB2777]/30 px-2.5 py-1 text-[12px] font-semibold text-[#BE185D] dark:border-[#F472B6]/30 dark:text-[#F9A8D4]">
             Öngösterim
           </span>
         </div>
@@ -192,27 +197,26 @@ export default function TryAssistant() {
         </h2>
 
         <div className="mt-9">
-          <p className={step}>1 · İşletmenizi seçin</p>
+          <p className={step}>1 · İşletme</p>
           <div role="group" aria-label="Örnek işletme" className="grid grid-cols-3 gap-2.5">
             {SECTORS.map((s) => {
               const selected = s.id === sectorId;
               return (
-                <button
-                  key={s.id}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => pickSector(s.id)}
-                  className={`flex min-h-[96px] flex-col items-start justify-between rounded-2xl border p-3.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777] ${
-                    selected
-                      ? "border-[#171719] bg-[#171719] text-white dark:border-white dark:bg-white dark:text-[#171719]"
-                      : "border-[#DAD8DF] bg-white text-[#171719] hover:border-[#171719] dark:border-white/15 dark:bg-white/[0.04] dark:text-white dark:hover:border-white/50"
-                  }`}
-                >
-                  <span aria-hidden="true" className="text-[24px] leading-none">{ICONS[s.id]}</span>
-                  <span>
-                    <span className="block text-[15px] font-semibold">{s.tab}</span>
-                    <span className={`block text-[12.5px] ${selected ? "opacity-70" : "text-[#62616B] dark:text-white/55"}`}>{s.business}</span>
+                <button key={s.id} type="button" aria-pressed={selected} onClick={() => pickSector(s.id)} className="group text-left focus-visible:outline-none">
+                  <span
+                    className={`relative block aspect-[4/3] overflow-hidden rounded-xl ring-offset-2 ring-offset-[#F7F6F3] transition-shadow group-focus-visible:ring-2 group-focus-visible:ring-[#DB2777] dark:ring-offset-[#0F0F12] ${
+                      selected ? "ring-2 ring-[#171719] dark:ring-white" : ""
+                    }`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- küçük, zaten sıkıştırılmış poster */}
+                    <img
+                      src={scene(s.id).poster}
+                      alt=""
+                      className={`h-full w-full object-cover transition duration-500 group-hover:scale-105 ${selected ? "" : "opacity-75 grayscale-[35%]"}`}
+                    />
                   </span>
+                  <span className={`mt-2 block text-[15px] font-semibold ${selected ? "text-[#171719] dark:text-white" : "text-[#62616B] dark:text-white/60"}`}>{s.tab}</span>
+                  <span className="block text-[12.5px] text-[#8E8D99]">{s.business}</span>
                 </button>
               );
             })}
@@ -220,203 +224,178 @@ export default function TryAssistant() {
         </div>
 
         <div className="mt-7">
-          <p className={step}>2 · Nasıl denemek istersiniz?</p>
-          <div role="group" aria-label="Kanal" className="grid grid-cols-2 gap-2.5">
+          <p className={step}>2 · Kanal</p>
+          <div role="group" aria-label="Kanal" className="inline-flex w-full rounded-full border border-[#DAD8DF] bg-white p-1 dark:border-white/15 dark:bg-white/[0.04] sm:w-auto">
             {(
               [
-                ["chat", "💬", "Yazın", "WhatsApp sohbeti"],
-                ["call", "📞", "Arayın", "Sesli görüşme"],
+                ["chat", "Yazarak", IconChat],
+                ["call", "Arayarak", IconPhone],
               ] as const
-            ).map(([m, icon, title, sub]) => {
-              const selected = mode === m;
-              return (
-                <button
-                  key={m}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => pickMode(m)}
-                  className={`flex min-h-[64px] items-center gap-3 rounded-2xl border px-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777] ${
-                    selected
-                      ? "border-[#DB2777] bg-[#DB2777] text-white"
-                      : "border-[#DAD8DF] bg-white text-[#171719] hover:border-[#DB2777] dark:border-white/15 dark:bg-white/[0.04] dark:text-white"
-                  }`}
-                >
-                  <span aria-hidden="true" className="text-[22px]">{icon}</span>
-                  <span>
-                    <span className="block text-[16px] font-semibold">{title}</span>
-                    <span className={`block text-[13px] ${selected ? "text-white/80" : "text-[#62616B] dark:text-white/55"}`}>{sub}</span>
-                  </span>
-                </button>
-              );
-            })}
+            ).map(([m, label, Icon]) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => pickMode(m)}
+                className={`inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777] sm:flex-none ${
+                  mode === m ? "bg-[#171719] text-white dark:bg-white dark:text-[#171719]" : "text-[#3A3942] hover:text-[#171719] dark:text-white/70"
+                }`}
+              >
+                <Icon />
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <p className="mt-7 text-[17px] leading-relaxed text-[#3A3942] dark:text-white/75" aria-live="polite">
+        <p className="mt-7 max-w-[44ch] text-[17px] leading-relaxed text-[#3A3942] dark:text-white/75" aria-live="polite">
           {mode === "chat"
-            ? "Telefondaki seçeneklerden birine dokunun; asistan yanıtlasın. Her sonuç bir bildirim kartı olarak belirir."
+            ? "Sohbetteki seçeneklerden birine dokunun; asistan yanıtlasın, sonuç sahnenin köşesine düşsün."
             : call === "idle"
-              ? "Yeşil düğmeye basın, asistan açsın. Sesiniz açık olsun 🔊"
+              ? "“Ara”ya basın, asistan açsın. Sesiniz açık olsun."
               : call === "ended"
-                ? "Görüşme bitti; sonuç bir bildirim kartı olarak belirdi."
+                ? "Görüşme bitti; sonuç sahnenin köşesinde."
                 : "Görüşme sürüyor; konuşulan cümle ekrana yazılıyor."}
         </p>
 
-        <p className="mt-5 flex gap-2.5 border-t border-[#DAD8DF] pt-5 text-[14px] leading-relaxed text-[#62616B] dark:border-white/10 dark:text-white/55">
-          <span aria-hidden="true">ⓘ</span>
-          <span>
-            Bu öngösterim hazır seçeneklerle ilerler ve kurmaca işletmeler kullanır. Gerçek asistanlarımız yazdığınız her şeyi anlar, sohbeti doğal biçimde
-            sürdürür ve sesle konuşur.
-          </span>
+        <p className="mt-6 border-t border-[#DAD8DF] pt-5 text-[14px] leading-relaxed text-[#62616B] dark:border-white/10 dark:text-white/55">
+          Bu öngösterim hazır seçeneklerle ilerler ve kurmaca işletmeler kullanır. Gerçek asistanlarımız yazdığınız her şeyi anlar, sohbeti doğal biçimde
+          sürdürür ve sesle konuşur.
         </p>
       </div>
 
-      {/* ── Sağ: sahne ─────────────────────────────────────── */}
-      <div className="relative">
-        <div className="relative mx-auto h-[640px] w-full max-w-[640px] lg:h-[700px]">
-          {/* Dokulu disk + (görüşmede) yayılan halkalar */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-            {ringing && (
-              <>
-                <span style={{ animationDelay: "0s" }} className="hero-ring absolute left-1/2 top-1/2 h-[min(500px,92vw)] w-[min(500px,92vw)] rounded-full border-[1.5px] border-[#DB2777]/40" />
-                <span style={{ animationDelay: "1.9s" }} className="hero-ring absolute left-1/2 top-1/2 h-[min(500px,92vw)] w-[min(500px,92vw)] rounded-full border-[1.5px] border-[#DB2777]/40" />
-              </>
-            )}
-            <span className="hero-disc absolute left-1/2 top-1/2 h-[min(500px,92vw)] w-[min(500px,92vw)] -translate-x-1/2 -translate-y-1/2 rounded-full" />
-          </div>
+      {/* ── Sağ: video sahne ───────────────────────────────── */}
+      <div className="relative h-[620px] overflow-hidden rounded-[28px] bg-[#1A1714] lg:h-[680px]">
+        <video
+          key={`${sectorId}-${reduced}`}
+          src={reduced ? undefined : media.video}
+          poster={media.poster}
+          autoPlay={!reduced}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.2)_0%,rgba(10,10,12,0.05)_40%,rgba(10,10,12,0.55)_100%)]" />
+        <p className="absolute left-5 top-5 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white/85 backdrop-blur-md">
+          {sector.business} · örnek işletme
+        </p>
 
-          {/* Telefon */}
-          <div className="absolute left-1/2 top-1/2 z-[1] w-[300px] -translate-x-1/2 -translate-y-1/2 sm:w-[320px]">
-            <div key={mode} className="try-flip rounded-[44px] bg-[#0B0B0F] p-[10px] shadow-[0_40px_90px_rgba(23,23,25,0.3),inset_0_0_0_1.5px_rgba(255,255,255,0.12)]">
-              <div className="relative h-[580px] overflow-hidden rounded-[35px] lg:h-[600px]">
-                <span aria-hidden="true" className="absolute left-1/2 top-2.5 z-10 h-[22px] w-[90px] -translate-x-1/2 rounded-full bg-black" />
-                {mode === "chat" ? (
-                  <div className="flex h-full flex-col bg-[#EFE9E1] text-[#171719]">
-                    <div className="flex items-center gap-3 bg-[#1F5F4E] px-4 pb-3 pt-10 text-white">
-                      <span className="grid h-9 w-9 place-items-center rounded-full bg-white/20 text-[13px] font-bold">{sector.business.charAt(0)}</span>
-                      <div>
-                        <p className="text-[15px] font-semibold leading-tight">{sector.business}</p>
-                        <p className="text-[12px] text-white/75">{typing ? "yazıyor…" : "Yapay zekâ asistanı · çevrimiçi"}</p>
-                      </div>
-                    </div>
-                    <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 py-3" aria-live="polite">
-                      {msgs.map((m) => (
-                        <p
-                          key={m.id}
-                          className={`max-w-[84%] animate-[aiMsg_.3s_ease-out] rounded-2xl px-3 py-2 text-[14px] leading-snug shadow-[0_1px_1px_rgba(0,0,0,0.08)] ${
-                            m.from === "customer" ? "self-end rounded-br-md bg-[#D7F5CF]" : "self-start rounded-bl-md bg-white"
-                          }`}
-                        >
-                          {m.text}
-                        </p>
-                      ))}
-                      {typing && (
-                        <span className="inline-flex gap-1 self-start rounded-2xl bg-white px-3 py-2.5 text-[#62616B]" aria-label="Asistan yazıyor">
-                          {[0, 1, 2].map((i) => (
-                            <span key={i} className="h-1.5 w-1.5 animate-bounce rounded-full bg-current opacity-60" style={{ animationDelay: `${i * 0.15}s` }} />
-                          ))}
-                        </span>
-                      )}
-                    </div>
-                    <div className="border-t border-black/5 bg-[#F7F4EF] px-3 pb-3 pt-2.5">
-                      <div className="flex min-h-[40px] flex-wrap gap-1.5">
-                        {options.map((o) => (
-                          <button
-                            key={o.label}
-                            type="button"
-                            onClick={() => choose(o.label, o.next)}
-                            className="min-h-[36px] rounded-full border border-[#1F5F4E]/30 bg-white px-3 text-[13px] font-medium text-[#1F5F4E] transition-colors hover:bg-[#1F5F4E] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#DB2777]"
-                          >
-                            {o.label}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="mt-2 flex items-center gap-2" aria-hidden="true">
-                        <span className="h-9 flex-1 truncate rounded-full bg-white px-4 text-[12.5px] leading-9 text-[#9A99A3]">Öngösterimde hazır seçenekler kullanılır</span>
-                        <span className="grid h-9 w-9 place-items-center rounded-full bg-[#1F5F4E]/40 text-white">➤</span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex h-full flex-col bg-[radial-gradient(120%_70%_at_50%_0%,#3A1730_0%,#141218_55%,#0B0A0E_100%)] px-5 pb-7 pt-14 text-white">
-                    <div className="text-center">
-                      <span className={`mx-auto grid h-20 w-20 place-items-center rounded-full bg-white/10 text-[30px] font-semibold ${call === "ringing" ? "animate-pulse" : ""}`}>
-                        {sector.business.charAt(0)}
-                      </span>
-                      <p className="mt-4 text-[22px] font-semibold">{sector.business}</p>
-                      <p className="mt-1 text-[14px] text-white/60" aria-live="polite">
-                        {call === "idle" && "Yapay zekâ asistanı · Defne sesi"}
-                        {call === "ringing" && "Aranıyor…"}
-                        {call === "active" && `Görüşmede · ${mm}:${ss}`}
-                        {call === "ended" && `Görüşme bitti · ${mm}:${ss}`}
-                      </p>
-                    </div>
-                    <div aria-hidden="true" className="mt-6 flex h-12 items-center justify-center gap-[3px]">
-                      {Array.from({ length: 26 }).map((_, i) => {
-                        const talking = call === "active" && current?.from === "assistant";
-                        return (
-                          <span
-                            key={i}
-                            className={`w-[3px] rounded-full ${talking ? "animate-[aiWave_0.9s_ease-in-out_infinite] bg-[#F472B6]" : "bg-white/20"}`}
-                            style={{ height: `${16 + ((i * 37) % 24)}px`, animationDelay: `${(i % 7) * 0.08}s`, transform: talking ? undefined : "scaleY(0.35)" }}
-                          />
-                        );
-                      })}
-                    </div>
-                    <div className="mt-4 flex flex-1 flex-col justify-end gap-2.5 overflow-hidden">
-                      {line >= 0 &&
-                        sector.call.slice(Math.max(0, line - 3), line + 1).map((l, i, arr) => (
-                          <p key={`${line}-${i}`} className={`text-[14.5px] leading-snug ${i === arr.length - 1 ? "" : "opacity-55"} ${l.from === "assistant" ? "text-[#F9A8D4]" : "text-white/90"}`}>
-                            <span className="mr-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">{l.from === "assistant" ? "Asistan" : "Arayan"}</span>
-                            {l.text}
-                          </p>
-                        ))}
-                    </div>
-                    <div className="mt-6 flex justify-center">
-                      {call === "idle" || call === "ended" ? (
-                        <button
-                          type="button"
-                          onClick={startCall}
-                          className="inline-flex min-h-[60px] items-center gap-3 rounded-full bg-[#22A55B] pl-2 pr-7 text-[16px] font-semibold text-white shadow-[0_10px_30px_rgba(34,165,91,0.35)] transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                        >
-                          <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-full bg-white/20 text-[20px]">✆</span>
-                          {call === "ended" ? "Tekrar ara" : "Ara"}
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={hangUp}
-                          className="inline-flex min-h-[60px] items-center gap-3 rounded-full bg-[#E5484D] pl-2 pr-7 text-[16px] font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                        >
-                          <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-full bg-white/20 text-[20px]">✆</span>
-                          Kapat
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Masaüstü: sonuçlar telefonun yanından uçan kartlar */}
-          <ul aria-live="polite" aria-label="Sonuçlar" className="hidden lg:block">
-            {records.map((r, i) => (
-              <li key={r.id} className={`absolute z-[2] w-[212px] xl:w-[236px] ${SLOTS[i]} ${i === 0 ? "try-pop" : ""}`}>
-                <RecordCard r={r} faded={i > 1} />
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Mobil / tablet: sonuçlar telefonun altında */}
-        <ul aria-live="polite" aria-label="Sonuçlar" className="-mt-6 space-y-2.5 lg:hidden">
-          {records.map((r) => (
-            <li key={r.id} className="animate-[aiMsg_.4s_ease-out]">
-              <RecordCard r={r} />
+        {/* Sonuçlar: sahnenin sol üst köşesine bildirim olarak */}
+        <ul aria-live="polite" aria-label="Sonuçlar" className="absolute left-4 right-4 top-14 z-[2] space-y-2 sm:left-5 sm:right-auto sm:w-[270px]">
+          {records.map((r, i) => (
+            <li key={r.id} className={`${i === 0 ? "try-pop" : ""} ${i > 0 ? "hidden sm:block" : ""}`}>
+              <RecordCard r={r} faded={i > 0} />
             </li>
           ))}
         </ul>
+
+        {mode === "chat" ? (
+          /* Yüzen sohbet penceresi (telefon çerçevesi yok) */
+          <div className="try-pop absolute inset-x-3 bottom-3 z-[1] flex max-h-[430px] flex-col overflow-hidden rounded-[22px] bg-white/95 text-[#171719] shadow-[0_30px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[370px] lg:max-h-[470px]">
+            <div className="flex items-center gap-3 border-b border-black/[0.06] px-4 py-3">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#1F5F4E] text-[13px] font-bold text-white">{sector.business.charAt(0)}</span>
+              <div className="min-w-0">
+                <p className="text-[15px] font-semibold leading-tight">{sector.business}</p>
+                <p className="text-[12px] text-[#62616B]">{typing ? "yazıyor…" : "Yapay zekâ asistanı · WhatsApp"}</p>
+              </div>
+            </div>
+            <div ref={listRef} className="flex min-h-[150px] flex-1 flex-col gap-2 overflow-y-auto bg-[#F4F1EC] px-3 py-3" aria-live="polite">
+              {msgs.map((m) => (
+                <p
+                  key={m.id}
+                  className={`max-w-[85%] animate-[aiMsg_.3s_ease-out] rounded-2xl px-3 py-2 text-[14px] leading-snug ${
+                    m.from === "customer" ? "self-end rounded-br-md bg-[#D7F5CF]" : "self-start rounded-bl-md bg-white shadow-[0_1px_1px_rgba(0,0,0,0.06)]"
+                  }`}
+                >
+                  {m.text}
+                </p>
+              ))}
+              {typing && (
+                <span className="inline-flex gap-1 self-start rounded-2xl bg-white px-3 py-2.5 text-[#62616B]" aria-label="Asistan yazıyor">
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} className="h-1.5 w-1.5 animate-bounce rounded-full bg-current opacity-60" style={{ animationDelay: `${i * 0.15}s` }} />
+                  ))}
+                </span>
+              )}
+            </div>
+            <div className="flex min-h-[58px] flex-wrap content-start gap-1.5 border-t border-black/[0.06] px-3 py-2.5">
+              {options.map((o) => (
+                <button
+                  key={o.label}
+                  type="button"
+                  onClick={() => choose(o.label, o.next)}
+                  className="min-h-[36px] rounded-full border border-[#171719]/15 bg-white px-3 text-[13px] font-medium text-[#171719] transition-colors hover:border-[#171719] hover:bg-[#171719] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#DB2777]"
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* Görüşme şeridi */
+          <div className="try-pop absolute inset-x-3 bottom-3 z-[1] rounded-[22px] bg-[#111116]/80 p-5 text-white shadow-[0_30px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:inset-x-6 sm:bottom-6">
+            <div className="flex items-center gap-4">
+              <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white/10 text-[18px] font-semibold ${call === "ringing" ? "animate-pulse" : ""}`}>
+                {sector.business.charAt(0)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[16px] font-semibold">{sector.business}</p>
+                <p className="text-[13px] text-white/60" aria-live="polite">
+                  {call === "idle" && "Yapay zekâ asistanı · Defne sesi"}
+                  {call === "ringing" && "Aranıyor…"}
+                  {call === "active" && `Görüşmede · ${mm}:${ss}`}
+                  {call === "ended" && `Görüşme bitti · ${mm}:${ss}`}
+                </p>
+              </div>
+              {call === "idle" || call === "ended" ? (
+                <button
+                  type="button"
+                  onClick={startCall}
+                  className="inline-flex min-h-[48px] shrink-0 items-center gap-2 rounded-full bg-[#22A55B] px-5 text-[15px] font-semibold text-white transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  <IconPhone />
+                  {call === "ended" ? "Tekrar ara" : "Ara"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={hangUp}
+                  className="inline-flex min-h-[48px] shrink-0 items-center gap-2 rounded-full bg-[#E5484D] px-5 text-[15px] font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  <IconPhone />
+                  Kapat
+                </button>
+              )}
+            </div>
+            <div aria-hidden="true" className="mt-4 flex h-10 items-center gap-[3px]">
+              {Array.from({ length: 48 }).map((_, i) => {
+                const talking = call === "active" && current?.from === "assistant";
+                return (
+                  <span
+                    key={i}
+                    className={`w-[3px] flex-1 rounded-full ${talking ? "animate-[aiWave_0.9s_ease-in-out_infinite] bg-[#F472B6]" : "bg-white/20"}`}
+                    style={{ height: `${12 + ((i * 37) % 26)}px`, animationDelay: `${(i % 7) * 0.08}s`, transform: talking ? undefined : "scaleY(0.3)" }}
+                  />
+                );
+              })}
+            </div>
+            <div className="mt-3 min-h-[66px] space-y-1.5">
+              {line >= 0 ? (
+                sector.call.slice(Math.max(0, line - 1), line + 1).map((l, i, arr) => (
+                  <p key={`${line}-${i}`} className={`text-[15px] leading-snug ${i === arr.length - 1 ? "" : "opacity-50"} ${l.from === "assistant" ? "text-[#F9A8D4]" : "text-white/90"}`}>
+                    <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">{l.from === "assistant" ? "Asistan" : "Arayan"}</span>
+                    {l.text}
+                  </p>
+                ))
+              ) : (
+                <p className="text-[14.5px] text-white/60">{call === "ringing" ? "Asistan birazdan açacak…" : "Arayın; asistan sizi işletmenin seçtiği sesle karşılasın."}</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -425,22 +404,20 @@ export default function TryAssistant() {
 function RecordCard({ r, faded }: { r: Rec; faded?: boolean }) {
   const tone =
     r.kind === "handoff"
-      ? { dot: "bg-amber-500", icon: "↪", label: "Ekibe aktarıldı" }
+      ? { dot: "bg-amber-500", Icon: () => <IconHandoff size={14} stroke={2} />, label: "Ekibe aktarıldı" }
       : r.kind === "info"
-        ? { dot: "bg-sky-500", icon: "i", label: "Bilgi verildi" }
-        : { dot: "bg-emerald-500", icon: "✓", label: "Tamamlandı" };
+        ? { dot: "bg-sky-500", Icon: IconInfo, label: "Bilgi verildi" }
+        : { dot: "bg-emerald-500", Icon: IconCheck, label: "Tamamlandı" };
   return (
-    <div className={`rounded-2xl bg-white px-4 py-3 shadow-[0_20px_45px_rgba(23,23,25,0.16)] transition-opacity dark:bg-[#24242E] ${faded ? "opacity-70" : ""}`}>
-      <div className="flex items-center gap-2.5">
-        <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[12px] font-bold text-white ${tone.dot}`} aria-hidden="true">
-          {tone.icon}
-        </span>
-        <div className="min-w-0">
-          <p className="text-[14px] font-semibold leading-snug text-[#171719] dark:text-white">{r.title}</p>
-          <p className="text-[12.5px] leading-snug text-[#62616B] dark:text-white/60">
-            {r.channel === "WhatsApp" ? "💬" : "📞"} {r.detail}
-          </p>
-        </div>
+    <div className={`flex items-center gap-3 rounded-2xl bg-white/95 px-3.5 py-3 shadow-[0_16px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-opacity ${faded ? "opacity-75" : ""}`}>
+      <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-white ${tone.dot}`}>
+        <tone.Icon />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[14px] font-semibold leading-snug text-[#171719]">{r.title}</p>
+        <p className="text-[12.5px] leading-snug text-[#62616B]">
+          {r.channel === "WhatsApp" ? "WhatsApp" : "Telefon"} · {r.detail}
+        </p>
       </div>
       <span className="sr-only">{tone.label}</span>
     </div>

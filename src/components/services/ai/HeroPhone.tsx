@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { IconPhone } from "./icons";
 
 const CHAT = [
   { me: true, text: "Merhaba, bu akşam 4 kişilik yer var mı?" },
@@ -147,7 +148,7 @@ export default function HeroPhone() {
           {/* Önde yüzen kartlar (farklı derinlik) */}
           <div className="hero-float hero-float-call absolute -left-[16%] top-[12%] w-[200px] rounded-2xl bg-[#111116] p-3.5 text-white shadow-[0_24px_50px_rgba(17,17,22,0.35)] md:-left-[34%] md:top-[17%] md:w-[230px]">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#DB2777] text-[16px]">📞</span>
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#DB2777] text-white"><IconPhone size={18} /></span>
               <div className="min-w-0">
                 <p className="text-[13px] font-semibold">Gelen arama</p>
                 <p className="truncate text-[12px] text-white/60">Asistan yanıtlıyor · 00:24</p>
@@ -177,7 +178,7 @@ export default function HeroPhone() {
           onClick={askPermission}
           className="absolute bottom-1 left-1/2 z-[2] min-h-[44px] -translate-x-1/2 whitespace-nowrap rounded-full border border-[#DAD8DF] bg-white/90 px-4 text-[13px] font-semibold text-[#171719] shadow-[0_8px_24px_rgba(23,23,25,0.12)] backdrop-blur"
         >
-          📱 Telefonunu sağa sola eğ
+          Telefonunu sağa sola eğ
         </button>
       )}
     </div>

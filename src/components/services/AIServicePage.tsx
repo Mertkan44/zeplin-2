@@ -14,6 +14,7 @@ import { RelatedServices } from "./RelatedServices";
 import TryAssistant from "./ai/TryAssistant";
 import VoicePicker from "./ai/VoicePicker";
 import HeroPhone from "./ai/HeroPhone";
+import { IconBox, IconCalendar, IconChat, IconHandoff, IconMoon, IconPanel, IconPhone, IconQuestion } from "./ai/icons";
 
 const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
@@ -21,7 +22,7 @@ const h2 = "mt-4 text-[clamp(32px,4.2vw,54px)] font-semibold leading-[1.06] trac
 const lead = "mt-5 max-w-[60ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 md:text-[18px]";
 const rule = "border-[#DAD8DF] dark:border-white/10";
 
-const CAP_ICONS = ["📅", "💬", "📦", "🌙", "↪", "▦"];
+const CAP_ICONS = [IconCalendar, IconQuestion, IconBox, IconMoon, IconHandoff, IconPanel];
 
 export function AIServicePage({ service }: { service: ServiceData }) {
   const related = getRelatedServices(service.relatedSlugs);
@@ -97,8 +98,8 @@ export function AIServicePage({ service }: { service: ServiceData }) {
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <span aria-hidden="true" className={`grid h-14 w-14 place-items-center rounded-2xl text-[26px] ${c.id === "chatbot" ? "bg-[#FCE7F3] dark:bg-[#DB2777]/20" : "bg-[#DB2777]/20"}`}>
-                    {c.id === "chatbot" ? "💬" : "📞"}
+                  <span aria-hidden="true" className={`grid h-14 w-14 place-items-center rounded-2xl ${c.id === "chatbot" ? "bg-[#FCE7F3] text-[#BE185D] dark:bg-[#DB2777]/20 dark:text-[#F9A8D4]" : "bg-[#DB2777]/20 text-[#F9A8D4]"}`}>
+                    {c.id === "chatbot" ? <IconChat size={26} /> : <IconPhone size={26} />}
                   </span>
                   <div>
                     <h3 className="text-[28px] font-semibold tracking-[-0.02em]">{c.name}</h3>
@@ -149,8 +150,8 @@ export function AIServicePage({ service }: { service: ServiceData }) {
           <ul className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {CAPABILITIES.map((c, i) => (
               <li key={c.title} className={`border-t ${rule} pt-6`}>
-                <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[20px] shadow-[0_6px_20px_rgba(23,23,25,0.06)] dark:bg-white/10">
-                  {CAP_ICONS[i]}
+                <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[#BE185D] shadow-[0_6px_20px_rgba(23,23,25,0.06)] dark:bg-white/10">
+                  {(() => { const Icon = CAP_ICONS[i]; return <Icon size={22} />; })()}
                 </span>
                 <h3 className="mt-4 text-[21px] font-semibold tracking-[-0.015em]">{c.title}</h3>
                 <p className="mt-2 text-[16.5px] leading-[1.6] text-[#3A3942] dark:text-white/70">{c.desc}</p>

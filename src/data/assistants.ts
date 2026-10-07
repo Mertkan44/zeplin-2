@@ -156,12 +156,12 @@ export const CHAT_FLOWS: Record<SectorId, ChatFlow> = {
       ],
     },
     "vegan-menu": {
-      bot: ["Menümüzü gönderdim 📎 Vegan seçenekler yeşil yaprakla işaretli."],
+      bot: ["Menümüzü gönderdim. Vegan seçenekler yeşil yaprakla işaretli."],
       options: AGAIN("menu"),
       record: { title: "Menü paylaşıldı", detail: "Vegan seçenekler soruldu", kind: "info" },
     },
     adres: {
-      bot: ["Örnek Sokak No: 12'deyiz. Konumu gönderdim 📍 Akşamları sokağın başında vale var."],
+      bot: ["Örnek Sokak No: 12'deyiz. Konumu gönderdim; akşamları sokağın başında vale var."],
       options: AGAIN("menu"),
       record: { title: "Konum paylaşıldı", detail: "Adres soruldu", kind: "info" },
     },
@@ -248,7 +248,7 @@ export const CHAT_FLOWS: Record<SectorId, ChatFlow> = {
       options: [{ label: "#4821 · 2 ürün", next: "sip-ok" }],
     },
     "sip-ok": {
-      bot: ["4821 numaralı siparişiniz bugün kargoya verildi; yarın teslim edilmesi bekleniyor.", "Takip bağlantısını gönderdim 📦"],
+      bot: ["4821 numaralı siparişiniz bugün kargoya verildi; yarın teslim edilmesi bekleniyor.", "Takip bağlantısını gönderdim."],
       options: AGAIN("menu"),
       record: { title: "Kargo bilgisi paylaşıldı", detail: "Sipariş 4821 · takip bağlantısı", kind: "success" },
     },
@@ -265,7 +265,7 @@ export const CHAT_FLOWS: Record<SectorId, ChatFlow> = {
       record: { title: "Değişim talebi açıldı", detail: "Beden değişimi", kind: "success" },
     },
     beden: {
-      bot: ["M beden şu an tükendi 😕 Gelince size haber vereyim mi?"],
+      bot: ["M beden şu an tükendi. Gelince size haber vereyim mi?"],
       options: [
         { label: "Evet, haber ver", next: "beden-ok" },
         { label: "L bedene bakalım", next: "beden-l" },
@@ -277,7 +277,7 @@ export const CHAT_FLOWS: Record<SectorId, ChatFlow> = {
       record: { title: "Stok bildirimi kuruldu", detail: "Ceket · M beden", kind: "info" },
     },
     "beden-l": {
-      bot: ["L beden stokta var. Sepete eklemeniz için bağlantıyı gönderdim 🛍️"],
+      bot: ["L beden stokta var. Sepete eklemeniz için bağlantıyı gönderdim."],
       options: AGAIN("menu"),
       record: { title: "Ürün bağlantısı paylaşıldı", detail: "Ceket · L beden", kind: "info" },
     },
