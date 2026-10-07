@@ -74,18 +74,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
 
       {/* ── Kendiniz deneyin (öngösterim) ──────────────────────────── */}
       <section id="demo" aria-labelledby="try-title" className={`scroll-mt-24 border-t ${rule} py-20 md:py-28`}>
-        <div className={wrap}>
-          <div className="mb-10 grid gap-6 lg:grid-cols-[1.3fr_1fr] lg:items-end">
-            <div>
-              <p className={eyebrow}>Kendiniz deneyin</p>
-              <h2 id="try-title" className={h2}>
-                Asistanla konuşun.
-              </h2>
-            </div>
-            <p className="max-w-[46ch] text-[17px] leading-[1.65] text-[#62616B] dark:text-white/65 lg:pb-2">
-              Bir sektör seçin; ister yazarak deneyin, ister arayıp asistanın sesini dinleyin.
-            </p>
-          </div>
+        <div className={`${wrap} overflow-x-clip`}>
           <TryAssistant />
         </div>
       </section>
