@@ -68,8 +68,10 @@ export default function NightStory() {
   const pinned = usePinned(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [scrollP, setScrollP] = useState(0);
-  // Masaüstü: sahne ekrana girerken üst kenarda alacakaranlık geçişi (0 → 1); çıkışta sabahla aydınlanır
+  // Masaüstü: sahne yuvarlak köşeli bir kart olarak alttan girer, ekranı kapladıkça köşeleri düzleşir (0 → 1);
+  // çıkarken aynı hareketin tersi (sitenin pembe kapanış bandıyla aynı yüzey dili)
   const [enterP, setEnterP] = useState(0);
+  const [exitP, setExitP] = useState(0);
   const [playP, setPlayP] = useState(0);
   const played = useRef(false);
 
@@ -85,6 +87,7 @@ export default function NightStory() {
         const r = el.getBoundingClientRect();
         setScrollP(clamp(-r.top / Math.max(1, r.height - window.innerHeight)));
         setEnterP(clamp(1 - r.top / (window.innerHeight * 0.85)));
+        setExitP(clamp((window.innerHeight - r.bottom) / (window.innerHeight * 0.85)));
       });
     };
     onScroll();
@@ -137,10 +140,15 @@ export default function NightStory() {
   const unanswered = Math.round(shown * (1 - order));
   const clock =
     morning > 0.5 ? "09.00" : shown > 0 ? NIGHT[Math.min(shown, NIGHT.length) - 1].time : "23.47";
-  const lightsOut = pinned && !reduced ? ease(enterP) : 1;
+  const card = pinned && !reduced;
+  const lightsOut = card ? ease(enterP) : 1;
+  const R = 44; // köşe yarıçapı (px)
+  const INSET = 28; // kenarlardan içeri (px)
+  // Şekil doğrusal ilerler: kart görünümü girişin/çıkışın büyük kısmında okunur
+  const sIn = 1 - enterP;
+  const sOut = exitP;
+  const shape = card ? `inset(0 ${(sIn + sOut) * INSET}px 0 round ${sIn * R}px ${sIn * R}px ${sOut * R}px ${sOut * R}px)` : undefined;
   const dark = 1 - morning;
-  // Geçiş, sahne yerine oturana dek tam güçte (kenar hiç görünmez); sabitlendikten sonraki ilk kaydırmada söner
-  const dusk = enterP < 1 ? 1 : 1 - seg(scrollP, 0, 0.05);
   // "Asistan devrede." beklerken mesajlar geri çekilir, düzene geçerken geri gelir
   const hush = seg(p, 0.37, 0.42) * (1 - seg(p, 0.56, 0.62));
 
@@ -152,16 +160,8 @@ export default function NightStory() {
     >
       <div
         className={`${pinned && !reduced ? "sticky top-0 h-[100svh]" : "h-[800px]"} relative overflow-hidden`}
-        style={{ background: `rgb(${mix(247, 11, dark)} ${mix(246, 10, dark)} ${mix(243, 13, dark)})` }}
+        style={{ background: `rgb(${mix(247, 11, dark)} ${mix(246, 10, dark)} ${mix(243, 13, dark)})`, clipPath: shape }}
       >
-        {/* Alacakaranlık: sayfanın açık renginden geceye yumuşak geçiş (yalnızca giriş sırasında) */}
-        {pinned && !reduced && dusk > 0 && (
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-[6] h-[55svh] bg-[linear-gradient(180deg,#F7F6F3_0%,rgba(247,246,243,0.6)_30%,rgba(11,10,13,0)_100%)] dark:bg-[linear-gradient(180deg,#0F0F12_0%,rgba(15,15,18,0)_100%)]" style={{ opacity: dusk }} />
-        )}
-        {/* Karanlık mod çıkışı: açık renkli sabah, koyu sayfaya alttan yumuşakça bağlanır */}
-        {pinned && !reduced && morning > 0 && (
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-[6] hidden h-[26svh] bg-[linear-gradient(0deg,#0F0F12_0%,rgba(15,15,18,0.5)_40%,rgba(15,15,18,0)_100%)] dark:block" style={{ opacity: morning }} />
-        )}
         {/* Gren */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] mix-blend-overlay" style={{ backgroundImage: GRAIN, opacity: 0.35 }} />
 
