@@ -8,8 +8,8 @@
 import { useRef, useState } from "react";
 import { FAQ } from "@/data/assistants";
 
-const DISPLAY = { fontFamily: "var(--font-night-display), var(--font-jost), sans-serif" } as const;
-const MONO = { fontFamily: "var(--font-night-mono), ui-monospace, monospace" } as const;
+const DISPLAY = { fontFamily: "var(--font-jost), sans-serif" } as const;
+const MONO = { fontFamily: "var(--font-jost), sans-serif", fontWeight: 500 } as const;
 
 export default function AssistantFaq() {
   const [open, setOpen] = useState(0);
@@ -32,7 +32,7 @@ export default function AssistantFaq() {
         <p className="text-[12px] uppercase tracking-[0.2em] text-[#DB2777] dark:text-[#F472B6]" style={MONO}>
           Sık sorulanlar
         </p>
-        <h2 id="ai-faq-title" className="mt-4 font-bold leading-[1.02] tracking-[-0.045em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
+        <h2 id="ai-faq-title" className="mt-4 font-bold leading-[1.02] tracking-[-0.025em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
           Sorun, yanıtlayalım.
         </h2>
 

@@ -12,8 +12,8 @@ import { PRINCIPLES, TONES, VOICES, type ToneId, type VoiceId } from "@/data/ass
 
 type PlayState = "idle" | "loading" | "playing" | "missing";
 
-const DISPLAY = { fontFamily: "var(--font-night-display), var(--font-jost), sans-serif" } as const;
-const MONO = { fontFamily: "var(--font-night-mono), ui-monospace, monospace" } as const;
+const DISPLAY = { fontFamily: "var(--font-jost), sans-serif" } as const;
+const MONO = { fontFamily: "var(--font-jost), sans-serif", fontWeight: 500 } as const;
 
 /* Her sese sabit, ayırt edici bir dalga deseni (dekoratif) */
 const wave = (seed: number) => Array.from({ length: 28 }, (_, i) => 8 + ((i * (seed * 7 + 13)) % 22));
@@ -60,7 +60,7 @@ export default function AssistantPersona() {
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
       {/* ── Sağ (masaüstü): anlatım + seçim ─────────────────── */}
       <div className="lg:order-2">
-        <h2 id="persona-title" className="font-bold leading-[1.02] tracking-[-0.045em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
+        <h2 id="persona-title" className="font-bold leading-[1.02] tracking-[-0.025em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
           Sesini siz seçin, sınırlarını birlikte belirleyelim.
         </h2>
 
@@ -81,7 +81,7 @@ export default function AssistantPersona() {
                     0{i + 1}
                   </span>
                   <span
-                    className={`min-w-[110px] font-bold tracking-[-0.03em] transition-colors ${selected ? "text-[#171719] dark:text-white" : "text-[#8E8D99] group-hover:text-[#3A3942] dark:group-hover:text-white/80"}`}
+                    className={`min-w-[110px] font-bold tracking-[-0.015em] transition-colors ${selected ? "text-[#171719] dark:text-white" : "text-[#8E8D99] group-hover:text-[#3A3942] dark:group-hover:text-white/80"}`}
                     style={{ ...DISPLAY, fontSize: "clamp(26px, 2.4vw, 36px)" }}
                   >
                     {v.name}
@@ -130,7 +130,7 @@ export default function AssistantPersona() {
               <span className="text-[#F472B6]">No. 0{vi + 1}</span>
             </div>
 
-            <p key={voice} className="persona-in mt-6 font-extrabold leading-[0.9] tracking-[-0.06em]" style={{ ...DISPLAY, fontSize: "clamp(64px, 8vw, 120px)" }}>
+            <p key={voice} className="persona-in mt-6 font-extrabold leading-[0.9] tracking-[-0.035em]" style={{ ...DISPLAY, fontSize: "clamp(64px, 8vw, 120px)" }}>
               {current.name}
             </p>
             <p className="mt-3 text-[12px] uppercase tracking-[0.16em] text-white/55" style={MONO}>

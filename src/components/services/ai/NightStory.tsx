@@ -37,8 +37,8 @@ const ORDER = NIGHT.map((_, i) => [i < 6 ? 30 : 70, 22 + (i % 6) * 11.5]);
 /* Mobil: kenara taşmasın diye dağınıklık daraltılır, sütunlar kenara yaklaşır */
 const ORDER_M = NIGHT.map((_, i) => [i < 6 ? 26 : 74, 17 + (i % 6) * 12.6]);
 
-const DISPLAY = { fontFamily: "var(--font-night-display), var(--font-jost), sans-serif" } as const;
-const MONO = { fontFamily: "var(--font-night-mono), ui-monospace, monospace" } as const;
+const DISPLAY = { fontFamily: "var(--font-jost), sans-serif" } as const;
+const MONO = { fontFamily: "var(--font-jost), sans-serif", fontWeight: 500 } as const;
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const seg = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
@@ -173,7 +173,7 @@ export default function NightStory() {
           <div className="absolute inset-0 z-[3] grid place-items-center text-center" style={{ opacity: silence }}>
             <div>
               <p className="text-[12px] uppercase tracking-[0.24em] text-[#F472B6]" style={MONO}>Nasıl çalışır</p>
-              <p className="mt-4 font-extrabold leading-[0.85] tracking-[-0.06em] text-white tabular-nums" style={{ ...DISPLAY, fontSize: "clamp(120px, 24vw, 340px)" }}>
+              <p className="mt-4 font-extrabold leading-[0.85] tracking-[-0.035em] text-white tabular-nums" style={{ ...DISPLAY, fontSize: "clamp(120px, 24vw, 340px)" }}>
                 23.47
               </p>
               <p className="mt-6 text-[clamp(18px,1.8vw,26px)] text-white/65" style={DISPLAY}>
@@ -241,7 +241,7 @@ export default function NightStory() {
           {/* Cevapsız sayacı */}
           <div className="absolute bottom-10 right-6 z-[4] text-right md:bottom-14 md:right-12" style={{ opacity: Math.max(chaosIn * (1 - morning), 0) }}>
             <p
-              className="font-extrabold leading-[0.85] tracking-[-0.05em] tabular-nums"
+              className="font-extrabold leading-[0.85] tracking-[-0.015em] tabular-nums"
               style={{ ...DISPLAY, fontSize: "clamp(72px, 10vw, 150px)", color: unanswered > 0 ? "#FB7185" : "#F472B6" }}
             >
               {unanswered}
@@ -251,7 +251,7 @@ export default function NightStory() {
 
           {/* 3 · Kırılma */}
           <p
-            className="absolute inset-x-0 z-[7] text-center font-extrabold leading-none tracking-[-0.055em] text-white"
+            className="absolute inset-x-0 z-[7] text-center font-extrabold leading-none tracking-[-0.03em] text-white"
             style={{
               top: `${mix(50, pinned ? 9 : 6, order)}%`,
               transform: `translateY(-50%) scale(${mix(1, pinned ? 0.32 : 0.42, order)})`,
@@ -273,7 +273,7 @@ export default function NightStory() {
                 <p className="text-[11.5px] uppercase tracking-[0.2em] text-[#DB2777]" style={MONO}>
                   09.00 · Atlas Restoran açılıyor
                 </p>
-                <p className="mt-5 font-bold leading-[1] tracking-[-0.045em] text-[#171719]" style={{ ...DISPLAY, fontSize: "clamp(38px, 5vw, 84px)" }}>
+                <p className="mt-5 font-bold leading-[1] tracking-[-0.025em] text-[#171719]" style={{ ...DISPLAY, fontSize: "clamp(38px, 5vw, 84px)" }}>
                   Siz uyurken <span className="text-[#DB2777]">{NIGHT.length} kişi</span> yazdı ya da aradı. Hiçbiri cevapsız kalmadı.
                 </p>
                 <p className="mt-5 max-w-[46ch] text-[clamp(15px,1.25vw,18px)] leading-relaxed text-[#62616B]">
