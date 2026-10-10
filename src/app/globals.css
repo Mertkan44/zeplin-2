@@ -663,26 +663,26 @@ body:has([data-footer-under="pink"]) .site-footer {
 /* "23.47" gece sahnesi */
 .night-pop { animation: nightPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .night-stamp { animation: nightStamp 0.32s cubic-bezier(0.2, 1.6, 0.4, 1); }
-.night-marquee { animation: nightMarquee 26s linear infinite; }
-.night-jitter { animation: nightJitter 0.12s steps(2) infinite; }
-.night-run-l { animation: nightRunL 9s linear infinite; }
-.night-run-r { animation: nightRunR 9s linear infinite; }
+/* Çalan telefon: ahize kısa aralıklarla zıplar, titreşim çizgileri yanıp söner */
+.phone-handset { animation: phoneRing 1.1s ease-in-out infinite; }
+.phone-waves { animation: phoneWaves 1.1s ease-in-out infinite; }
+@keyframes phoneRing {
+  0%, 52%, 100% { transform: none; }
+  4% { transform: translateY(-16px) rotate(-7deg); }
+  10% { transform: translateY(-12px) rotate(6deg); }
+  16% { transform: translateY(-16px) rotate(-6deg); }
+  22% { transform: translateY(-12px) rotate(5deg); }
+  28% { transform: translateY(-14px) rotate(-4deg); }
+  36% { transform: translateY(-4px) rotate(2deg); }
+}
+@keyframes phoneWaves {
+  0%, 40%, 100% { opacity: 0; }
+  6%, 30% { opacity: 1; }
+}
 /* Fişin alt kenarı: yırtık adisyon */
 .night-receipt {
   -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
   mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
-}
-@keyframes nightJitter {
-  0% { translate: 0 0; }
-  50% { translate: 3px -2px; }
-}
-@keyframes nightRunL {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes nightRunR {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
 }
 @keyframes nightPop {
   from { scale: 1.6; opacity: 0; filter: blur(6px); }
@@ -691,10 +691,6 @@ body:has([data-footer-under="pink"]) .site-footer {
 @keyframes nightStamp {
   from { scale: 2.4; opacity: 0; }
   to { scale: 1; opacity: 1; }
-}
-@keyframes nightMarquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
 }
 @keyframes heroPhoneIn {
   from { translate: 60% 8%; rotate: y 40deg; opacity: 0; }
@@ -717,7 +713,7 @@ body:has([data-footer-under="pink"]) .site-footer {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-phone, .hero-float, .hero-msg, .hero-wave { animation: none !important; }
-  .hero-backdrop, .try-flip, .try-pop, .night-pop, .night-stamp, .night-marquee, .night-jitter, .night-run-l, .night-run-r { animation: none !important; }
+  .hero-backdrop, .try-flip, .try-pop, .night-pop, .night-stamp, .phone-handset, .phone-waves { animation: none !important; }
   .hero-ring { animation: none !important; scale: 1.2; opacity: 0.35; }
   .hero-ring-2 { display: none; }
   .hero-phone { transform: translate(-50%, -50%) rotateX(3deg) rotateY(-8deg); transition: none; }

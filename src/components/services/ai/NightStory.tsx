@@ -38,8 +38,7 @@ const ORDER = NIGHT.map((_, i) => [i < 6 ? 30 : 70, 22 + (i % 6) * 11.5]);
 /* Mobil: kenara taşmasın diye dağınıklık daraltılır, sütunlar kenara yaklaşır */
 const ORDER_M = NIGHT.map((_, i) => [i < 6 ? 26 : 74, 17 + (i % 6) * 12.6]);
 
-const WORDS = ["rezervasyon", "randevu", "sık sorulanlar", "sipariş takibi", "gece yarısı", "ekibe devir", "kayıt ve özet"];
-const SERIF = { fontFamily: "var(--font-instrument), Georgia, serif" } as const;
+const DISPLAY = { fontFamily: "var(--font-night-display), var(--font-jost), sans-serif" } as const;
 const MONO = { fontFamily: "var(--font-night-mono), ui-monospace, monospace" } as const;
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -128,22 +127,24 @@ export default function NightStory() {
   /* Evreler */
   const silence = 1 - seg(p, 0.08, 0.14);
   const chaosIn = seg(p, 0.12, 0.18);
-  const shown = Math.floor(seg(p, 0.15, 0.4) * NIGHT.length + 0.0001);
-  const flash = p < 0.455 ? seg(p, 0.41, 0.455) : 1 - seg(p, 0.455, 0.52);
-  const devrede = seg(p, 0.43, 0.47) * (1 - seg(p, 0.6, 0.66));
-  const order = ease(seg(p, 0.5, 0.64));
-  const morning = seg(p, 0.72, 0.8);
-  const chaos = chaosIn * (1 - seg(p, 0.42, 0.48));
+  const shown = Math.floor(seg(p, 0.15, 0.34) * NIGHT.length + 0.0001);
+  const flash = p < 0.375 ? seg(p, 0.35, 0.375) : 1 - seg(p, 0.375, 0.44);
+  const devrede = seg(p, 0.36, 0.39) * (1 - seg(p, 0.7, 0.75)); // ~0.39–0.58 tam ekran kalır
+  const order = ease(seg(p, 0.58, 0.7));
+  const morning = seg(p, 0.8, 0.87);
+  const chaos = chaosIn * (1 - seg(p, 0.35, 0.4));
   const unanswered = Math.round(shown * (1 - order));
   const clock =
     morning > 0.5 ? "09.00" : shown > 0 ? NIGHT[Math.min(shown, NIGHT.length) - 1].time : "23.47";
   const dark = 1 - morning;
+  // "Asistan devrede." beklerken mesajlar geri çekilir, düzene geçerken geri gelir
+  const hush = seg(p, 0.37, 0.42) * (1 - seg(p, 0.56, 0.62));
 
   return (
     <section
       ref={sectionRef}
       aria-labelledby="night-title"
-      className={pinned && !reduced ? "relative h-[560svh]" : "relative"}
+      className={pinned && !reduced ? "relative h-[680svh]" : "relative"}
     >
       <div
         className={`${pinned && !reduced ? "sticky top-0 h-[100svh]" : "h-[800px]"} relative overflow-hidden`}
@@ -174,31 +175,19 @@ export default function NightStory() {
           <div className="absolute inset-0 z-[3] grid place-items-center text-center" style={{ opacity: silence }}>
             <div>
               <p className="text-[12px] uppercase tracking-[0.24em] text-[#F472B6]" style={MONO}>Nasıl çalışır</p>
-              <p className="mt-4 leading-[0.85] tracking-[-0.03em] text-white tabular-nums" style={{ ...SERIF, fontSize: "clamp(130px, 26vw, 380px)" }}>
+              <p className="mt-4 font-extrabold leading-[0.85] tracking-[-0.06em] text-white tabular-nums" style={{ ...DISPLAY, fontSize: "clamp(120px, 24vw, 340px)" }}>
                 23.47
               </p>
-              <p className="mt-6 text-[clamp(20px,2vw,30px)] italic text-white/70" style={SERIF}>
+              <p className="mt-6 text-[clamp(18px,1.8vw,26px)] text-white/65" style={DISPLAY}>
                 Atlas Restoran kapandı. Telefon susmuyor.
               </p>
               <p className="mt-10 text-[11px] uppercase tracking-[0.24em] text-white/35" style={MONO}>{pinned ? "↓ kaydırın" : ""}</p>
             </div>
           </div>
 
-          {/* 2 · Kaos: ekranı dolduran, ters yönlere akan "arıyor…" satırları */}
-          <div className={`absolute inset-0 z-[1] flex flex-col justify-center gap-[1vh] overflow-hidden ${chaos > 0.05 && !reduced ? "night-jitter" : ""}`} style={{ opacity: chaos }}>
-            {[0, 1, 2, 3, 4].map((row) => (
-              <div key={row} className={`whitespace-nowrap ${reduced ? "" : row % 2 ? "night-run-r" : "night-run-l"}`} style={{ animationDuration: `${7 + row * 1.7}s` }}>
-                {Array.from({ length: 8 }).map((_, k) => (
-                  <span
-                    key={k}
-                    className="mr-[0.25em] italic leading-[0.95]"
-                    style={{ ...SERIF, fontSize: "clamp(64px, 11vw, 170px)", color: row === 2 ? "rgba(244,114,182,0.32)" : "rgba(255,255,255,0.07)" }}
-                  >
-                    arıyor…
-                  </span>
-                ))}
-              </div>
-            ))}
+          {/* 2 · Kaos: çalan, ahizeli masa telefonu */}
+          <div className="absolute inset-0 z-[1] grid place-items-center" style={{ opacity: chaos }}>
+            <RingingPhone ringing={chaos > 0.05 && !reduced} />
           </div>
 
           {/* Mesajlar */}
@@ -212,7 +201,7 @@ export default function NightStory() {
             const y = mix(sy, oy, order);
             const rot = mix(sr, 0, order);
             const fresh = i === shown - 1 && order === 0;
-            const stamped = order > 0 && seg(p, 0.6 + i * 0.008, 0.62 + i * 0.008) > 0;
+            const stamped = order > 0 && seg(p, 0.66 + i * 0.006, 0.67 + i * 0.006) > 0;
             const isCall = m.kind === "call";
             return (
               <div
@@ -221,8 +210,9 @@ export default function NightStory() {
                 style={{
                   left: `${x}%`,
                   top: `${y}%`,
-                  transform: `translate(-50%, -50%) rotate(${rot}deg)`,
-                  opacity: 1 - morning,
+                  transform: `translate(-50%, -50%) rotate(${rot}deg) scale(${1 - hush * 0.06})`,
+                  opacity: (1 - morning) * (1 - hush * 0.86),
+                  filter: hush > 0.01 ? `blur(${hush * 4}px)` : undefined,
                 }}
               >
                 <div
@@ -253,8 +243,8 @@ export default function NightStory() {
           {/* Cevapsız sayacı */}
           <div className="absolute bottom-10 right-6 z-[4] text-right md:bottom-14 md:right-12" style={{ opacity: Math.max(chaosIn * (1 - morning), 0) }}>
             <p
-              className="leading-[0.85] tabular-nums"
-              style={{ ...SERIF, fontSize: "clamp(72px, 10vw, 150px)", color: unanswered > 0 ? "#FB7185" : "#F472B6" }}
+              className="font-extrabold leading-[0.85] tracking-[-0.05em] tabular-nums"
+              style={{ ...DISPLAY, fontSize: "clamp(72px, 10vw, 150px)", color: unanswered > 0 ? "#FB7185" : "#F472B6" }}
             >
               {unanswered}
             </p>
@@ -264,12 +254,12 @@ export default function NightStory() {
           {/* 3 · Kırılma */}
           <div className="pointer-events-none absolute inset-0 z-[6] bg-[#DB2777]" style={{ opacity: flash * 0.92 }} />
           <p
-            className="absolute inset-x-0 z-[7] text-center italic leading-none tracking-[-0.02em] text-white"
+            className="absolute inset-x-0 z-[7] text-center font-extrabold leading-none tracking-[-0.055em] text-white"
             style={{
               top: `${mix(50, pinned ? 9 : 6, order)}%`,
               transform: `translateY(-50%) scale(${mix(1, pinned ? 0.32 : 0.42, order)})`,
-              ...SERIF,
-              fontSize: "clamp(76px, 13vw, 210px)",
+              ...DISPLAY,
+              fontSize: "clamp(64px, 11vw, 180px)",
               opacity: devrede,
             }}
           >
@@ -286,8 +276,8 @@ export default function NightStory() {
                 <p className="text-[11.5px] uppercase tracking-[0.2em] text-[#DB2777]" style={MONO}>
                   09.00 · Atlas Restoran açılıyor
                 </p>
-                <p className="mt-5 leading-[1.02] tracking-[-0.02em] text-[#171719]" style={{ ...SERIF, fontSize: "clamp(40px, 5.4vw, 92px)" }}>
-                  Siz uyurken <span className="italic text-[#DB2777]">{NIGHT.length} kişi</span> yazdı ya da aradı. Hiçbiri cevapsız kalmadı.
+                <p className="mt-5 font-bold leading-[1] tracking-[-0.045em] text-[#171719]" style={{ ...DISPLAY, fontSize: "clamp(38px, 5vw, 84px)" }}>
+                  Siz uyurken <span className="text-[#DB2777]">{NIGHT.length} kişi</span> yazdı ya da aradı. Hiçbiri cevapsız kalmadı.
                 </p>
                 <p className="mt-5 max-w-[46ch] text-[clamp(15px,1.25vw,18px)] leading-relaxed text-[#62616B]">
                   Yazanlar WhatsApp&apos;tan, arayanlar telefondan; hepsini aynı asistan karşıladı. Ekibe kalan iki konuşma sabah masada bekliyor.
@@ -323,22 +313,6 @@ export default function NightStory() {
                 <p className="mt-5 text-center text-[10.5px] uppercase tracking-[0.16em] text-[#8E8D99]">örnek gece · işletme kurmaca</p>
               </div>
             </div>
-
-            {/* Akan yetenekler */}
-            <div className={`overflow-hidden whitespace-nowrap border-y border-[#171719]/15 py-3 ${pinned ? "mt-12" : "mt-8"}`}>
-              <div className={`inline-flex items-center ${reduced ? "" : "night-marquee"}`}>
-                {[...WORDS, ...WORDS].map((w, i) => (
-                  <span key={i} className="inline-flex items-center">
-                    <span className="italic text-[#171719]" style={{ ...SERIF, fontSize: "clamp(34px, 4.2vw, 64px)" }}>
-                      {w}
-                    </span>
-                    <span className="mx-6 text-[12px] text-[#DB2777]" style={MONO}>
-                      ✳
-                    </span>
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
@@ -354,5 +328,44 @@ export default function NightStory() {
         )}
       </div>
     </section>
+  );
+}
+
+/* Kodla çizilmiş retro masa telefonu: çalarken ahize zıplar, yanlardan titreşim çizgileri yayılır. */
+function RingingPhone({ ringing }: { ringing: boolean }) {
+  return (
+    <svg viewBox="0 0 420 340" className="w-[min(560px,78vw)] overflow-visible" aria-hidden="true">
+      {/* Titreşim çizgileri */}
+      <g className={ringing ? "phone-waves" : ""} fill="none" stroke="#F472B6" strokeWidth="6" strokeLinecap="round" opacity={ringing ? 1 : 0}>
+        <path d="M18 70 Q4 100 18 130" />
+        <path d="M-8 52 Q-30 100 -8 148" opacity="0.6" />
+        <path d="M402 70 Q416 100 402 130" />
+        <path d="M428 52 Q450 100 428 148" opacity="0.6" />
+      </g>
+      {/* Kordon */}
+      <path d="M88 250 C40 250 50 290 20 292 C0 293 6 312 -10 318" fill="none" stroke="#9D174D" strokeWidth="5" strokeLinecap="round" strokeDasharray="1 9" />
+      {/* Gövde */}
+      <path d="M78 318 L342 318 Q366 318 359 294 L318 160 Q312 142 292 142 L128 142 Q108 142 102 160 L61 294 Q54 318 78 318 Z" fill="#DB2777" />
+      <path d="M108 168 L312 168" stroke="#F9A8D4" strokeWidth="4" strokeLinecap="round" opacity="0.5" />
+      {/* Kadran */}
+      <circle cx="210" cy="238" r="66" fill="#9D174D" />
+      <circle cx="210" cy="238" r="62" fill="none" stroke="#F9A8D4" strokeWidth="2" opacity="0.4" />
+      {Array.from({ length: 10 }).map((_, k) => {
+        const a = ((k * 30 - 200) * Math.PI) / 180;
+        return <circle key={k} cx={210 + 44 * Math.cos(a)} cy={238 + 44 * Math.sin(a)} r="10" fill="#0B0A0D" />;
+      })}
+      <circle cx="210" cy="238" r="20" fill="#F472B6" />
+      {/* Çatal */}
+      <rect x="112" y="122" width="34" height="26" rx="8" fill="#BE185D" />
+      <rect x="274" y="122" width="34" height="26" rx="8" fill="#BE185D" />
+      {/* Ahize */}
+      <g className={ringing ? "phone-handset" : ""} style={{ transformOrigin: "210px 120px", transformBox: "view-box" }}>
+        <path
+          d="M74 128 Q48 128 48 104 L50 82 Q52 58 82 58 L134 60 Q158 62 158 86 L158 94 Q210 78 262 94 L262 86 Q262 62 286 60 L338 58 Q368 58 370 82 L372 104 Q372 128 346 128 L290 128 Q266 128 262 112 Q210 98 158 112 Q154 128 130 128 Z"
+          fill="#F472B6"
+        />
+        <path d="M88 76 L128 77" stroke="#FCE7F3" strokeWidth="5" strokeLinecap="round" opacity="0.7" />
+      </g>
+    </svg>
   );
 }

@@ -7,9 +7,9 @@
  */
 
 import Link from "next/link";
-import { JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { briefHref, getRelatedServices, type ServiceData } from "@/data/services";
-import { CHANNELS, FAQ, PRINCIPLES } from "@/data/assistants";
+import { FAQ, PRINCIPLES } from "@/data/assistants";
 import { whatsappUrl } from "@/lib/contact";
 import { RelatedServices } from "./RelatedServices";
 import TryAssistant from "./ai/TryAssistant";
@@ -18,6 +18,7 @@ import HeroPhone from "./ai/HeroPhone";
 import NightStory from "./ai/NightStory";
 
 // Gece sahnesindeki saat, damga ve fiş satırları için (yalnızca bu sayfada yüklenir)
+const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-night-display", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "700"], variable: "--font-night-mono", display: "swap" });
 
 const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
@@ -31,7 +32,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
   const related = getRelatedServices(service.relatedSlugs);
 
   return (
-    <main className={`${mono.variable} min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white`}>
+    <main className={`${mono.variable} ${display.variable} min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white`}>
       {/* ── Açılış + iki kanal demosu ──────────────────────────────── */}
       <section aria-labelledby="ai-title" className="overflow-x-clip pb-12 pt-28 md:pb-16 md:pt-36">
         <div className={wrap}>
@@ -87,13 +88,6 @@ export function AIServicePage({ service }: { service: ServiceData }) {
       <span id="chatbot" className="block scroll-mt-24" aria-hidden="true" />
       <span id="callbot" className="block" aria-hidden="true" />
       <NightStory />
-      <div className={`${wrap} grid gap-3 py-8 text-[13.5px] leading-relaxed text-[#62616B] dark:text-white/55 md:grid-cols-2 md:gap-10`}>
-        {CHANNELS.map((c) => (
-          <p key={c.id}>
-            <span className="font-semibold text-[#3A3942] dark:text-white/80">{c.name} · {c.where}:</span> {c.lead} {c.note}
-          </p>
-        ))}
-      </div>
 
       {/* ── Ses ve kişilik ─────────────────────────────────────────── */}
       <section id="ses" aria-labelledby="voice-title" className={`scroll-mt-24 border-t ${rule} py-20 md:py-28`}>
