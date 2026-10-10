@@ -326,23 +326,6 @@ export const CAPABILITIES = [
   { title: "Kayıt ve özet", desc: "Her konuşma panele düşer: kim, ne istedi, ne yapıldı." },
 ];
 
-/* ── Güven ve sınırlar (yayın öncesi onay gerekir) ────────────────── */
-
-export const PRINCIPLES = [
-  {
-    title: "Bilmediğini uydurmaz.",
-    desc: "Yalnızca sizin tanımladığınız bilgilerle yanıt verir; emin olmadığında soruyu ekibinize aktarır.",
-  },
-  {
-    title: "Tavsiye vermemesi gereken yerde vermez.",
-    desc: "Sağlık, hukuk ya da finans gibi konularda yönlendirme yapar, uzman görüşünün yerine geçmez.",
-  },
-  {
-    title: "Veriyi birlikte belirleriz.",
-    desc: "Hangi bilginin kaydedileceğine, ne kadar saklanacağına ve kimin göreceğine KVKK çerçevesinde birlikte karar veririz.",
-  },
-];
-
 /* ── Kanallar ─────────────────────────────────────────────────────── */
 
 export const CHANNELS = [
@@ -378,6 +361,10 @@ export const FAQ = [
   {
     q: "Asistan yanlış bir şey söylerse ne olur?",
     a: "Asistanı yalnızca sizin onayladığınız bilgilerle kurarız ve yayından önce örnek konuşmalarla birlikte deneriz. Emin olmadığı durumda cevap uydurmak yerine konuşmayı ekibinize aktarır; yayından sonra da konuşmalara bakarak düzeltiriz.",
+  },
+  {
+    q: "Sağlık ya da hukuk gibi konularda tavsiye verir mi?",
+    a: "Hayır. Sağlık, hukuk ya da finans gibi konularda yönlendirme yapar ve gerekirse ekibinize aktarır; uzman görüşünün yerine geçmez.",
   },
   {
     q: "Telefon numaramı değiştirmem gerekir mi?",
