@@ -38,7 +38,9 @@ const ORDER = NIGHT.map((_, i) => [i < 6 ? 30 : 70, 22 + (i % 6) * 11.5]);
 /* Mobil: kenara taşmasın diye dağınıklık daraltılır, sütunlar kenara yaklaşır */
 const ORDER_M = NIGHT.map((_, i) => [i < 6 ? 26 : 74, 17 + (i % 6) * 12.6]);
 
-const WORDS = ["REZERVASYON", "RANDEVU", "SIK SORULANLAR", "SİPARİŞ TAKİBİ", "GECE YARISI", "EKİBE DEVİR", "KAYIT VE ÖZET"];
+const WORDS = ["rezervasyon", "randevu", "sık sorulanlar", "sipariş takibi", "gece yarısı", "ekibe devir", "kayıt ve özet"];
+const SERIF = { fontFamily: "var(--font-instrument), Georgia, serif" } as const;
+const MONO = { fontFamily: "var(--font-night-mono), ui-monospace, monospace" } as const;
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const seg = (p: number, a: number, b: number) => clamp((p - a) / (b - a));
@@ -161,9 +163,9 @@ export default function NightStory() {
 
         <div aria-hidden="true" className="absolute inset-0">
           {/* Üst satır: etiketler + saat */}
-          <div className={`absolute inset-x-5 z-[4] flex items-start justify-between text-[12px] font-semibold uppercase tracking-[0.18em] md:inset-x-12 ${pinned ? "top-28" : "top-5"}`} style={{ opacity: 1 - morning }}>
+          <div className={`absolute inset-x-5 z-[4] flex items-start justify-between text-[11.5px] uppercase tracking-[0.16em] md:inset-x-12 ${pinned ? "top-28" : "top-5"}`} style={{ ...MONO, opacity: 1 - morning }}>
             <span style={{ color: dark > 0.5 ? "rgba(255,255,255,0.55)" : "#62616B", opacity: 1 - silence }}>Atlas Restoran · örnek gece</span>
-            <span className="tabular-nums" style={{ color: dark > 0.5 ? "#F472B6" : "#DB2777", opacity: 1 - silence, fontSize: 15 }}>
+            <span className="tabular-nums" style={{ color: dark > 0.5 ? "#F472B6" : "#DB2777", opacity: 1 - silence, fontSize: 16, fontWeight: 500 }}>
               {clock}
             </span>
           </div>
@@ -171,22 +173,33 @@ export default function NightStory() {
           {/* 1 · Sessizlik */}
           <div className="absolute inset-0 z-[3] grid place-items-center text-center" style={{ opacity: silence }}>
             <div>
-              <p className="text-[13px] font-semibold uppercase tracking-[0.22em] text-[#F472B6]">Nasıl çalışır</p>
-              <p className="mt-6 font-semibold leading-none tracking-[-0.06em] text-white tabular-nums" style={{ fontSize: "clamp(110px, 22vw, 300px)" }}>
+              <p className="text-[12px] uppercase tracking-[0.24em] text-[#F472B6]" style={MONO}>Nasıl çalışır</p>
+              <p className="mt-4 leading-[0.85] tracking-[-0.03em] text-white tabular-nums" style={{ ...SERIF, fontSize: "clamp(130px, 26vw, 380px)" }}>
                 23.47
               </p>
-              <p className="mt-6 text-[clamp(17px,1.6vw,22px)] text-white/60">Atlas Restoran kapandı. Telefon susmuyor.</p>
-              <p className="mt-10 text-[12px] uppercase tracking-[0.2em] text-white/35">{pinned ? "Kaydırın" : ""}</p>
+              <p className="mt-6 text-[clamp(20px,2vw,30px)] italic text-white/70" style={SERIF}>
+                Atlas Restoran kapandı. Telefon susmuyor.
+              </p>
+              <p className="mt-10 text-[11px] uppercase tracking-[0.24em] text-white/35" style={MONO}>{pinned ? "↓ kaydırın" : ""}</p>
             </div>
           </div>
 
-          {/* 2 · Kaos: ARIYOR */}
-          <p
-            className={`absolute left-1/2 top-1/2 z-[1] whitespace-nowrap font-semibold leading-none tracking-[-0.07em] ${chaos > 0.05 && !reduced ? "night-shake" : ""}`}
-            style={{ translate: "-50% -50%", fontSize: "clamp(90px, 17vw, 260px)", color: "rgba(255,255,255,0.08)", opacity: chaos, WebkitTextStroke: "1.5px rgba(244,114,182,0.45)" }}
-          >
-            ARIYOR…
-          </p>
+          {/* 2 · Kaos: ekranı dolduran, ters yönlere akan "arıyor…" satırları */}
+          <div className={`absolute inset-0 z-[1] flex flex-col justify-center gap-[1vh] overflow-hidden ${chaos > 0.05 && !reduced ? "night-jitter" : ""}`} style={{ opacity: chaos }}>
+            {[0, 1, 2, 3, 4].map((row) => (
+              <div key={row} className={`whitespace-nowrap ${reduced ? "" : row % 2 ? "night-run-r" : "night-run-l"}`} style={{ animationDuration: `${7 + row * 1.7}s` }}>
+                {Array.from({ length: 8 }).map((_, k) => (
+                  <span
+                    key={k}
+                    className="mr-[0.25em] italic leading-[0.95]"
+                    style={{ ...SERIF, fontSize: "clamp(64px, 11vw, 170px)", color: row === 2 ? "rgba(244,114,182,0.32)" : "rgba(255,255,255,0.07)" }}
+                  >
+                    arıyor…
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
 
           {/* Mesajlar */}
           {NIGHT.map((m, i) => {
@@ -220,14 +233,15 @@ export default function NightStory() {
                     boxShadow: order > 0.5 ? "0 10px 30px rgba(0,0,0,0.35)" : "0 18px 40px rgba(0,0,0,0.5)",
                   }}
                 >
-                  <p className={`text-[11px] font-semibold uppercase tracking-[0.14em] ${isCall ? "text-[#FB7185]" : "text-[#62616B]"}`}>
+                  <p className={`text-[10.5px] uppercase tracking-[0.12em] ${isCall ? "text-[#FB7185]" : "text-[#62616B]"}`} style={MONO}>
                     {isCall ? "Telefon" : "WhatsApp"} · {m.time}
                   </p>
                   <p className={`mt-1 leading-snug ${pinned ? "text-[15px]" : "text-[12.5px]"} ${isCall ? "font-semibold" : ""}`}>{m.text}</p>
                 </div>
                 {stamped && (
                   <span
-                    className={`absolute rotate-[-6deg] whitespace-nowrap rounded-md border-2 border-[#DB2777] bg-[#0B0A0D] font-bold text-[#F472B6] ${pinned ? "-right-3 -top-3 px-2 py-1 text-[11px] tracking-[0.12em]" : "-right-1 -top-4 px-1.5 py-0.5 text-[8.5px] tracking-[0.08em]"} ${reduced ? "" : "night-stamp"}`}
+                    style={MONO}
+                    className={`absolute rotate-[-6deg] whitespace-nowrap rounded-[3px] border-2 border-[#DB2777] bg-[#0B0A0D] font-bold uppercase text-[#F472B6] ${pinned ? "-right-3 -top-3 px-2 py-1 text-[11px] tracking-[0.12em]" : "-right-1 -top-4 px-1.5 py-0.5 text-[8.5px] tracking-[0.08em]"} ${reduced ? "" : "night-stamp"}`}
                   >
                     {m.stamp}
                   </span>
@@ -239,68 +253,92 @@ export default function NightStory() {
           {/* Cevapsız sayacı */}
           <div className="absolute bottom-10 right-6 z-[4] text-right md:bottom-14 md:right-12" style={{ opacity: Math.max(chaosIn * (1 - morning), 0) }}>
             <p
-              className="font-semibold leading-none tracking-[-0.06em] tabular-nums"
-              style={{ fontSize: "clamp(56px, 8vw, 120px)", color: unanswered > 0 ? "#FB7185" : "#F472B6" }}
+              className="leading-[0.85] tabular-nums"
+              style={{ ...SERIF, fontSize: "clamp(72px, 10vw, 150px)", color: unanswered > 0 ? "#FB7185" : "#F472B6" }}
             >
               {unanswered}
             </p>
-            <p className="mt-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/55">cevapsız</p>
+            <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/55" style={MONO}>cevapsız</p>
           </div>
 
           {/* 3 · Kırılma */}
           <div className="pointer-events-none absolute inset-0 z-[6] bg-[#DB2777]" style={{ opacity: flash * 0.92 }} />
           <p
-            className="absolute inset-x-0 z-[7] text-center font-semibold leading-none tracking-[-0.06em] text-white"
+            className="absolute inset-x-0 z-[7] text-center italic leading-none tracking-[-0.02em] text-white"
             style={{
               top: `${mix(50, pinned ? 9 : 6, order)}%`,
               transform: `translateY(-50%) scale(${mix(1, pinned ? 0.32 : 0.42, order)})`,
-              fontSize: "clamp(64px, 11vw, 170px)",
+              ...SERIF,
+              fontSize: "clamp(76px, 13vw, 210px)",
               opacity: devrede,
             }}
           >
             Asistan devrede.
           </p>
 
-          {/* 5 · Sabah */}
-          <div className={`absolute inset-0 z-[3] flex flex-col px-5 md:px-12 ${pinned ? "justify-center pt-16" : "justify-start pt-24"}`} style={{ opacity: morning, pointerEvents: morning > 0.5 ? "auto" : "none" }}>
-            <div className="mx-auto w-full max-w-[1300px]">
-              <p className="font-semibold leading-none tracking-[-0.06em] text-[#171719] tabular-nums" style={{ fontSize: "clamp(80px, 13vw, 200px)" }}>
-                09.00
-              </p>
-              <p className="mt-4 max-w-[30ch] text-[clamp(20px,2vw,28px)] leading-snug text-[#3A3942]">
-                Restoran açılmadan gece kapanmış:{" "}
-                <span className="text-[#62616B]">yazanlar WhatsApp&apos;tan, arayanlar telefondan; hepsini aynı asistan karşıladı.</span>
-              </p>
-              <dl className="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 md:grid-cols-4">
+          {/* 5 · Sabah: tek cümle + gece raporu (adisyon fişi) + akan yetenekler */}
+          <div
+            className={`absolute inset-0 z-[3] flex flex-col px-5 md:px-12 ${pinned ? "justify-center pt-16" : "justify-start pt-20"}`}
+            style={{ opacity: morning, pointerEvents: morning > 0.5 ? "auto" : "none" }}
+          >
+            <div className="mx-auto grid w-full max-w-[1300px] items-center gap-8 md:grid-cols-[1.25fr_0.75fr] md:gap-16">
+              <div style={{ transform: `translateY(${(1 - morning) * 24}px)` }}>
+                <p className="text-[11.5px] uppercase tracking-[0.2em] text-[#DB2777]" style={MONO}>
+                  09.00 · Atlas Restoran açılıyor
+                </p>
+                <p className="mt-5 leading-[1.02] tracking-[-0.02em] text-[#171719]" style={{ ...SERIF, fontSize: "clamp(40px, 5.4vw, 92px)" }}>
+                  Siz uyurken <span className="italic text-[#DB2777]">{NIGHT.length} kişi</span> yazdı ya da aradı. Hiçbiri cevapsız kalmadı.
+                </p>
+                <p className="mt-5 max-w-[46ch] text-[clamp(15px,1.25vw,18px)] leading-relaxed text-[#62616B]">
+                  Yazanlar WhatsApp&apos;tan, arayanlar telefondan; hepsini aynı asistan karşıladı. Ekibe kalan iki konuşma sabah masada bekliyor.
+                </p>
+              </div>
+
+              {/* Gece raporu: restoran adisyonu */}
+              <div
+                className="night-receipt relative mx-auto w-full max-w-[340px] bg-white px-6 pb-8 pt-6 text-[#171719] shadow-[0_30px_60px_rgba(23,23,25,0.14)]"
+                style={{ ...MONO, transform: `rotate(${mix(-1, 2.5, morning)}deg) translateY(${(1 - morning) * 40}px)` }}
+              >
+                <p className="text-center text-[13px] font-bold tracking-[0.2em]">GECE RAPORU</p>
+                <p className="mt-1 text-center text-[11px] text-[#62616B]">ATLAS RESTORAN · 23.47–09.00</p>
+                <div className="my-4 border-t border-dashed border-[#171719]/40" />
                 {[
-                  [COUNT.rez, "rezervasyon"],
-                  [COUNT.soru, "soru yanıtlandı"],
-                  [COUNT.ekip, "konuşma ekibe devredildi"],
-                  [0, "cevapsız"],
-                ].map(([n, l], i) => (
-                  <div key={l} className="border-t-2 border-[#171719] pt-3">
-                    <dt className="sr-only">{l}</dt>
-                    <dd>
-                      <span className={`block font-semibold leading-none tracking-[-0.05em] tabular-nums ${i === 3 ? "text-[#DB2777]" : "text-[#171719]"}`} style={{ fontSize: "clamp(48px, 6vw, 88px)" }}>
-                        {n}
-                      </span>
-                      <span className="mt-2 block text-[15px] text-[#62616B]">{l}</span>
-                    </dd>
-                  </div>
+                  ["Gelen mesaj", NIGHT.filter((n) => n.kind === "msg").length],
+                  ["Gelen arama", NIGHT.filter((n) => n.kind === "call").length],
+                  ["Rezervasyon", COUNT.rez],
+                  ["Yanıtlanan soru", COUNT.soru],
+                  ["Ekibe devredilen", COUNT.ekip],
+                ].map(([k, v]) => (
+                  <p key={k} className="flex items-baseline gap-2 py-[3px] text-[13px]">
+                    <span>{k}</span>
+                    <span aria-hidden="true" className="flex-1 translate-y-[-3px] border-b border-dotted border-[#171719]/35" />
+                    <span className="tabular-nums">{String(v).padStart(2, "0")}</span>
+                  </p>
                 ))}
-              </dl>
+                <div className="my-4 border-t border-dashed border-[#171719]/40" />
+                <p className="flex items-baseline justify-between text-[16px] font-bold">
+                  <span>CEVAPSIZ</span>
+                  <span className="text-[#DB2777] tabular-nums">00</span>
+                </p>
+                <p className="mt-5 text-center text-[10.5px] uppercase tracking-[0.16em] text-[#8E8D99]">örnek gece · işletme kurmaca</p>
+              </div>
             </div>
+
             {/* Akan yetenekler */}
-            <div className="mt-12 overflow-hidden whitespace-nowrap border-y border-[#171719]/15 py-4">
-              <div className={`inline-flex gap-10 ${reduced ? "" : "night-marquee"}`}>
+            <div className={`overflow-hidden whitespace-nowrap border-y border-[#171719]/15 py-3 ${pinned ? "mt-12" : "mt-8"}`}>
+              <div className={`inline-flex items-center ${reduced ? "" : "night-marquee"}`}>
                 {[...WORDS, ...WORDS].map((w, i) => (
-                  <span key={i} className="font-semibold tracking-[-0.04em] text-transparent" style={{ fontSize: "clamp(36px, 4.5vw, 64px)", WebkitTextStroke: "1.5px #171719" }}>
-                    {w} <span className="text-[#DB2777]" style={{ WebkitTextStroke: 0 }}>·</span>
+                  <span key={i} className="inline-flex items-center">
+                    <span className="italic text-[#171719]" style={{ ...SERIF, fontSize: "clamp(34px, 4.2vw, 64px)" }}>
+                      {w}
+                    </span>
+                    <span className="mx-6 text-[12px] text-[#DB2777]" style={MONO}>
+                      ✳
+                    </span>
                   </span>
                 ))}
               </div>
             </div>
-            <p className="mx-auto mt-4 w-full max-w-[1300px] text-[12.5px] text-[#8E8D99]">Örnek gece: işletme ve rakamlar kurmacadır.</p>
           </div>
         </div>
 

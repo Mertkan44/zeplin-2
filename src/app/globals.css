@@ -661,15 +661,28 @@ body:has([data-footer-under="pink"]) .site-footer {
   to { translate: 0 0; scale: 1; opacity: 1; }
 }
 /* "23.47" gece sahnesi */
-.night-shake { animation: nightShake 0.11s steps(2) infinite; }
 .night-pop { animation: nightPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .night-stamp { animation: nightStamp 0.32s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .night-marquee { animation: nightMarquee 26s linear infinite; }
-@keyframes nightShake {
-  0% { translate: -50% -50%; }
-  25% { translate: calc(-50% + 4px) calc(-50% - 3px); }
-  50% { translate: calc(-50% - 3px) calc(-50% + 2px); }
-  75% { translate: calc(-50% + 2px) calc(-50% + 3px); }
+.night-jitter { animation: nightJitter 0.12s steps(2) infinite; }
+.night-run-l { animation: nightRunL 9s linear infinite; }
+.night-run-r { animation: nightRunR 9s linear infinite; }
+/* Fişin alt kenarı: yırtık adisyon */
+.night-receipt {
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+}
+@keyframes nightJitter {
+  0% { translate: 0 0; }
+  50% { translate: 3px -2px; }
+}
+@keyframes nightRunL {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes nightRunR {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 @keyframes nightPop {
   from { scale: 1.6; opacity: 0; filter: blur(6px); }
@@ -704,7 +717,7 @@ body:has([data-footer-under="pink"]) .site-footer {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-phone, .hero-float, .hero-msg, .hero-wave { animation: none !important; }
-  .hero-backdrop, .try-flip, .try-pop, .night-shake, .night-pop, .night-stamp, .night-marquee { animation: none !important; }
+  .hero-backdrop, .try-flip, .try-pop, .night-pop, .night-stamp, .night-marquee, .night-jitter, .night-run-l, .night-run-r { animation: none !important; }
   .hero-ring { animation: none !important; scale: 1.2; opacity: 0.35; }
   .hero-ring-2 { display: none; }
   .hero-phone { transform: translate(-50%, -50%) rotateX(3deg) rotateY(-8deg); transition: none; }

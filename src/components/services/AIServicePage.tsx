@@ -7,6 +7,7 @@
  */
 
 import Link from "next/link";
+import { JetBrains_Mono } from "next/font/google";
 import { briefHref, getRelatedServices, type ServiceData } from "@/data/services";
 import { CHANNELS, FAQ, PRINCIPLES } from "@/data/assistants";
 import { whatsappUrl } from "@/lib/contact";
@@ -15,6 +16,9 @@ import TryAssistant from "./ai/TryAssistant";
 import VoicePicker from "./ai/VoicePicker";
 import HeroPhone from "./ai/HeroPhone";
 import NightStory from "./ai/NightStory";
+
+// Gece sahnesindeki saat, damga ve fiş satırları için (yalnızca bu sayfada yüklenir)
+const mono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "700"], variable: "--font-night-mono", display: "swap" });
 
 const wrap = "mx-auto w-full max-w-[1400px] px-5 md:px-10";
 const eyebrow = "text-[13px] font-semibold uppercase tracking-[0.16em] text-[#DB2777] dark:text-[#F472B6]";
@@ -27,7 +31,7 @@ export function AIServicePage({ service }: { service: ServiceData }) {
   const related = getRelatedServices(service.relatedSlugs);
 
   return (
-    <main className="min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white">
+    <main className={`${mono.variable} min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white`}>
       {/* ── Açılış + iki kanal demosu ──────────────────────────────── */}
       <section aria-labelledby="ai-title" className="overflow-x-clip pb-12 pt-28 md:pb-16 md:pt-36">
         <div className={wrap}>
