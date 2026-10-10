@@ -58,12 +58,9 @@ export default function AssistantPersona() {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-      {/* ── Sol: anlatım + seçim ─────────────────────────── */}
-      <div>
-        <p className="text-[12px] uppercase tracking-[0.2em] text-[#DB2777] dark:text-[#F472B6]" style={MONO}>
-          Asistan kimliği
-        </p>
-        <h2 id="persona-title" className="mt-4 font-bold leading-[1.02] tracking-[-0.045em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
+      {/* ── Sağ (masaüstü): anlatım + seçim ─────────────────── */}
+      <div className="lg:order-2">
+        <h2 id="persona-title" className="font-bold leading-[1.02] tracking-[-0.045em] text-[#171719] dark:text-white" style={{ ...DISPLAY, fontSize: "clamp(38px, 4.6vw, 72px)" }}>
           Sesini siz seçin, sınırlarını birlikte belirleyelim.
         </h2>
 
@@ -120,8 +117,8 @@ export default function AssistantPersona() {
         </fieldset>
       </div>
 
-      {/* ── Sağ: kimlik kartı ───────────────────────────── */}
-      <div className="lg:pt-6">
+      {/* ── Sol (masaüstü): kimlik kartı ──────────────────── */}
+      <div className="lg:order-1">
         <article className="relative overflow-hidden rounded-[28px] bg-[#111116] text-white shadow-[0_40px_90px_rgba(17,17,22,0.25)]">
           {/* Yaka kartı askısı */}
           <div aria-hidden="true" className="flex justify-center pt-4">

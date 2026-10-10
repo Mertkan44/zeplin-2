@@ -8,9 +8,8 @@
 
 import Link from "next/link";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
-import { briefHref, getRelatedServices, type ServiceData } from "@/data/services";
+import { briefHref, type ServiceData } from "@/data/services";
 import { whatsappUrl } from "@/lib/contact";
-import { RelatedServices } from "./RelatedServices";
 import TryAssistant from "./ai/TryAssistant";
 import AssistantPersona from "./ai/AssistantPersona";
 import AssistantFaq from "./ai/AssistantFaq";
@@ -29,8 +28,6 @@ const rule = "border-[#DAD8DF] dark:border-white/10";
 
 
 export function AIServicePage({ service }: { service: ServiceData }) {
-  const related = getRelatedServices(service.relatedSlugs);
-
   return (
     <main className={`${mono.variable} ${display.variable} min-h-screen bg-[#F7F6F3] text-[#171719] dark:bg-[#0F0F12] dark:text-white`}>
       {/* ── Açılış + iki kanal demosu ──────────────────────────────── */}
@@ -129,7 +126,6 @@ export function AIServicePage({ service }: { service: ServiceData }) {
         </div>
       </section>
 
-      <RelatedServices services={related} />
     </main>
   );
 }
