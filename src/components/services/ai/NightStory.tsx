@@ -2,8 +2,7 @@
 
 /*
  * "23.47" — bir restoranın örnek gecesi. İkon, kutu, şema yok: tipografi, hareket, gren.
- * 1 Sessizlik (saat) → 2 Kaos (ARIYOR…, mesaj yağmuru, cevapsız sayacı) → 3 Kırılma (pembe flaş,
- * "Asistan devrede.") → 4 Düzen (mesajlar sütuna dizilir, damgalar basılır) → 5 Sabah (09.00, özet).
+ * 1 Sessizlik (saat) → 2 Kaos (ARIYOR…, mesaj yağmuru, cevapsız sayacı) → 3 Kırılma ("Asistan devrede.") → 4 Düzen (mesajlar sütuna dizilir, damgalar basılır) → 5 Sabah (09.00, özet).
  * Masaüstü: kaydırmaya sabitlenmiş sahne, ilerleme = kaydırma. Mobil / kısa ekran: görünür olunca
  * kendi kendine oynar (bir kez), sonunda "Tekrar oynat". Hareket azaltıldığında son kare.
  * Rakamlar kurmacadır ve "örnek gece" olarak etiketlenir; aşağıdaki mesajlardan türetilir.
@@ -128,7 +127,6 @@ export default function NightStory() {
   const silence = 1 - seg(p, 0.08, 0.14);
   const chaosIn = seg(p, 0.12, 0.18);
   const shown = Math.floor(seg(p, 0.15, 0.34) * NIGHT.length + 0.0001);
-  const flash = p < 0.375 ? seg(p, 0.35, 0.375) : 1 - seg(p, 0.375, 0.44);
   const devrede = seg(p, 0.36, 0.39) * (1 - seg(p, 0.7, 0.75)); // ~0.39–0.58 tam ekran kalır
   const order = ease(seg(p, 0.58, 0.7));
   const morning = seg(p, 0.8, 0.87);
@@ -252,7 +250,6 @@ export default function NightStory() {
           </div>
 
           {/* 3 · Kırılma */}
-          <div className="pointer-events-none absolute inset-0 z-[6] bg-[#DB2777]" style={{ opacity: flash * 0.92 }} />
           <p
             className="absolute inset-x-0 z-[7] text-center font-extrabold leading-none tracking-[-0.055em] text-white"
             style={{
