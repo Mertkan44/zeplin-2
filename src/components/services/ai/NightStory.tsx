@@ -68,6 +68,8 @@ export default function NightStory() {
   const pinned = usePinned(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [scrollP, setScrollP] = useState(0);
+  // Masaüstü: sahne ekrana girerken üst kenarda alacakaranlık geçişi (0 → 1); çıkışta sabahla aydınlanır
+  const [enterP, setEnterP] = useState(0);
   const [playP, setPlayP] = useState(0);
   const played = useRef(false);
 
@@ -82,6 +84,7 @@ export default function NightStory() {
         if (!el) return;
         const r = el.getBoundingClientRect();
         setScrollP(clamp(-r.top / Math.max(1, r.height - window.innerHeight)));
+        setEnterP(clamp(1 - r.top / (window.innerHeight * 0.85)));
       });
     };
     onScroll();
@@ -134,7 +137,10 @@ export default function NightStory() {
   const unanswered = Math.round(shown * (1 - order));
   const clock =
     morning > 0.5 ? "09.00" : shown > 0 ? NIGHT[Math.min(shown, NIGHT.length) - 1].time : "23.47";
+  const lightsOut = pinned && !reduced ? ease(enterP) : 1;
   const dark = 1 - morning;
+  // Geçiş, sahne yerine oturana dek tam güçte (kenar hiç görünmez); sabitlendikten sonraki ilk kaydırmada söner
+  const dusk = enterP < 1 ? 1 : 1 - seg(scrollP, 0, 0.05);
   // "Asistan devrede." beklerken mesajlar geri çekilir, düzene geçerken geri gelir
   const hush = seg(p, 0.37, 0.42) * (1 - seg(p, 0.56, 0.62));
 
@@ -148,6 +154,14 @@ export default function NightStory() {
         className={`${pinned && !reduced ? "sticky top-0 h-[100svh]" : "h-[800px]"} relative overflow-hidden`}
         style={{ background: `rgb(${mix(247, 11, dark)} ${mix(246, 10, dark)} ${mix(243, 13, dark)})` }}
       >
+        {/* Alacakaranlık: sayfanın açık renginden geceye yumuşak geçiş (yalnızca giriş sırasında) */}
+        {pinned && !reduced && dusk > 0 && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-[6] h-[55svh] bg-[linear-gradient(180deg,#F7F6F3_0%,rgba(247,246,243,0.6)_30%,rgba(11,10,13,0)_100%)] dark:bg-[linear-gradient(180deg,#0F0F12_0%,rgba(15,15,18,0)_100%)]" style={{ opacity: dusk }} />
+        )}
+        {/* Karanlık mod çıkışı: açık renkli sabah, koyu sayfaya alttan yumuşakça bağlanır */}
+        {pinned && !reduced && morning > 0 && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-[6] hidden h-[26svh] bg-[linear-gradient(0deg,#0F0F12_0%,rgba(15,15,18,0.5)_40%,rgba(15,15,18,0)_100%)] dark:block" style={{ opacity: morning }} />
+        )}
         {/* Gren */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] mix-blend-overlay" style={{ backgroundImage: GRAIN, opacity: 0.35 }} />
 
@@ -170,7 +184,7 @@ export default function NightStory() {
           </div>
 
           {/* 1 · Sessizlik */}
-          <div className="absolute inset-0 z-[3] grid place-items-center text-center" style={{ opacity: silence }}>
+          <div className="absolute inset-0 z-[3] grid place-items-center text-center" style={{ opacity: silence * lightsOut, transform: `translateY(${(1 - lightsOut) * 32}px)` }}>
             <div>
               <p className="text-[12px] uppercase tracking-[0.24em] text-[#F472B6]" style={MONO}>Nasıl çalışır</p>
               <p className="mt-4 font-extrabold leading-[0.85] tracking-[-0.035em] text-white tabular-nums" style={{ ...DISPLAY, fontSize: "clamp(120px, 24vw, 340px)" }}>
@@ -179,7 +193,7 @@ export default function NightStory() {
               <p className="mt-6 text-[clamp(18px,1.8vw,26px)] text-white/65" style={DISPLAY}>
                 Atlas Restoran kapandı. Telefon susmuyor.
               </p>
-              <p className="mt-10 text-[11px] uppercase tracking-[0.24em] text-white/35" style={MONO}>{pinned ? "↓ kaydırın" : ""}</p>
+              <p className="ai-bob mt-10 text-[11px] uppercase tracking-[0.24em] text-white/35" style={MONO}>{pinned ? "↓ kaydırın" : ""}</p>
             </div>
           </div>
 
@@ -318,7 +332,7 @@ export default function NightStory() {
           <button
             type="button"
             onClick={play}
-            className="absolute bottom-4 left-1/2 z-[8] -translate-x-1/2 rounded-full border border-[#171719]/20 bg-white/80 px-4 py-2 text-[13px] font-semibold text-[#171719] backdrop-blur"
+            className="ai-rise absolute inset-x-0 bottom-4 z-[8] mx-auto min-h-[44px] w-fit rounded-full border border-[#171719]/20 bg-white/80 px-5 text-[13px] font-semibold text-[#171719] backdrop-blur transition-[background-color,border-color] duration-[var(--dur-2)] hover:border-[#171719] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#DB2777]"
           >
             Geceyi tekrar oynat
           </button>
