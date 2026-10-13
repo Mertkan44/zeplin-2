@@ -70,8 +70,10 @@ export default function HomeProcess() {
   const reached = (i: number) => p >= i / STEPS.length + 0.02 || p >= 0.999;
 
   return (
-    <section aria-labelledby="home-process-title" className="px-5 py-[var(--home-space)] md:px-12">
-      <div className="mx-auto max-w-6xl rounded-[28px] bg-[#111116] px-6 py-12 text-white dark:bg-[#17171C] dark:ring-1 dark:ring-white/10 md:px-12 md:py-16">
+    <section aria-labelledby="home-process-title" className="px-3 py-[var(--home-space)] md:px-5">
+      {/* Koyu yüzey ekran boyunca bant gibi uzanır; içerik sayfanın diğer bölümleriyle aynı hizada kalır */}
+      <div className="rounded-[28px] bg-[#111116] px-3 py-14 text-white dark:bg-[#17171C] dark:ring-1 dark:ring-white/10 md:rounded-[36px] md:px-7 md:py-20">
+        <div className="mx-auto max-w-6xl px-3 md:px-0">
         <motion.div
           variants={revealVariants}
           initial="hidden"
@@ -140,6 +142,7 @@ export default function HomeProcess() {
             );
           })}
         </ol>
+        </div>
       </div>
     </section>
   );
